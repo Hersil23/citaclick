@@ -38,13 +38,24 @@ ul{list-style:none}
 .nav-wordmark span{font-weight:500}
 .nav-center{display:flex;align-items:center;gap:.5rem}
 .nav-actions{display:flex;align-items:center;gap:.75rem}
-.pill{display:flex;background:rgba(255,255,255,.1);border-radius:20px;padding:2px;gap:2px}
-.pill-opt{padding:5px 14px;font-size:.7rem;font-weight:700;border-radius:18px;letter-spacing:.04em;transition:all .3s;color:rgba(255,255,255,.5);white-space:nowrap}
-.pill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.pill-opt:hover:not(.active){color:rgba(255,255,255,.8)}
-[data-theme="blush"] .pill{background:rgba(74,44,58,.12)}
-[data-theme="blush"] .pill-opt{color:rgba(74,44,58,.4)}
-[data-theme="blush"] .pill-opt.active{background:#fff;color:var(--women-text)}
+.pill{display:flex;border-radius:20px;padding:2px;gap:2px;transition:background .3s}
+.pill-opt{padding:5px 14px;font-size:.7rem;font-weight:700;border-radius:18px;letter-spacing:.04em;transition:all .3s;white-space:nowrap}
+.pill-opt.active{box-shadow:0 1px 4px rgba(0,0,0,.1)}
+/* pill colors inherited from nav context via --pill-fg, --pill-active-bg, --pill-active-fg, --pill-bg */
+.nav{--pill-bg:rgba(255,255,255,.1);--pill-fg:rgba(255,255,255,.5);--pill-fg-hover:rgba(255,255,255,.8);--pill-active-bg:#fff;--pill-active-fg:#1A1A2E}
+.nav.over-light{--pill-bg:rgba(74,44,58,.1);--pill-fg:rgba(74,44,58,.45);--pill-fg-hover:rgba(74,44,58,.7);--pill-active-bg:#fff;--pill-active-fg:#4A2C3A}
+.nav.scrolled{--pill-bg:rgba(255,255,255,.1);--pill-fg:rgba(255,255,255,.5);--pill-fg-hover:rgba(255,255,255,.8);--pill-active-bg:#fff;--pill-active-fg:#1A1A2E}
+.pill{background:var(--pill-bg)}
+.pill-opt{color:var(--pill-fg)}
+.pill-opt.active{background:var(--pill-active-bg);color:var(--pill-active-fg)}
+.pill-opt:hover:not(.active){color:var(--pill-fg-hover)}
+[data-theme="blush"] .nav{color:var(--women-text)}
+[data-theme="blush"] .nav.scrolled{background:rgba(253,246,249,.92);color:var(--women-text);box-shadow:0 1px 24px rgba(74,44,58,.08)}
+[data-theme="blush"] .nav:not(.scrolled).over-dark{color:var(--men-text)}
+[data-theme="blush"] .nav:not(.scrolled).over-light{color:var(--women-text)}
+[data-theme="blush"] .nav.scrolled .nav-link{color:var(--women-text)}
+[data-theme="blush"] .nav.scrolled{--pill-bg:rgba(74,44,58,.1);--pill-fg:rgba(74,44,58,.45);--pill-fg-hover:rgba(74,44,58,.7);--pill-active-bg:#fff;--pill-active-fg:var(--women-text)}
+[data-theme="blush"] .nav:not(.scrolled).over-light{--pill-bg:rgba(74,44,58,.1);--pill-fg:rgba(74,44,58,.45);--pill-fg-hover:rgba(74,44,58,.7);--pill-active-bg:#fff;--pill-active-fg:var(--women-text)}
 .nav-link{font-size:.875rem;font-weight:500;opacity:.8;transition:opacity .2s}
 .nav-link:hover{opacity:1}
 .btn-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;background:var(--men-accent);color:#fff;font-weight:600;font-size:.875rem;border-radius:var(--radius);transition:transform .15s,box-shadow .15s;white-space:nowrap}
