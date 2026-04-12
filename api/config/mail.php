@@ -48,7 +48,7 @@ class Mailer
     private static function buildPlainTemplate(string $subject, array $vars): string
     {
         $lines = '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;">';
-        $lines .= '<h2 style="color:#E94560;">' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</h2>';
+        $lines .= '<h2 style="color:#E8000D;">' . htmlspecialchars($subject, ENT_QUOTES, 'UTF-8') . '</h2>';
 
         foreach ($vars as $key => $value) {
             $label = ucfirst(str_replace('_', ' ', $key));

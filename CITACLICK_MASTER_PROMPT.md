@@ -190,13 +190,13 @@ Tipografia wordmark: system-ui, sans-serif — letter-spacing: -0.5px
 
 | Tema | Accent | Fondo | Texto |
 |---|---|---|---|
-| Caballeros claro | #E94560 | #F8F8FA | #1A1A2E |
-| Caballeros oscuro | #E94560 | #1A1A2E | #F0F0F8 |
+| Caballeros claro | #E8000D | #F8F8FA | #1A1A2E |
+| Caballeros oscuro | #E8000D | #1A1A2E | #F0F0F8 |
 | Damas claro | #B784A7 | #FDF6F9 | #4A2C3A |
 | Damas oscuro | #C9A0DC | #1A0F18 | #F5EEF8 |
 
 ### Iconos PWA y Tiendas
-- Fondo solido #E94560 con icono en blanco (#FFFFFF) centrado, padding 15%
+- Fondo solido #E8000D con icono en blanco (#FFFFFF) centrado, padding 15%
 - Icono maskable: safe zone 10%
 - Tamaños: 96, 128, 152, 180, 192, 512, 1024px
 
