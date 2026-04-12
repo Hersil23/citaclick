@@ -1,0 +1,221 @@
+/* ============================================
+   CITACLICK — DESIGN TOKENS
+   ============================================ */
+
+/* --- TYPOGRAPHY (Google Fonts) --- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+:root {
+  /* --- Font Families --- */
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Playfair Display', serif;
+
+  /* --- Font Sizes (fluid scale) --- */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3125rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  /* --- Font Weights --- */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* --- Line Heights --- */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* --- Spacing Scale --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* --- Border Radius --- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* --- Shadows --- */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 8px 10px rgba(0, 0, 0, 0.04);
+
+  /* --- Z-Index Scale --- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sidebar: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+
+  /* --- Layout --- */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --header-height: 60px;
+  --footer-height: 40px;
+  --content-max-width: 1200px;
+
+  /* --- Transitions --- */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* --- Appointment Status Colors --- */
+  --status-pending: #F59E0B;
+  --status-pending-bg: rgba(245, 158, 11, 0.12);
+  --status-confirmed: #10B981;
+  --status-confirmed-bg: rgba(16, 185, 129, 0.12);
+  --status-cancelled: #EF4444;
+  --status-cancelled-bg: rgba(239, 68, 68, 0.12);
+  --status-completed: #3B82F6;
+  --status-completed-bg: rgba(59, 130, 246, 0.12);
+  --status-no-show: #8B5CF6;
+  --status-no-show-bg: rgba(139, 92, 246, 0.12);
+}
+
+
+/* ============================================
+   THEME: CABALLEROS (Light)
+   ============================================ */
+[data-theme="caballeros"],
+:root {
+  --color-primary: #1A1A2E;
+  --color-secondary: #16213E;
+  --color-accent: #0F3460;
+  --color-highlight: #E94560;
+  --color-surface: #F5F5F5;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-sunken: #EBEBEB;
+  --color-text: #1A1A2E;
+  --color-text-secondary: #4A4A68;
+  --color-text-muted: #8888A0;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #D8D8E4;
+  --color-border-light: #EEEEEF;
+  --color-input-bg: #FFFFFF;
+  --color-input-border: #D0D0DC;
+  --color-input-focus: #0F3460;
+  --color-overlay: rgba(26, 26, 46, 0.6);
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+}
+
+
+/* ============================================
+   THEME: CABALLEROS (Dark)
+   ============================================ */
+[data-theme="caballeros"][data-mode="dark"] {
+  --color-primary: #C8C8E0;
+  --color-secondary: #A0A0C0;
+  --color-accent: #5B8DEF;
+  --color-highlight: #E94560;
+  --color-surface: #0F0F1A;
+  --color-surface-raised: #1A1A2E;
+  --color-surface-sunken: #0A0A14;
+  --color-text: #E8E8F0;
+  --color-text-secondary: #B0B0CC;
+  --color-text-muted: #6E6E8A;
+  --color-text-inverse: #0F0F1A;
+  --color-border: #2A2A44;
+  --color-border-light: #1E1E36;
+  --color-input-bg: #1A1A2E;
+  --color-input-border: #2E2E4A;
+  --color-input-focus: #5B8DEF;
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+  --color-info: #60A5FA;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.35), 0 8px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ============================================
+   THEME: DAMAS (Light)
+   ============================================ */
+[data-theme="damas"] {
+  --color-primary: #7B4B8A;
+  --color-secondary: #C9A0DC;
+  --color-accent: #E8A0BF;
+  --color-highlight: #B784A7;
+  --color-surface: #FDF6F9;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-sunken: #F5EBF0;
+  --color-text: #4A2C3A;
+  --color-text-secondary: #7A5568;
+  --color-text-muted: #A88898;
+  --color-text-inverse: #FFFFFF;
+  --color-border: #E8D0DC;
+  --color-border-light: #F2E4EC;
+  --color-input-bg: #FFFFFF;
+  --color-input-border: #DCC4D2;
+  --color-input-focus: #B784A7;
+  --color-overlay: rgba(74, 44, 58, 0.5);
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+}
+
+
+/* ============================================
+   THEME: DAMAS (Dark)
+   ============================================ */
+[data-theme="damas"][data-mode="dark"] {
+  --color-primary: #DDB8E8;
+  --color-secondary: #B088C0;
+  --color-accent: #D480A8;
+  --color-highlight: #C898B8;
+  --color-surface: #1A0F14;
+  --color-surface-raised: #2A1A22;
+  --color-surface-sunken: #120A0E;
+  --color-text: #F0E0E8;
+  --color-text-secondary: #C8A8B8;
+  --color-text-muted: #806070;
+  --color-text-inverse: #1A0F14;
+  --color-border: #3A2430;
+  --color-border-light: #2E1A24;
+  --color-input-bg: #2A1A22;
+  --color-input-border: #3E2834;
+  --color-input-focus: #C898B8;
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-error: #F87171;
+  --color-info: #60A5FA;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.35), 0 8px 10px rgba(0, 0, 0, 0.2);
+}

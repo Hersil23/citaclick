@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+error_log
+
+# Uploads
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+
+# Build
+dist/
+build/
+
+# Cache
+*.cache
+.phpunit.result.cache
+
+# Credentials
+credentials.json
+*.pem
+*.key

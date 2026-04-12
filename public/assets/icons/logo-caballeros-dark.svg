@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 38" width="130" height="38">
+  <g transform="translate(5,5)">
+    <rect x="0" y="0" width="28" height="28" rx="6" ry="6" fill="none" stroke="#E94560" stroke-width="1.8"/>
+    <rect x="0" y="0" width="28" height="10" rx="6" ry="6" fill="#E94560"/>
+    <rect x="0" y="6" width="28" height="4" fill="#E94560"/>
+    <line x1="8" y1="0" x2="8" y2="4" stroke="#E94560" stroke-width="2.2" stroke-linecap="round"/>
+    <line x1="20" y1="0" x2="20" y2="4" stroke="#1A1A2E" stroke-width="2.2" stroke-linecap="round"/>
+    <polyline points="6,18.4 10.4,22.8 22,13.6" fill="none" stroke="#E94560" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="42" y="27" font-family="system-ui, sans-serif" font-size="18" letter-spacing="-0.5">
+    <tspan font-weight="500" fill="#F0F0F8">cita</tspan><tspan font-weight="700" fill="#E94560">click</tspan>
+  </text>
+</svg>

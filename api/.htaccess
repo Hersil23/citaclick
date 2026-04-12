@@ -1,0 +1,26 @@
+RewriteEngine On
+
+# Block direct access to PHP files except routes/index.php
+RewriteCond %{REQUEST_URI} !^/api/routes/index\.php$ [NC]
+RewriteCond %{REQUEST_FILENAME} \.php$ [NC]
+RewriteRule ^ - [F,L]
+
+# Route all API requests to the main entry point
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ routes/index.php [QSA,L]
+
+# Deny access to config and sensitive directories
+<FilesMatch "\.(env|log|sql|md)$">
+    Require all denied
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
