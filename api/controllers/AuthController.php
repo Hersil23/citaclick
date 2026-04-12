@@ -161,7 +161,7 @@ class AuthController
             ]);
             $userId = (int)$db->lastInsertId();
 
-            $trialEnd = date('Y-m-d', strtotime('+7 days'));
+            $trialEnd = date('Y-m-d', strtotime('+21 days'));
             $stmt = $db->prepare('
                 INSERT INTO subscriptions (business_id, plan_id, status, start_date, end_date, created_at)
                 VALUES (:bid, :pid, "active", CURDATE(), :end_date, NOW())

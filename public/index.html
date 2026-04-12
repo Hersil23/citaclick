@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="onyx">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -24,14 +24,9 @@ img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer;border:none;background:none;-webkit-tap-highlight-color:transparent}
 ul{list-style:none}
+:root{--men-bg:#1A1A2E;--men-surface:#16213E;--men-accent:#E8000D;--men-text:#F0F0F8;--women-bg:#FDF6F9;--women-surface:#F5ECF3;--women-accent:#B784A7;--women-text:#4A2C3A;--radius:10px;--radius-lg:20px}
 
-:root{
-  --men-bg:#1A1A2E;--men-surface:#16213E;--men-accent:#E8000D;--men-text:#F0F0F8;
-  --women-bg:#FDF6F9;--women-surface:#F5ECF3;--women-accent:#B784A7;--women-text:#4A2C3A;
-  --radius:10px;--radius-lg:20px;
-}
-
-/* NAV */
+/* ═══ NAV ═══ */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(1rem,4vw,3rem);height:64px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,box-shadow .3s,color .3s}
 .nav.scrolled{background:rgba(26,26,46,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 24px rgba(0,0,0,.18)}
 .nav.over-light{color:var(--women-text)}
@@ -41,19 +36,27 @@ ul{list-style:none}
 .nav-wordmark{font-family:system-ui,sans-serif;font-size:1.25rem;letter-spacing:-.5px}
 .nav-wordmark b{font-weight:700}
 .nav-wordmark span{font-weight:500}
+.nav-center{display:flex;align-items:center;gap:.5rem}
 .nav-actions{display:flex;align-items:center;gap:.75rem}
-.lang-toggle{padding:4px 10px;border:1.5px solid currentColor;border-radius:4px;font-size:.7rem;font-weight:700;letter-spacing:.08em;opacity:.7;transition:opacity .2s}
-.lang-toggle:hover{opacity:1}
+.pill{display:flex;background:rgba(255,255,255,.1);border-radius:20px;padding:2px;gap:2px}
+.pill-opt{padding:5px 14px;font-size:.7rem;font-weight:700;border-radius:18px;letter-spacing:.04em;transition:all .3s;color:rgba(255,255,255,.5);white-space:nowrap}
+.pill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.pill-opt:hover:not(.active){color:rgba(255,255,255,.8)}
+[data-theme="blush"] .pill{background:rgba(74,44,58,.12)}
+[data-theme="blush"] .pill-opt{color:rgba(74,44,58,.4)}
+[data-theme="blush"] .pill-opt.active{background:#fff;color:var(--women-text)}
 .nav-link{font-size:.875rem;font-weight:500;opacity:.8;transition:opacity .2s}
 .nav-link:hover{opacity:1}
 .btn-cta{display:inline-flex;align-items:center;justify-content:center;padding:10px 22px;background:var(--men-accent);color:#fff;font-weight:600;font-size:.875rem;border-radius:var(--radius);transition:transform .15s,box-shadow .15s;white-space:nowrap}
 .btn-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,0,13,.35)}
 .btn-cta:active{transform:translateY(0)}
-.btn-cta-lg{padding:14px 32px;font-size:1rem;border-radius:var(--radius)}
+.btn-cta-lg{padding:14px 32px;font-size:1rem}
+[data-theme="blush"] .btn-cta{background:var(--women-accent)}
+[data-theme="blush"] .btn-cta:hover{box-shadow:0 6px 20px rgba(183,132,167,.35)}
 .hide-mobile{display:none}
 @media(min-width:768px){.hide-mobile{display:inline-flex}}
 
-/* HERO */
+/* ═══ HERO ═══ */
 .hero{display:flex;height:100vh;height:100dvh;position:relative;overflow:hidden}
 .hero-half{position:relative;width:50%;display:flex;align-items:center;justify-content:center;padding:clamp(2rem,5vw,5rem);transition:width .45s cubic-bezier(.4,0,.2,1);overflow:hidden}
 .hero-men{background:var(--men-bg);color:var(--men-text)}
@@ -67,8 +70,20 @@ ul{list-style:none}
 .hero-list li::before{content:'';width:18px;height:2px;border-radius:1px;flex-shrink:0}
 .hero-men .hero-list li::before{background:var(--men-accent)}
 .hero-women .hero-list li::before{background:var(--women-accent)}
+/* theme-driven hero widths */
+[data-theme="onyx"] .hero-men{width:60%}
+[data-theme="onyx"] .hero-women{width:40%}
+[data-theme="blush"] .hero-men{width:40%}
+[data-theme="blush"] .hero-women{width:60%}
+@media(min-width:768px){
+  .hero:hover .hero-men,.hero:hover .hero-women{width:50%}
+  .hero .hero-men:hover{width:62%}
+  .hero .hero-men:hover~.hero-women{width:38%}
+  .hero .hero-women:hover{width:62%}
+  .hero:has(.hero-women:hover) .hero-men{width:38%}
+}
 
-/* mini calendar previews */
+/* mini cal */
 .mini-cal{border-radius:var(--radius);overflow:hidden;font-size:.7rem;box-shadow:0 8px 32px rgba(0,0,0,.2)}
 .mini-cal-men{background:var(--men-surface);color:var(--men-text);border:1px solid rgba(255,255,255,.06)}
 .mini-cal-women{background:#fff;color:var(--women-text);border:1px solid rgba(183,132,167,.15)}
@@ -81,36 +96,34 @@ ul{list-style:none}
 .mini-cal-men .mini-cal-event{background:rgba(232,0,13,.2);color:#E8000D}
 .mini-cal-women .mini-cal-event{background:rgba(183,132,167,.15);color:var(--women-accent)}
 
-/* center floating block */
-.hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;background:rgba(26,26,46,.95);border:1px solid rgba(232,0,13,.25);border-radius:var(--radius-lg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:clamp(1.5rem,3vw,2.5rem);text-align:center;width:clamp(280px,30vw,360px);color:var(--men-text);box-shadow:0 24px 64px rgba(0,0,0,.4)}
+/* hero center */
+.hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);z-index:10;background:rgba(26,26,46,.95);border:1px solid rgba(232,0,13,.25);border-radius:var(--radius-lg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:clamp(1.5rem,3vw,2.5rem);text-align:center;width:clamp(280px,30vw,360px);color:var(--men-text);box-shadow:0 24px 64px rgba(0,0,0,.4);opacity:1;transition:opacity .25s ease,transform .25s ease}
+.hero-center.hiding{opacity:0;transform:translate(-50%,-50%) scale(.92);pointer-events:none}
+.hero-center.hidden-banner{display:none}
 .hero-center-logo{width:40px;height:40px;margin:0 auto 1rem}
 .hero-center h2{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.5vw,2rem);font-weight:600;line-height:1.2;margin-bottom:.75rem;letter-spacing:-.02em}
 .hero-center p{font-size:.8125rem;color:rgba(240,240,248,.5);margin-bottom:1.5rem;line-height:1.6}
 .hero-center .btn-cta{width:100%;margin-bottom:.75rem}
 .hero-center .micro{font-size:.7rem;color:rgba(240,240,248,.35)}
-
-@media(min-width:768px){
-  .hero:hover .hero-men,.hero:hover .hero-women{width:50%}
-  .hero .hero-men:hover{width:62%}
-  .hero .hero-men:hover~.hero-women{width:38%}
-  .hero .hero-women:hover{width:62%}
-  .hero:has(.hero-women:hover) .hero-men{width:38%}
-}
+.hero-close{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;opacity:.5;transition:opacity .2s}
+.hero-close:hover{opacity:1}
+.hero-close svg{width:12px;height:12px}
 
 @media(max-width:767px){
   .hero{flex-direction:column;height:auto;min-height:100dvh}
-  .hero-half{width:100%;min-height:50vh;padding:5rem 1.5rem 3rem}
+  .hero-half{width:100%!important;min-height:50vh;padding:5rem 1.5rem 3rem}
   .hero-center{position:relative;top:auto;left:auto;transform:none;width:calc(100% - 2rem);margin:-2rem auto -2rem;max-width:360px}
+  .hero-center.hiding{transform:scale(.92)}
 }
 
-/* SECTIONS */
+/* ═══ SECTIONS ═══ */
 .section{padding:clamp(4rem,10vw,7rem) clamp(1rem,4vw,3rem)}
 .section-dark{background:#0D0D1A;color:var(--men-text)}
 .section-light{background:#F8F8FA;color:#1A1A2E}
 .section-title{font-family:'Playfair Display',serif;font-size:clamp(1.75rem,3.5vw,2.75rem);font-weight:600;text-align:center;margin-bottom:.75rem;letter-spacing:-.02em}
 .section-sub{text-align:center;font-size:.9375rem;opacity:.5;max-width:480px;margin:0 auto 3rem;line-height:1.65}
 
-/* DEMO CALENDAR */
+/* ═══ DEMO ═══ */
 .demo-cal{max-width:720px;margin:0 auto;background:var(--men-surface);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.3)}
 .demo-toolbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap;gap:.75rem}
 .demo-nav{display:flex;align-items:center;gap:.5rem}
@@ -136,8 +149,6 @@ ul{list-style:none}
 .demo-event.ev-red{background:rgba(232,0,13,.15);color:#E8000D}
 .demo-note{text-align:center;font-size:.8125rem;opacity:.35;margin-top:2rem}
 .demo-cta{text-align:center;margin-top:1.5rem}
-
-/* demo modal */
 .demo-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(13,13,26,.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;visibility:hidden;transition:all .25s}
 .demo-modal-overlay.open{opacity:1;visibility:visible}
 .demo-modal{background:var(--men-surface);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:1.75rem;width:100%;max-width:340px;color:var(--men-text);transform:scale(.95);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
@@ -152,7 +163,11 @@ ul{list-style:none}
 .btn-cancel{background:rgba(255,255,255,.06);color:var(--men-text)}
 .btn-confirm{background:var(--men-accent);color:#fff}
 
-/* PLANS */
+/* ═══ PLANS ═══ */
+.period-selector{display:flex;justify-content:center;gap:4px;margin-bottom:2.5rem;background:rgba(26,26,46,.06);border-radius:var(--radius);padding:3px;max-width:520px;margin-left:auto;margin-right:auto;flex-wrap:wrap}
+.period-btn{padding:8px 16px;font-size:.75rem;font-weight:600;border-radius:8px;transition:all .2s;color:rgba(26,26,46,.45);white-space:nowrap}
+.period-btn.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.period-btn:hover:not(.active){color:#1A1A2E}
 .plans-grid{display:grid;grid-template-columns:1fr;gap:1.25rem;max-width:960px;margin:0 auto}
 @media(min-width:768px){.plans-grid{grid-template-columns:1fr 1.3fr 1fr}}
 .plan-card{background:#fff;border:1px solid #E8E8F0;border-radius:var(--radius-lg);padding:2rem;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
@@ -160,8 +175,9 @@ ul{list-style:none}
 .plan-card.featured{background:var(--men-bg);color:var(--men-text);border-color:rgba(232,0,13,.2);position:relative;box-shadow:0 12px 40px rgba(232,0,13,.12)}
 .plan-badge{position:absolute;top:-12px;right:1.5rem;background:var(--men-accent);color:#fff;font-size:.65rem;font-weight:700;padding:4px 14px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase}
 .plan-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;margin-bottom:.5rem}
-.plan-price{font-size:2rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.25rem}
+.plan-price{font-size:2rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.25rem;transition:opacity .15s}
 .plan-price small{font-size:.875rem;font-weight:400;opacity:.5}
+.plan-prefix{font-size:.875rem;font-weight:400;opacity:.5}
 .plan-features{flex:1;display:flex;flex-direction:column;gap:.5rem;margin:1.5rem 0;font-size:.8125rem;opacity:.7}
 .plan-features li{display:flex;align-items:center;gap:.5rem}
 .plan-features li::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
@@ -171,13 +187,18 @@ ul{list-style:none}
 .plan-card.featured .btn-cta{background:var(--men-accent)}
 .plan-card:not(.featured) .btn-cta{background:transparent;border:1.5px solid #1A1A2E;color:#1A1A2E}
 .plan-card:not(.featured) .btn-cta:hover{background:#1A1A2E;color:#fff}
+.plan-note{font-size:.75rem;opacity:.5;margin-top:.75rem;line-height:1.5}
+.plans-note{text-align:center;font-size:.8125rem;opacity:.4;margin-top:2rem}
 
-/* SOCIAL PROOF */
+/* ═══ TRUST / SOCIAL PROOF ═══ */
 .proof{background:var(--men-bg);color:var(--men-text)}
-.counter-row{text-align:center;margin-bottom:3.5rem}
-.counter-number{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,4.5rem);font-weight:700;letter-spacing:-.03em;line-height:1}
-.counter-number span{color:var(--men-accent)}
-.counter-label{font-size:1rem;opacity:.4;margin-top:.5rem}
+.trust-grid{display:grid;grid-template-columns:1fr;gap:2rem;max-width:900px;margin:0 auto 3.5rem}
+@media(min-width:768px){.trust-grid{grid-template-columns:repeat(3,1fr)}}
+.trust-card{text-align:center;padding:1.5rem}
+.trust-icon{width:48px;height:48px;margin:0 auto 1.25rem;color:var(--men-accent)}
+[data-theme="blush"] .trust-icon{color:var(--women-accent)}
+.trust-title{font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:600;margin-bottom:.5rem}
+.trust-text{font-size:.8125rem;opacity:.5;line-height:1.6}
 .testimonials{display:grid;grid-template-columns:1fr;gap:1.25rem;max-width:960px;margin:0 auto}
 @media(min-width:768px){.testimonials{grid-template-columns:repeat(3,1fr)}}
 .test-card{background:var(--men-surface);border:1px solid rgba(255,255,255,.05);border-radius:var(--radius-lg);padding:1.75rem;transition:transform .2s}
@@ -188,7 +209,7 @@ ul{list-style:none}
 .test-author{font-weight:600;font-size:.8125rem}
 .test-role{font-size:.75rem;opacity:.4;margin-top:2px}
 
-/* CTA FINAL */
+/* ═══ CTA FINAL ═══ */
 .cta-final{background:linear-gradient(180deg,var(--men-bg) 0%,#0D0D1A 100%);text-align:center}
 .cta-final h2{font-family:'Playfair Display',serif;font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:600;margin-bottom:2rem;letter-spacing:-.02em}
 .cta-divider{display:flex;align-items:center;gap:1rem;max-width:320px;margin:2rem auto;font-size:.8125rem;opacity:.3}
@@ -198,7 +219,19 @@ ul{list-style:none}
 .contact-link:hover{opacity:1}
 .contact-link svg{width:18px;height:18px}
 
-/* FOOTER */
+/* ═══ WHATSAPP FAB ═══ */
+.wa-fab{position:fixed;bottom:24px;right:24px;z-index:999;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(37,211,102,.4);transition:transform .2s;animation:wa-enter .5s 1.5s both ease}
+.wa-fab:hover{transform:scale(1.08)}
+.wa-fab:active{transform:scale(.95)}
+.wa-fab svg{width:24px;height:24px;color:#fff}
+.wa-fab::before{content:attr(data-tooltip);position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(26,26,46,.9);color:#fff;font-size:.75rem;font-weight:600;padding:6px 12px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.wa-fab:hover::before{opacity:1}
+.wa-fab::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid #25D366;opacity:0;animation:wa-pulse 3s ease-in-out infinite 2s}
+@keyframes wa-enter{from{opacity:0;transform:translateY(80px)}to{opacity:1;transform:translateY(0)}}
+@keyframes wa-pulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+@media(max-width:767px){.wa-fab{width:48px;height:48px;bottom:16px;right:16px}.wa-fab svg{width:22px;height:22px}}
+
+/* ═══ FOOTER ═══ */
 .site-footer{background:#0D0D1A;color:rgba(240,240,248,.35);padding:2rem clamp(1rem,4vw,3rem);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-size:.75rem;border-top:1px solid rgba(255,255,255,.04)}
 .footer-logo{display:flex;align-items:center;gap:.5rem}
 .footer-logo svg{width:20px;height:20px}
@@ -208,7 +241,7 @@ ul{list-style:none}
 .footer-credit a{transition:color .15s}
 .footer-credit a:hover{color:var(--men-accent)}
 
-/* ANIMATIONS */
+/* ═══ ANIMATIONS ═══ */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 .stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
@@ -217,14 +250,48 @@ ul{list-style:none}
 .stagger.visible>*:nth-child(2){transition-delay:.15s}
 .stagger.visible>*:nth-child(3){transition-delay:.3s}
 .stagger.visible>*:nth-child(4){transition-delay:.45s}
-.stagger.visible>*:nth-child(5){transition-delay:.6s}
-.stagger.visible>*:nth-child(6){transition-delay:.75s}
 @media(prefers-reduced-motion:reduce){.reveal,.stagger>*{opacity:1;transform:none;transition:none}}
+@media(max-width:639px){.demo-grid .dd{min-height:52px;padding:4px}.demo-event{font-size:.5rem;padding:1px 3px}}
 
-@media(max-width:639px){
-  .demo-grid .dd{min-height:52px;padding:4px}
-  .demo-event{font-size:.5rem;padding:1px 3px}
-}
+/* ═══ BLUSH THEME OVERRIDES ═══ */
+[data-theme="blush"] body{background:var(--women-bg);color:var(--women-text)}
+[data-theme="blush"] .nav.scrolled{background:rgba(253,246,249,.92)}
+[data-theme="blush"] .nav.scrolled{color:var(--women-text);box-shadow:0 1px 24px rgba(74,44,58,.08)}
+[data-theme="blush"] .section-dark{background:var(--women-surface);color:var(--women-text)}
+[data-theme="blush"] .demo-cal{background:#fff;border-color:rgba(183,132,167,.12);box-shadow:0 12px 48px rgba(74,44,58,.08)}
+[data-theme="blush"] .demo-toolbar{border-bottom-color:rgba(183,132,167,.1)}
+[data-theme="blush"] .demo-nav button{color:var(--women-text)}
+[data-theme="blush"] .demo-grid .dh{color:rgba(74,44,58,.3);border-bottom-color:rgba(183,132,167,.08)}
+[data-theme="blush"] .demo-grid .dd{border-color:rgba(183,132,167,.06);color:var(--women-text)}
+[data-theme="blush"] .demo-grid .dd:hover{background:rgba(183,132,167,.06)}
+[data-theme="blush"] .demo-grid .dd.today .dn{background:var(--women-accent)}
+[data-theme="blush"] .demo-views{background:rgba(183,132,167,.08)}
+[data-theme="blush"] .demo-view-btn{color:rgba(74,44,58,.35)}
+[data-theme="blush"] .demo-view-btn.active{background:#fff;color:var(--women-text)}
+[data-theme="blush"] .demo-modal{background:#fff;border-color:rgba(183,132,167,.15);color:var(--women-text)}
+[data-theme="blush"] .demo-modal input,[data-theme="blush"] .demo-modal select{background:var(--women-surface);border-color:rgba(183,132,167,.15);color:var(--women-text)}
+[data-theme="blush"] .demo-modal input:focus,[data-theme="blush"] .demo-modal select:focus{border-color:var(--women-accent)}
+[data-theme="blush"] .demo-modal select option{background:#fff;color:var(--women-text)}
+[data-theme="blush"] .btn-cancel{background:var(--women-surface);color:var(--women-text)}
+[data-theme="blush"] .btn-confirm{background:var(--women-accent)}
+[data-theme="blush"] .demo-modal-overlay{background:rgba(253,246,249,.7)}
+[data-theme="blush"] .proof{background:var(--women-surface)}
+[data-theme="blush"] .test-card{background:#fff;border-color:rgba(183,132,167,.1);color:var(--women-text)}
+[data-theme="blush"] .section-light{background:#fff}
+[data-theme="blush"] .plan-card.featured{background:var(--women-text);border-color:rgba(183,132,167,.2);box-shadow:0 12px 40px rgba(183,132,167,.15)}
+[data-theme="blush"] .plan-badge{background:var(--women-accent)}
+[data-theme="blush"] .plan-card.featured .plan-features li::before{background:var(--women-accent)}
+[data-theme="blush"] .plan-card.featured .btn-cta{background:var(--women-accent)}
+[data-theme="blush"] .plan-card:not(.featured) .btn-cta{border-color:var(--women-text);color:var(--women-text)}
+[data-theme="blush"] .plan-card:not(.featured) .btn-cta:hover{background:var(--women-text);color:#fff}
+[data-theme="blush"] .cta-final{background:linear-gradient(180deg,var(--women-surface) 0%,var(--women-bg) 100%)}
+[data-theme="blush"] .hero-center{background:rgba(74,44,58,.95);border-color:rgba(183,132,167,.3)}
+[data-theme="blush"] .period-selector{background:rgba(183,132,167,.08)}
+[data-theme="blush"] .period-btn{color:rgba(74,44,58,.4)}
+[data-theme="blush"] .period-btn.active{color:var(--women-text)}
+[data-theme="blush"] .site-footer{background:var(--women-surface);color:rgba(74,44,58,.35);border-top-color:rgba(183,132,167,.1)}
+[data-theme="blush"] .footer-links a:hover{color:var(--women-accent)}
+[data-theme="blush"] .footer-credit a:hover{color:var(--women-accent)}
 </style>
 </head>
 <body>
@@ -234,8 +301,17 @@ ul{list-style:none}
     <svg viewBox="0 0 38 38" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="var(--men-bg)" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span class="nav-wordmark"><span>cita</span><b>click</b></span>
   </a>
+  <div class="nav-center">
+    <div class="pill" id="theme-pill">
+      <button class="pill-opt active" data-val="onyx">Onyx</button>
+      <button class="pill-opt" data-val="blush">Blush</button>
+    </div>
+    <div class="pill hide-mobile" id="lang-pill">
+      <button class="pill-opt active" data-val="es">ES</button>
+      <button class="pill-opt" data-val="en">EN</button>
+    </div>
+  </div>
   <div class="nav-actions">
-    <button class="lang-toggle hide-mobile" id="lang-btn" aria-label="Cambiar idioma">ES</button>
     <a href="/login" class="nav-link hide-mobile" data-t="nav_login">Iniciar sesion</a>
     <a href="/register" class="btn-cta" data-t="nav_cta">Empieza gratis</a>
   </div>
@@ -266,11 +342,12 @@ ul{list-style:none}
       <div class="mini-cal mini-cal-women" id="mini-cal-women"></div>
     </div>
   </div>
-  <div class="hero-center">
+  <div class="hero-center" id="hero-center">
+    <button class="hero-close" id="hero-close" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <svg class="hero-center-logo" viewBox="0 0 38 38" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="rgba(26,26,46,.95)" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <h2 data-t="hero_headline">Tu agenda. Un clic.</h2>
     <p data-t="hero_sub">Gestiona citas, clientes y servicios desde un solo lugar</p>
-    <a href="/register" class="btn-cta btn-cta-lg" data-t="hero_cta">Empieza gratis — 7 dias</a>
+    <a href="/register" class="btn-cta btn-cta-lg" data-t="hero_cta">Empieza gratis — 21 dias</a>
     <div class="micro" data-t="hero_micro">Sin tarjeta de credito</div>
   </div>
 </section>
@@ -315,34 +392,54 @@ ul{list-style:none}
 
 <section class="section section-light" id="plans">
   <h2 class="section-title reveal" data-t="plans_title">Elige tu plan</h2>
-  <p class="section-sub reveal" style="color:#1A1A2E;" data-t="plans_sub">Todos incluyen 7 dias gratis. Sin tarjeta de credito.</p>
+  <p class="section-sub reveal" style="color:inherit;" data-t="plans_sub">Todos incluyen 21 dias gratis. Sin tarjeta de credito.</p>
+  <div class="period-selector reveal" id="period-selector">
+    <button class="period-btn active" data-period="monthly" data-t="period_monthly">Mensual</button>
+    <button class="period-btn" data-period="quarterly" data-t="period_quarterly">Trimestral -10%</button>
+    <button class="period-btn" data-period="semiannual" data-t="period_semi">Semestral -15%</button>
+    <button class="period-btn" data-period="annual" data-t="period_annual">Anual -20%</button>
+  </div>
   <div class="plans-grid stagger">
     <div class="plan-card">
       <div class="plan-name">Standard</div>
-      <div class="plan-price">$9.99 <small>/mes</small></div>
+      <div class="plan-price" id="price-standard">$7 <small>/mes</small></div>
       <ul class="plan-features"><li data-t="pf_1provider">1 prestador de servicio</li><li data-t="pf_calendar">Calendario completo</li><li data-t="pf_clients">Gestion de clientes</li><li data-t="pf_notif">Notificaciones WhatsApp + Email</li></ul>
       <a href="/register?plan=standard" class="btn-cta" data-t="plan_start">Empezar</a>
     </div>
     <div class="plan-card featured">
       <div class="plan-badge" data-t="plan_popular">MAS POPULAR</div>
       <div class="plan-name">Premium</div>
-      <div class="plan-price">$19.99 <small>/mes</small></div>
+      <div class="plan-price" id="price-premium">$13 <small>/mes</small></div>
       <ul class="plan-features"><li data-t="pf_catalog">Catalogo de servicios + QR</li><li data-t="pf_public">Link publico del negocio</li><li data-t="pf_maps">Google Maps integrado</li><li data-t="pf_currency">Conversion de moneda</li><li data-t="pf_assistant">1 asistente adicional</li></ul>
       <a href="/register?plan=premium" class="btn-cta" data-t="plan_popular_cta">Empezar — mas popular</a>
     </div>
     <div class="plan-card">
       <div class="plan-name">Salon VIP</div>
-      <div class="plan-price">$39.99 <small>/mes</small></div>
+      <div class="plan-price" id="price-vip"><span class="plan-prefix" data-t="plan_from">desde </span>$25 <small>/mes</small></div>
       <ul class="plan-features"><li data-t="pf_5providers">Hasta 5 prestadores</li><li data-t="pf_roles">Gestion de roles</li><li data-t="pf_dashboards">Dashboard por prestador</li><li data-t="pf_global">Panel de administracion global</li></ul>
       <a href="/register?plan=salon_vip" class="btn-cta" data-t="plan_start">Empezar</a>
+      <div class="plan-note" data-t="plan_vip_note">Base incluye: Admin + Asistente + 1 Prestador. Prestadores adicionales: +$5/mes c/u (max. 5)</div>
     </div>
   </div>
 </section>
 
 <section class="section proof" id="proof">
-  <div class="counter-row reveal">
-    <div class="counter-number"><span data-t="counter_prefix">mas de </span><span id="counter-val">0</span>+</div>
-    <div class="counter-label" data-t="counter_label">negocios confian en CitaClick</div>
+  <div class="trust-grid stagger">
+    <div class="trust-card">
+      <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/></svg>
+      <div class="trust-title" data-t="trust_t1">21 dias gratis</div>
+      <div class="trust-text" data-t="trust_d1">Prueba completa sin tarjeta de credito. Cancela cuando quieras.</div>
+    </div>
+    <div class="trust-card">
+      <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+      <div class="trust-title" data-t="trust_t2">Tus datos seguros</div>
+      <div class="trust-text" data-t="trust_d2">Conexion HTTPS cifrada. Tus clientes y citas siempre protegidos.</div>
+    </div>
+    <div class="trust-card">
+      <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>
+      <div class="trust-title" data-t="trust_t3">Soporte real</div>
+      <div class="trust-text" data-t="trust_d3">Escribenos por WhatsApp o email. Respondemos en menos de 24 horas.</div>
+    </div>
   </div>
   <div class="testimonials stagger">
     <div class="test-card">
@@ -382,25 +479,39 @@ ul{list-style:none}
   <div class="footer-credit">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a></div>
 </footer>
 
+<a href="https://wa.me/584145116337" target="_blank" rel="noopener" class="wa-fab" data-tooltip="Escribenos" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
 <script>
 (function(){
 var T={
-es:{nav_login:'Iniciar sesion',nav_cta:'Empieza gratis',hero_tag_men:'PARA PROFESIONALES',hero_title_men:'Agenda sin limites',hero_l1_men:'Barberias y peluquerias',hero_l2_men:'Psicologos y terapeutas',hero_l3_men:'Abogados y consultores',hero_tag_women:'PARA TU NEGOCIO',hero_title_women:'Clientes que regresan',hero_l1_women:'Salones de belleza',hero_l2_women:'Manicuristas y esteticistas',hero_l3_women:'Nutricionistas y coaches',hero_headline:'Tu agenda. Un clic.',hero_sub:'Gestiona citas, clientes y servicios desde un solo lugar',hero_cta:'Empieza gratis \u2014 7 dias',hero_micro:'Sin tarjeta de credito',demo_title:'Pruebalo ahora \u2014 sin registrarte',demo_sub:'Crea una cita de prueba y mira como funciona CitaClick',demo_month:'Mes',demo_week:'Semana',demo_day:'Dia',demo_note:'Esta es solo una demo. Registrate para guardar tus citas reales.',demo_cta_btn:'Crear mi cuenta gratis',demo_modal_title:'Nueva cita',demo_modal_name:'Nombre del cliente',demo_modal_service:'Servicio',demo_modal_time:'Hora',demo_modal_cancel:'Cancelar',demo_modal_confirm:'Confirmar',plans_title:'Elige tu plan',plans_sub:'Todos incluyen 7 dias gratis. Sin tarjeta de credito.',pf_1provider:'1 prestador de servicio',pf_calendar:'Calendario completo',pf_clients:'Gestion de clientes',pf_notif:'Notificaciones WhatsApp + Email',pf_catalog:'Catalogo de servicios + QR',pf_public:'Link publico del negocio',pf_maps:'Google Maps integrado',pf_currency:'Conversion de moneda',pf_assistant:'1 asistente adicional',pf_5providers:'Hasta 5 prestadores',pf_roles:'Gestion de roles',pf_dashboards:'Dashboard por prestador',pf_global:'Panel de administracion global',plan_start:'Empezar',plan_popular:'MAS POPULAR',plan_popular_cta:'Empezar \u2014 mas popular',counter_prefix:'mas de ',counter_label:'negocios confian en CitaClick',t1_quote:'"Mis clientes ya no llaman para confirmar. Todo es automatico."',t1_role:'Salon de belleza, Caracas',t2_quote:'"Reduje las citas perdidas un 80% en el primer mes."',t2_role:'Barberia Premium, Bogota',t3_quote:'"Mis pacientes agendan a medianoche y yo me entero en la manana."',t3_role:'Psicologa, Ciudad de Mexico',cta_headline:'\u00bfListo para ordenar tu agenda?',cta_btn:'Crear cuenta gratis',cta_or:'o contactanos',foot_plans:'Planes',foot_contact:'Contacto',foot_terms:'Terminos',foot_privacy:'Privacidad'},
-en:{nav_login:'Log in',nav_cta:'Start free',hero_tag_men:'FOR PROFESSIONALS',hero_title_men:'Schedule without limits',hero_l1_men:'Barbershops and salons',hero_l2_men:'Psychologists and therapists',hero_l3_men:'Lawyers and consultants',hero_tag_women:'FOR YOUR BUSINESS',hero_title_women:'Clients that come back',hero_l1_women:'Beauty salons',hero_l2_women:'Nail techs and estheticians',hero_l3_women:'Nutritionists and coaches',hero_headline:'Your schedule. One click.',hero_sub:'Manage appointments, clients and services from one place',hero_cta:'Start free \u2014 7 days',hero_micro:'No credit card required',demo_title:'Try it now \u2014 no signup needed',demo_sub:'Create a test appointment and see how CitaClick works',demo_month:'Month',demo_week:'Week',demo_day:'Day',demo_note:'This is just a demo. Sign up to save your real appointments.',demo_cta_btn:'Create my free account',demo_modal_title:'New appointment',demo_modal_name:'Client name',demo_modal_service:'Service',demo_modal_time:'Time',demo_modal_cancel:'Cancel',demo_modal_confirm:'Confirm',plans_title:'Choose your plan',plans_sub:'All plans include 7 free days. No credit card required.',pf_1provider:'1 service provider',pf_calendar:'Full calendar',pf_clients:'Client management',pf_notif:'WhatsApp + Email notifications',pf_catalog:'Service catalog + QR',pf_public:'Public business link',pf_maps:'Google Maps integrated',pf_currency:'Currency conversion',pf_assistant:'1 extra assistant',pf_5providers:'Up to 5 providers',pf_roles:'Role management',pf_dashboards:'Dashboard per provider',pf_global:'Global admin panel',plan_start:'Get started',plan_popular:'MOST POPULAR',plan_popular_cta:'Get started \u2014 most popular',counter_prefix:'more than ',counter_label:'businesses trust CitaClick',t1_quote:'"My clients no longer call to confirm. Everything is automatic."',t1_role:'Beauty salon, Caracas',t2_quote:'"I reduced missed appointments by 80% in the first month."',t2_role:'Premium Barbershop, Bogota',t3_quote:'"My patients book at midnight and I find out in the morning."',t3_role:'Psychologist, Mexico City',cta_headline:'Ready to organize your schedule?',cta_btn:'Create free account',cta_or:'or contact us',foot_plans:'Plans',foot_contact:'Contact',foot_terms:'Terms',foot_privacy:'Privacy'}
+es:{nav_login:'Iniciar sesion',nav_cta:'Empieza gratis',hero_tag_men:'PARA PROFESIONALES',hero_title_men:'Agenda sin limites',hero_l1_men:'Barberias y peluquerias',hero_l2_men:'Psicologos y terapeutas',hero_l3_men:'Abogados y consultores',hero_tag_women:'PARA TU NEGOCIO',hero_title_women:'Clientes que regresan',hero_l1_women:'Salones de belleza',hero_l2_women:'Manicuristas y esteticistas',hero_l3_women:'Nutricionistas y coaches',hero_headline:'Tu agenda. Un clic.',hero_sub:'Gestiona citas, clientes y servicios desde un solo lugar',hero_cta:'Empieza gratis \u2014 21 dias',hero_micro:'Sin tarjeta de credito',demo_title:'Pruebalo ahora \u2014 sin registrarte',demo_sub:'Crea una cita de prueba y mira como funciona CitaClick',demo_month:'Mes',demo_week:'Semana',demo_day:'Dia',demo_note:'Esta es solo una demo. Registrate para guardar tus citas reales.',demo_cta_btn:'Crear mi cuenta gratis',demo_modal_title:'Nueva cita',demo_modal_name:'Nombre del cliente',demo_modal_service:'Servicio',demo_modal_time:'Hora',demo_modal_cancel:'Cancelar',demo_modal_confirm:'Confirmar',plans_title:'Elige tu plan',plans_sub:'Todos incluyen 21 dias gratis. Sin tarjeta de credito.',period_monthly:'Mensual',period_quarterly:'Trimestral -10%',period_semi:'Semestral -15%',period_annual:'Anual -20%',pf_1provider:'1 prestador de servicio',pf_calendar:'Calendario completo',pf_clients:'Gestion de clientes',pf_notif:'Notificaciones WhatsApp + Email',pf_catalog:'Catalogo de servicios + QR',pf_public:'Link publico del negocio',pf_maps:'Google Maps integrado',pf_currency:'Conversion de moneda',pf_assistant:'1 asistente adicional',pf_5providers:'Hasta 5 prestadores',pf_roles:'Gestion de roles',pf_dashboards:'Dashboard por prestador',pf_global:'Panel de administracion global',plan_start:'Empezar',plan_popular:'MAS POPULAR',plan_popular_cta:'Empezar \u2014 mas popular',plan_from:'desde ',plan_vip_note:'Base incluye: Admin + Asistente + 1 Prestador. Prestadores adicionales: +$5/mes c/u (max. 5)',trust_t1:'21 dias gratis',trust_d1:'Prueba completa sin tarjeta de credito. Cancela cuando quieras.',trust_t2:'Tus datos seguros',trust_d2:'Conexion HTTPS cifrada. Tus clientes y citas siempre protegidos.',trust_t3:'Soporte real',trust_d3:'Escribenos por WhatsApp o email. Respondemos en menos de 24 horas.',t1_quote:'"Mis clientes ya no llaman para confirmar. Todo es automatico."',t1_role:'Salon de belleza, Caracas',t2_quote:'"Reduje las citas perdidas un 80% en el primer mes."',t2_role:'Barberia Premium, Bogota',t3_quote:'"Mis pacientes agendan a medianoche y yo me entero en la manana."',t3_role:'Psicologa, Ciudad de Mexico',cta_headline:'\u00bfListo para ordenar tu agenda?',cta_btn:'Crear cuenta gratis',cta_or:'o contactanos',foot_plans:'Planes',foot_contact:'Contacto',foot_terms:'Terminos',foot_privacy:'Privacidad'},
+en:{nav_login:'Log in',nav_cta:'Start free',hero_tag_men:'FOR PROFESSIONALS',hero_title_men:'Schedule without limits',hero_l1_men:'Barbershops and salons',hero_l2_men:'Psychologists and therapists',hero_l3_men:'Lawyers and consultants',hero_tag_women:'FOR YOUR BUSINESS',hero_title_women:'Clients that come back',hero_l1_women:'Beauty salons',hero_l2_women:'Nail techs and estheticians',hero_l3_women:'Nutritionists and coaches',hero_headline:'Your schedule. One click.',hero_sub:'Manage appointments, clients and services from one place',hero_cta:'Start free \u2014 21 days',hero_micro:'No credit card required',demo_title:'Try it now \u2014 no signup needed',demo_sub:'Create a test appointment and see how CitaClick works',demo_month:'Month',demo_week:'Week',demo_day:'Day',demo_note:'This is just a demo. Sign up to save your real appointments.',demo_cta_btn:'Create my free account',demo_modal_title:'New appointment',demo_modal_name:'Client name',demo_modal_service:'Service',demo_modal_time:'Time',demo_modal_cancel:'Cancel',demo_modal_confirm:'Confirm',plans_title:'Choose your plan',plans_sub:'All plans include 21 free days. No credit card required.',period_monthly:'Monthly',period_quarterly:'Quarterly -10%',period_semi:'Semiannual -15%',period_annual:'Annual -20%',pf_1provider:'1 service provider',pf_calendar:'Full calendar',pf_clients:'Client management',pf_notif:'WhatsApp + Email notifications',pf_catalog:'Service catalog + QR',pf_public:'Public business link',pf_maps:'Google Maps integrated',pf_currency:'Currency conversion',pf_assistant:'1 extra assistant',pf_5providers:'Up to 5 providers',pf_roles:'Role management',pf_dashboards:'Dashboard per provider',pf_global:'Global admin panel',plan_start:'Get started',plan_popular:'MOST POPULAR',plan_popular_cta:'Get started \u2014 most popular',plan_from:'from ',plan_vip_note:'Base includes: Admin + Assistant + 1 Provider. Additional providers: +$5/mo each (max. 5)',trust_t1:'21 free days',trust_d1:'Full trial with no credit card. Cancel anytime.',trust_t2:'Your data is safe',trust_d2:'HTTPS encrypted connection. Your clients and appointments always protected.',trust_t3:'Real support',trust_d3:'Write us on WhatsApp or email. We respond in less than 24 hours.',t1_quote:'"My clients no longer call to confirm. Everything is automatic."',t1_role:'Beauty salon, Caracas',t2_quote:'"I reduced missed appointments by 80% in the first month."',t2_role:'Premium Barbershop, Bogota',t3_quote:'"My patients book at midnight and I find out in the morning."',t3_role:'Psychologist, Mexico City',cta_headline:'Ready to organize your schedule?',cta_btn:'Create free account',cta_or:'or contact us',foot_plans:'Plans',foot_contact:'Contact',foot_terms:'Terms',foot_privacy:'Privacy'}
 };
-var lang=localStorage.getItem('cc_landing_lang')||(navigator.language||'es').slice(0,2);
+var lang=localStorage.getItem('citaclick-lang')||(navigator.language||'es').slice(0,2);
 if(lang!=='en')lang='es';
+var theme=localStorage.getItem('citaclick-theme')||'onyx';
 
 function applyLang(){
   document.querySelectorAll('[data-t]').forEach(function(el){var k=el.getAttribute('data-t');if(T[lang]&&T[lang][k])el.textContent=T[lang][k];});
-  document.getElementById('lang-btn').textContent=lang.toUpperCase();
-  localStorage.setItem('cc_landing_lang',lang);
-  buildMiniCals();renderDemoMonth();
+  localStorage.setItem('citaclick-lang',lang);
+  document.querySelectorAll('#lang-pill .pill-opt').forEach(function(b){b.classList.toggle('active',b.dataset.val===lang);});
+  buildMiniCals();renderDemoMonth();updatePrices();
 }
-document.getElementById('lang-btn').addEventListener('click',function(){lang=lang==='es'?'en':'es';applyLang();});
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',theme);
+  localStorage.setItem('citaclick-theme',theme);
+  document.querySelectorAll('#theme-pill .pill-opt').forEach(function(b){b.classList.toggle('active',b.dataset.val===theme);});
+}
+document.getElementById('theme-pill').addEventListener('click',function(e){var b=e.target.closest('.pill-opt');if(!b)return;theme=b.dataset.val;applyTheme();});
+document.getElementById('lang-pill').addEventListener('click',function(e){var b=e.target.closest('.pill-opt');if(!b)return;lang=b.dataset.val;applyLang();});
 
 /* NAV SCROLL */
 var nav=document.getElementById('nav');
+var heroBanner=document.getElementById('hero-center');
+var bannerClosed=false;
+var bannerScrollHidden=false;
 function onScroll(){
   var sy=window.scrollY;
   nav.classList.toggle('scrolled',sy>80);
@@ -411,8 +522,20 @@ function onScroll(){
     nav.classList.toggle('over-light',overLight);
     nav.classList.toggle('over-dark',!overLight);
   }else{nav.classList.remove('over-light');nav.classList.add('over-dark');}
+  if(!bannerClosed){
+    if(sy>200&&!bannerScrollHidden){bannerScrollHidden=true;heroBanner.classList.add('hiding');}
+    else if(sy<50&&bannerScrollHidden){bannerScrollHidden=false;heroBanner.classList.remove('hiding');}
+  }
 }
-window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+window.addEventListener('scroll',onScroll,{passive:true});
+
+/* HERO BANNER CLOSE */
+if(sessionStorage.getItem('hero-banner-closed')){heroBanner.classList.add('hidden-banner');bannerClosed=true;}
+document.getElementById('hero-close').addEventListener('click',function(){
+  bannerClosed=true;heroBanner.classList.add('hiding');
+  sessionStorage.setItem('hero-banner-closed','true');
+  setTimeout(function(){heroBanner.classList.add('hidden-banner');},260);
+});
 
 /* MINI CALENDARS */
 function buildMiniCals(){
@@ -438,8 +561,7 @@ function buildOneMiniCal(id,mn,y,days,first,td,dh,events){
     var cell=document.createElement('td');if(d===td)cell.className='today';
     var dn=document.createElement('div');dn.className='dn';dn.textContent=d;cell.appendChild(dn);
     if(events[d]){var ev=document.createElement('div');ev.className='mini-cal-event';ev.textContent=events[d];cell.appendChild(ev);}
-    tr.appendChild(cell);
-    if((first-1+d)%7===0&&d<days){tbl.appendChild(tr);tr=document.createElement('tr');}
+    tr.appendChild(cell);if((first-1+d)%7===0&&d<days){tbl.appendChild(tr);tr=document.createElement('tr');}
   }
   tbl.appendChild(tr);el.appendChild(tbl);
 }
@@ -488,20 +610,38 @@ document.getElementById('dm-confirm').addEventListener('click',function(){
 document.getElementById('demo-prev').addEventListener('click',function(){demoCurrent.setMonth(demoCurrent.getMonth()-1);renderDemoMonth();});
 document.getElementById('demo-next').addEventListener('click',function(){demoCurrent.setMonth(demoCurrent.getMonth()+1);renderDemoMonth();});
 
+/* PRICING */
+var basePrices={standard:7,premium:13,vip:25};
+var discounts={monthly:1,quarterly:.9,semiannual:.85,annual:.8};
+var currentPeriod='monthly';
+document.getElementById('period-selector').addEventListener('click',function(e){
+  var b=e.target.closest('.period-btn');if(!b)return;
+  currentPeriod=b.dataset.period;
+  document.querySelectorAll('.period-btn').forEach(function(p){p.classList.toggle('active',p.dataset.period===currentPeriod);});
+  updatePrices();
+});
+function updatePrices(){
+  var d=discounts[currentPeriod];
+  var prefix=lang==='en'?T.en.plan_from:T.es.plan_from;
+  var perMonth=lang==='en'?'/mo':'/mes';
+  document.getElementById('price-standard').textContent='$'+(basePrices.standard*d).toFixed(2).replace(/\.00$/,'');
+  document.getElementById('price-standard').insertAdjacentHTML('beforeend',' <small>'+perMonth+'</small>');
+  document.getElementById('price-premium').textContent='$'+(basePrices.premium*d).toFixed(2).replace(/\.00$/,'');
+  document.getElementById('price-premium').insertAdjacentHTML('beforeend',' <small>'+perMonth+'</small>');
+  var vipEl=document.getElementById('price-vip');
+  vipEl.textContent='';
+  var sp=document.createElement('span');sp.className='plan-prefix';sp.textContent=prefix;vipEl.appendChild(sp);
+  vipEl.appendChild(document.createTextNode('$'+(basePrices.vip*d).toFixed(2).replace(/\.00$/,'')));
+  var sm=document.createElement('small');sm.textContent=' '+perMonth;vipEl.appendChild(sm);
+}
+
 /* INTERSECTION OBSERVER */
 if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){
   var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.15});
   document.querySelectorAll('.reveal,.stagger').forEach(function(el){obs.observe(el);});
 }else{document.querySelectorAll('.reveal,.stagger').forEach(function(el){el.classList.add('visible');});}
 
-/* COUNTER */
-var counterDone=false;
-new IntersectionObserver(function(entries){entries.forEach(function(e){
-  if(e.isIntersecting&&!counterDone){counterDone=true;var el=document.getElementById('counter-val');var target=500,current=0,step=Math.ceil(target/60);
-  var iv=setInterval(function(){current+=step;if(current>=target){current=target;clearInterval(iv);}el.textContent=current;},16);}
-});},{threshold:.3}).observe(document.getElementById('counter-val'));
-
-applyLang();
+applyTheme();applyLang();onScroll();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/service-worker.js').catch(function(){});
 })();
 </script>
