@@ -177,28 +177,28 @@ citaclick/
 - Mobile First — diseñado para pantallas de 375px hacia arriba
 - Sin emojis en ninguna interfaz de la aplicación
 - Diseño profesional, limpio, con carácter propio — NO genérico
-- Tipografía distintiva, no usar Inter, Roboto, Arial ni fonts genéricas
-- Modo claro y modo oscuro (el usuario activa desde su perfil)
+- Tipografía: DM Sans (body) + Playfair Display (display/titulos)
+- Modo claro y modo oscuro en ambos temas
 
-### Tema Caballeros
-```css
---color-primary: #1A1A2E;
---color-secondary: #16213E;
---color-accent: #0F3460;
---color-highlight: #E94560;
---color-surface: #F5F5F5;
---color-text: #1A1A2E;
-```
+### Identidad Visual (aprobada)
 
-### Tema Damas
-```css
---color-primary: #C9A0DC;
---color-secondary: #F2B5D4;
---color-accent: #E8A0BF;
---color-highlight: #B784A7;
---color-surface: #FDF6F9;
---color-text: #4A2C3A;
-```
+Logo: calendario con checkmark integrado (SVG viewBox 0 0 38 38)
+Wordmark: "cita" (font-weight 500) + "click" (font-weight 700 bold)
+Tipografia wordmark: system-ui, sans-serif — letter-spacing: -0.5px
+
+### Colores Oficiales por Tema
+
+| Tema | Accent | Fondo | Texto |
+|---|---|---|---|
+| Caballeros claro | #E94560 | #F8F8FA | #1A1A2E |
+| Caballeros oscuro | #E94560 | #1A1A2E | #F0F0F8 |
+| Damas claro | #B784A7 | #FDF6F9 | #4A2C3A |
+| Damas oscuro | #C9A0DC | #1A0F18 | #F5EEF8 |
+
+### Iconos PWA y Tiendas
+- Fondo solido #E94560 con icono en blanco (#FFFFFF) centrado, padding 15%
+- Icono maskable: safe zone 10%
+- Tamaños: 96, 128, 152, 180, 192, 512, 1024px
 
 ### Quién elige el tema
 - El **negocio** elige su tema al registrarse

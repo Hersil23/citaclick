@@ -1,0 +1,575 @@
+<div class="auth-page">
+  <div class="auth-container" style="max-width:480px;">
+    <div class="auth-logo">
+      <span class="auth-logo-text text-display">cita<span class="auth-logo-accent">click</span></span>
+    </div>
+
+    <div class="register-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:25%;"></div>
+      </div>
+      <span class="progress-label text-sm text-muted" id="progress-label">Paso 1 de 4</span>
+    </div>
+
+    <form class="auth-form" id="register-form" novalidate>
+
+      <div class="register-step active" data-step="1">
+        <h3 class="register-step-title" data-i18n="auth.business_type">Tipo de negocio</h3>
+        <div class="business-type-grid" id="business-types">
+          <button type="button" class="business-type-card" data-type="barbershop">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18"/><path d="M5 3c3 0 3 2 6 2s3-2 6-2"/><path d="M5 9c3 0 3 2 6 2s3-2 6-2"/><path d="M5 15c3 0 3 2 6 2s3-2 6-2"/><path d="M17 3v18"/></svg>
+            <span data-i18n="business_types.barbershop">Barberia</span>
+          </button>
+          <button type="button" class="business-type-card" data-type="salon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10"/><path d="M8 14s1.5 2 4 2"/><path d="M9 9h.01"/><circle cx="12" cy="12" r="3"/><path d="M22 12c0-5.5-4.5-10-10-10"/></svg>
+            <span data-i18n="business_types.salon">Peluqueria</span>
+          </button>
+          <button type="button" class="business-type-card" data-type="nails">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-2.5 7-6.5 7-11a7 7 0 0 0-14 0c0 4.5 3 8.5 7 11z"/><circle cx="12" cy="10" r="2"/></svg>
+            <span data-i18n="business_types.nails">Manicure / Pedicure</span>
+          </button>
+          <button type="button" class="business-type-card" data-type="psychology">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5 7.5V20h6v-2.5c2.9-1.2 5-4.1 5-7.5a8 8 0 0 0-8-8z"/><path d="M10 20v2h4v-2"/></svg>
+            <span data-i18n="business_types.psychology">Psicologia</span>
+          </button>
+          <button type="button" class="business-type-card" data-type="legal">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M12 2v6"/><path d="M2 12h6l4-6 4 6h6"/><path d="M6 12v8"/><path d="M18 12v8"/></svg>
+            <span data-i18n="business_types.legal">Servicios legales</span>
+          </button>
+          <button type="button" class="business-type-card" data-type="other">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            <span data-i18n="business_types.other">Otro</span>
+          </button>
+        </div>
+        <input type="hidden" id="reg-business-type" value="">
+      </div>
+
+      <div class="register-step" data-step="2">
+        <h3 class="register-step-title" data-i18n="auth.register_title">Registra tu negocio</h3>
+        <div class="form-group">
+          <label class="form-label" for="reg-business-name" data-i18n="auth.business_name">Nombre del negocio</label>
+          <input class="form-input" type="text" id="reg-business-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-slug" data-i18n="auth.business_slug">URL personalizada</label>
+          <div class="slug-preview">
+            <span class="text-sm text-muted">citaclick.net/negocio/</span>
+            <input class="form-input" type="text" id="reg-slug" style="border-left:none;border-radius:0 var(--radius-md) var(--radius-md) 0;" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-email" data-i18n="auth.email">Correo electronico</label>
+          <input class="form-input" type="email" id="reg-email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password" data-i18n="auth.password">Contrasena</label>
+          <input class="form-input" type="password" id="reg-password" required autocomplete="new-password" minlength="8">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password-confirm" data-i18n="auth.confirm_password">Confirmar contrasena</label>
+          <input class="form-input" type="password" id="reg-password-confirm" required autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="register-step" data-step="3">
+        <h3 class="register-step-title" data-i18n="auth.select_theme">Elige tu tema visual</h3>
+        <div class="theme-selector">
+          <button type="button" class="theme-card" data-theme-option="caballeros">
+            <div class="theme-preview" data-theme="caballeros">
+              <div class="theme-preview-header" style="background:#1A1A2E;"></div>
+              <div class="theme-preview-body" style="background:#F5F5F5;">
+                <div class="theme-preview-accent" style="background:#E94560;"></div>
+                <div class="theme-preview-line" style="background:#D8D8E4;"></div>
+                <div class="theme-preview-line short" style="background:#D8D8E4;"></div>
+              </div>
+            </div>
+            <span class="theme-label" data-i18n="auth.theme_caballeros">Caballeros</span>
+          </button>
+          <button type="button" class="theme-card" data-theme-option="damas">
+            <div class="theme-preview" data-theme="damas">
+              <div class="theme-preview-header" style="background:#B784A7;"></div>
+              <div class="theme-preview-body" style="background:#FDF6F9;">
+                <div class="theme-preview-accent" style="background:#C9A0DC;"></div>
+                <div class="theme-preview-line" style="background:#E8D0DC;"></div>
+                <div class="theme-preview-line short" style="background:#E8D0DC;"></div>
+              </div>
+            </div>
+            <span class="theme-label" data-i18n="auth.theme_damas">Damas</span>
+          </button>
+        </div>
+        <input type="hidden" id="reg-theme" value="">
+      </div>
+
+      <div class="register-step" data-step="4">
+        <h3 class="register-step-title" data-i18n="auth.select_plan">Selecciona tu plan</h3>
+        <div class="plan-selector">
+          <button type="button" class="plan-card" data-plan="standard">
+            <div class="plan-header">
+              <span class="plan-name" data-i18n="plans.standard">Standard</span>
+              <span class="plan-price">$9.99<small>/ <span data-i18n="plans.month">mes</span></small></span>
+            </div>
+            <ul class="plan-features">
+              <li data-i18n="plans.features.single_provider">1 prestador de servicio</li>
+              <li data-i18n="plans.features.calendar_views">Calendario (mes, semana, dia)</li>
+              <li data-i18n="plans.features.client_management">Gestion de clientes</li>
+              <li data-i18n="plans.features.schedule_config">Configuracion de horarios</li>
+              <li data-i18n="plans.features.whatsapp_email">Notificaciones WhatsApp + Email</li>
+              <li data-i18n="plans.features.cancel_reschedule">Cancelacion y reprogramacion</li>
+            </ul>
+          </button>
+          <button type="button" class="plan-card recommended" data-plan="premium">
+            <div class="plan-badge">Recomendado</div>
+            <div class="plan-header">
+              <span class="plan-name" data-i18n="plans.premium">Premium</span>
+              <span class="plan-price">$19.99<small>/ <span data-i18n="plans.month">mes</span></small></span>
+            </div>
+            <ul class="plan-features">
+              <li data-i18n="plans.features.service_catalog">Catalogo de servicios</li>
+              <li data-i18n="plans.features.public_link">Link publico del negocio</li>
+              <li data-i18n="plans.features.qr_code">QR descargable</li>
+              <li data-i18n="plans.features.extra_assistant">1 asistente adicional</li>
+              <li data-i18n="plans.features.google_maps">Enlace a Google Maps</li>
+              <li data-i18n="plans.features.currency_conversion">Conversion de moneda</li>
+              <li data-i18n="plans.features.public_profile">Perfil publico personalizado</li>
+            </ul>
+          </button>
+          <button type="button" class="plan-card" data-plan="salon_vip">
+            <div class="plan-header">
+              <span class="plan-name" data-i18n="plans.salon_vip">Salon VIP</span>
+              <span class="plan-price">$39.99<small>/ <span data-i18n="plans.month">mes</span></small></span>
+            </div>
+            <ul class="plan-features">
+              <li data-i18n="plans.features.up_to_5_providers">Hasta 5 prestadores</li>
+              <li data-i18n="plans.features.role_management">Gestion de roles</li>
+              <li data-i18n="plans.features.individual_dashboards">Dashboard por prestador</li>
+              <li data-i18n="plans.features.provider_schedules">Horarios por prestador</li>
+              <li data-i18n="plans.features.global_admin">Panel de administracion global</li>
+            </ul>
+          </button>
+        </div>
+        <input type="hidden" id="reg-plan" value="">
+        <p class="text-sm text-muted text-center mt-4" data-i18n="plans.trial">Prueba gratuita de 7 dias</p>
+      </div>
+
+      <div id="register-error" class="form-error" style="display:none;text-align:center;margin:var(--space-3) 0;"></div>
+
+      <div class="register-nav">
+        <button type="button" class="btn btn-secondary" id="btn-prev" style="display:none;" data-i18n="auth.previous">Anterior</button>
+        <button type="button" class="btn btn-primary" id="btn-next" data-i18n="auth.next">Siguiente</button>
+      </div>
+    </form>
+
+    <p class="auth-switch text-sm text-center mt-6">
+      <span data-i18n="auth.has_account">Ya tienes cuenta?</span>
+      <a href="/login" data-link style="color:var(--color-highlight);font-weight:var(--weight-semibold);" data-i18n="auth.login">Iniciar sesion</a>
+    </p>
+  </div>
+
+  <footer class="site-footer">
+    Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a>
+  </footer>
+</div>
+
+<style>
+  .register-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: var(--color-border-light);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background-color: var(--color-highlight);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-base);
+  }
+
+  .register-step {
+    display: none;
+  }
+
+  .register-step.active {
+    display: block;
+  }
+
+  .register-step-title {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-5);
+    text-align: center;
+  }
+
+  .business-type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .business-type-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border: 2px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .business-type-card:hover {
+    border-color: var(--color-highlight);
+    color: var(--color-text);
+  }
+
+  .business-type-card.selected {
+    border-color: var(--color-highlight);
+    background-color: var(--color-highlight);
+    color: var(--color-text-inverse);
+  }
+
+  .business-type-card.selected svg {
+    stroke: var(--color-text-inverse);
+  }
+
+  .slug-preview {
+    display: flex;
+    align-items: center;
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-md);
+    padding-left: var(--space-3);
+  }
+
+  .slug-preview .form-input {
+    border: none;
+    background: var(--color-input-bg);
+  }
+
+  .theme-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .theme-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 2px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .theme-card:hover,
+  .theme-card.selected {
+    border-color: var(--color-highlight);
+  }
+
+  .theme-card.selected {
+    box-shadow: 0 0 0 2px var(--color-highlight);
+  }
+
+  .theme-preview {
+    width: 100%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .theme-preview-header {
+    height: 24px;
+  }
+
+  .theme-preview-body {
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-height: 60px;
+  }
+
+  .theme-preview-accent {
+    width: 40%;
+    height: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .theme-preview-line {
+    width: 80%;
+    height: 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .theme-preview-line.short {
+    width: 50%;
+  }
+
+  .theme-label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+
+  .plan-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .plan-card {
+    text-align: left;
+    padding: var(--space-4);
+    border: 2px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+  }
+
+  .plan-card:hover,
+  .plan-card.selected {
+    border-color: var(--color-highlight);
+  }
+
+  .plan-card.selected {
+    box-shadow: 0 0 0 2px var(--color-highlight);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -10px;
+    right: var(--space-4);
+    background: var(--color-highlight);
+    color: var(--color-text-inverse);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+  }
+
+  .plan-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+  }
+
+  .plan-name {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+  }
+
+  .plan-price {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-highlight);
+  }
+
+  .plan-price small {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-regular);
+    color: var(--color-text-muted);
+  }
+
+  .plan-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .plan-features li {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    padding-left: var(--space-5);
+    position: relative;
+  }
+
+  .plan-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    background: var(--color-success);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  }
+
+  .register-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-5);
+    gap: var(--space-3);
+  }
+
+  .register-nav .btn {
+    flex: 1;
+  }
+
+  @media (min-width: 640px) {
+    .business-type-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    let currentStep = 1;
+    const totalSteps = 4;
+    const form = document.getElementById('register-form');
+    const errorEl = document.getElementById('register-error');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+
+    function showStep(step) {
+      document.querySelectorAll('.register-step').forEach(s => s.classList.remove('active'));
+      const target = document.querySelector('[data-step="' + step + '"]');
+      if (target) target.classList.add('active');
+
+      progressFill.style.width = ((step / totalSteps) * 100) + '%';
+      progressLabel.textContent = i18n.t('auth.step', { current: step, total: totalSteps });
+
+      btnPrev.style.display = step > 1 ? '' : 'none';
+
+      if (step === totalSteps) {
+        btnNext.textContent = i18n.t('auth.finish');
+      } else {
+        btnNext.textContent = i18n.t('auth.next');
+      }
+
+      errorEl.style.display = 'none';
+    }
+
+    function validateStep(step) {
+      switch (step) {
+        case 1:
+          return document.getElementById('reg-business-type').value !== '';
+        case 2: {
+          const name = document.getElementById('reg-business-name').value.trim();
+          const slug = document.getElementById('reg-slug').value.trim();
+          const email = document.getElementById('reg-email').value.trim();
+          const pass = document.getElementById('reg-password').value;
+          const passConfirm = document.getElementById('reg-password-confirm').value;
+          if (!name || !slug || !email || !pass) return false;
+          if (pass.length < 8) {
+            errorEl.textContent = 'La contrasena debe tener al menos 8 caracteres';
+            errorEl.style.display = 'block';
+            return false;
+          }
+          if (pass !== passConfirm) {
+            errorEl.textContent = 'Las contrasenas no coinciden';
+            errorEl.style.display = 'block';
+            return false;
+          }
+          return true;
+        }
+        case 3:
+          return document.getElementById('reg-theme').value !== '';
+        case 4:
+          return document.getElementById('reg-plan').value !== '';
+        default:
+          return true;
+      }
+    }
+
+    document.getElementById('business-types').addEventListener('click', (e) => {
+      const card = e.target.closest('.business-type-card');
+      if (!card) return;
+      document.querySelectorAll('.business-type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      document.getElementById('reg-business-type').value = card.dataset.type;
+    });
+
+    document.getElementById('reg-business-name').addEventListener('input', (e) => {
+      document.getElementById('reg-slug').value = slugify(e.target.value);
+    });
+
+    document.querySelectorAll('.theme-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        document.getElementById('reg-theme').value = card.dataset.themeOption;
+      });
+    });
+
+    document.querySelectorAll('.plan-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        document.getElementById('reg-plan').value = card.dataset.plan;
+      });
+    });
+
+    btnNext.addEventListener('click', async () => {
+      if (!validateStep(currentStep)) {
+        if (errorEl.style.display === 'none') {
+          errorEl.textContent = i18n.t('common.required_field');
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        btnNext.disabled = true;
+        btnNext.textContent = i18n.t('common.loading');
+
+        const data = {
+          business_type: document.getElementById('reg-business-type').value,
+          business_name: document.getElementById('reg-business-name').value.trim(),
+          slug: document.getElementById('reg-slug').value.trim(),
+          email: document.getElementById('reg-email').value.trim(),
+          password: document.getElementById('reg-password').value,
+          theme: document.getElementById('reg-theme').value,
+          plan: document.getElementById('reg-plan').value,
+        };
+
+        const result = await Auth.register(data);
+
+        if (result.success) {
+          Router.navigate('/dashboard');
+        } else {
+          errorEl.textContent = result.message || i18n.t('errors.server');
+          errorEl.style.display = 'block';
+          btnNext.disabled = false;
+          btnNext.textContent = i18n.t('auth.finish');
+        }
+      }
+    });
+
+    btnPrev.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    showStep(1);
+  })();
+</script>
