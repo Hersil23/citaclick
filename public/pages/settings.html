@@ -1,0 +1,221 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="nav.settings">Configuracion</h2>
+</div>
+
+<div class="settings-tabs">
+  <button class="settings-tab active" data-tab="profile" data-i18n="settings.profile">Perfil</button>
+  <button class="settings-tab" data-tab="appearance" data-i18n="settings.appearance">Apariencia</button>
+  <button class="settings-tab" data-tab="schedules" data-i18n="settings.schedules">Horarios</button>
+  <button class="settings-tab" data-tab="notifications" data-i18n="settings.notifications">Notificaciones</button>
+  <button class="settings-tab" data-tab="plan" data-i18n="settings.plan">Plan</button>
+  <button class="settings-tab" data-tab="currency" data-i18n="settings.currency">Moneda</button>
+</div>
+
+<div class="settings-panel active" id="tab-profile">
+  <div class="card">
+    <form id="profile-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.logo">Logo</label>
+        <input class="form-input" type="file" id="setting-logo" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="auth.business_name">Nombre del negocio</label>
+        <input class="form-input" type="text" id="setting-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.description">Descripcion</label>
+        <textarea class="form-input" id="setting-description" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.address">Direccion</label>
+        <input class="form-input" type="text" id="setting-address">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.phone">Telefono</label>
+        <input class="form-input" type="tel" id="setting-phone">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.google_maps">Enlace Google Maps</label>
+        <input class="form-input" type="url" id="setting-maps">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.instagram">Instagram</label>
+        <input class="form-input" type="text" id="setting-instagram" placeholder="@usuario">
+      </div>
+      <div class="form-group">
+        <label class="form-label" data-i18n="settings.facebook">Facebook</label>
+        <input class="form-input" type="url" id="setting-facebook">
+      </div>
+      <button type="submit" class="btn btn-primary" data-i18n="common.save">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<div class="settings-panel" id="tab-appearance">
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label" data-i18n="settings.theme">Tema</label>
+      <div class="flex gap-4 mt-2">
+        <button class="btn btn-secondary" id="btn-theme-cab" onclick="App.setTheme('caballeros')" data-i18n="auth.theme_caballeros">Caballeros</button>
+        <button class="btn btn-secondary" id="btn-theme-dam" onclick="App.setTheme('damas')" data-i18n="auth.theme_damas">Damas</button>
+      </div>
+    </div>
+    <div class="form-group mt-4">
+      <label class="form-label" data-i18n="settings.dark_mode">Modo oscuro</label>
+      <div class="form-check mt-2">
+        <input type="checkbox" id="setting-darkmode" onchange="App.setMode(this.checked ? 'dark' : 'light')">
+        <label for="setting-darkmode" data-i18n="settings.dark_mode">Modo oscuro</label>
+      </div>
+    </div>
+    <div class="form-group mt-4">
+      <label class="form-label" data-i18n="settings.language">Idioma</label>
+      <select class="form-input" id="setting-lang" onchange="i18n.setLocale(this.value)" style="max-width:200px;">
+        <option value="es">Espanol</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="settings-panel" id="tab-schedules">
+  <div class="card">
+    <h3 class="card-title mb-4" data-i18n="settings.working_hours">Horario de atencion</h3>
+    <div id="schedule-form"></div>
+    <button class="btn btn-primary mt-4" id="btn-save-schedule" data-i18n="common.save">Guardar</button>
+  </div>
+</div>
+
+<div class="settings-panel" id="tab-notifications">
+  <div class="card">
+    <div class="form-group">
+      <div class="form-check">
+        <input type="checkbox" id="setting-whatsapp-enabled" checked>
+        <label for="setting-whatsapp-enabled" data-i18n="settings.whatsapp_notifications">Notificaciones por WhatsApp</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="settings.whatsapp_number">Numero de WhatsApp</label>
+      <input class="form-input" type="tel" id="setting-whatsapp-num" style="max-width:300px;">
+    </div>
+    <div class="form-group mt-4">
+      <div class="form-check">
+        <input type="checkbox" id="setting-email-enabled" checked>
+        <label for="setting-email-enabled" data-i18n="settings.email_notifications">Notificaciones por correo</label>
+      </div>
+    </div>
+    <button class="btn btn-primary mt-4" data-i18n="common.save">Guardar</button>
+  </div>
+</div>
+
+<div class="settings-panel" id="tab-plan">
+  <div class="card">
+    <h3 class="card-title mb-4" data-i18n="settings.current_plan">Plan actual</h3>
+    <div id="current-plan-info"></div>
+  </div>
+</div>
+
+<div class="settings-panel" id="tab-currency">
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label" data-i18n="settings.local_currency">Moneda local</label>
+      <input class="form-input" type="text" id="setting-currency" placeholder="VES, COP, MXN..." style="max-width:200px;">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="settings.price_mode">Modo de precios</label>
+      <select class="form-input" id="setting-price-mode" style="max-width:250px;">
+        <option value="usd" data-i18n="settings.price_usd">Solo USD</option>
+        <option value="local" data-i18n="settings.price_local">Solo moneda local</option>
+        <option value="both" data-i18n="settings.price_both">Ambas</option>
+      </select>
+    </div>
+    <button class="btn btn-primary mt-4" data-i18n="common.save">Guardar</button>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a>
+</footer>
+
+<style>
+  .settings-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--color-surface-sunken);
+    border-radius: var(--radius-lg);
+    padding: 3px;
+    margin-bottom: var(--space-6);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-tab {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    border-radius: calc(var(--radius-lg) - 3px);
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .settings-tab:hover { color: var(--color-text); }
+
+  .settings-tab.active {
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    box-shadow: var(--shadow-xs);
+    font-weight: var(--weight-semibold);
+  }
+
+  .settings-panel { display: none; }
+  .settings-panel.active { display: block; }
+</style>
+
+<script>
+  (function () {
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('setting-darkmode').checked = App.getMode() === 'dark';
+    document.getElementById('setting-lang').value = i18n.getLocale();
+
+    async function loadProfile() {
+      const res = await Api.get('/business/profile');
+      if (!res.success || !res.data) return;
+      const b = res.data;
+      document.getElementById('setting-name').value = b.name || '';
+      document.getElementById('setting-description').value = b.description || '';
+      document.getElementById('setting-address').value = b.address || '';
+      document.getElementById('setting-phone').value = b.phone || '';
+      document.getElementById('setting-maps').value = b.google_maps_url || '';
+      document.getElementById('setting-instagram').value = b.instagram || '';
+      document.getElementById('setting-facebook').value = b.facebook || '';
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('setting-name').value.trim(),
+        description: document.getElementById('setting-description').value.trim(),
+        address: document.getElementById('setting-address').value.trim(),
+        phone: document.getElementById('setting-phone').value.trim(),
+        google_maps_url: document.getElementById('setting-maps').value.trim(),
+        instagram: document.getElementById('setting-instagram').value.trim(),
+        facebook: document.getElementById('setting-facebook').value.trim(),
+      };
+      const res = await Api.put('/business/profile', data);
+      if (res.success) showToast(i18n.t('common.success'), 'success');
+    });
+
+    loadProfile();
+  })();
+</script>

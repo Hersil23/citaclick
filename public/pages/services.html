@@ -1,0 +1,220 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="nav.services">Servicios</h2>
+  <button class="btn btn-primary" onclick="openModal('modal-service')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span data-i18n="services.new">Nuevo servicio</span>
+  </button>
+</div>
+
+<div id="services-list" class="cards-grid"></div>
+
+<div class="empty-state hidden" id="services-empty">
+  <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+  <h3 class="empty-state-title" data-i18n="services.no_services">Aun no tienes servicios registrados</h3>
+  <button class="btn btn-primary" onclick="openModal('modal-service')" data-i18n="services.new">Nuevo servicio</button>
+</div>
+
+<div class="modal-overlay" id="modal-service">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="services.new">Nuevo servicio</h3>
+      <button class="modal-close" onclick="closeModal('modal-service')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="service-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" data-i18n="services.name">Nombre del servicio</label>
+          <input class="form-input" type="text" id="svc-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="services.category">Categoria</label>
+          <select class="form-input" id="svc-category"></select>
+        </div>
+        <div class="flex gap-4">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" data-i18n="services.duration">Duracion (min)</label>
+            <input class="form-input" type="number" id="svc-duration" min="5" step="5" value="30" required>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" data-i18n="services.price">Precio (USD)</label>
+            <input class="form-input" type="number" id="svc-price" min="0" step="0.01" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="services.description">Descripcion</label>
+          <textarea class="form-input" id="svc-description" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-service')" data-i18n="common.cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-service" data-i18n="common.save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .service-card {
+    padding: var(--space-5);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+  }
+
+  .service-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .service-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+  }
+
+  .service-card h4 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+  }
+
+  .service-card .service-price {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--color-highlight);
+  }
+
+  .service-meta {
+    display: flex;
+    gap: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  (function () {
+    const listEl = document.getElementById('services-list');
+    const emptyEl = document.getElementById('services-empty');
+    let editingId = null;
+
+    async function loadServices() {
+      const res = await Api.get('/services');
+      if (!res.success) return;
+
+      const services = res.data || [];
+      listEl.textContent = '';
+
+      if (services.length === 0) {
+        emptyEl.classList.remove('hidden');
+        listEl.classList.add('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      listEl.classList.remove('hidden');
+
+      services.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.onclick = () => editService(s);
+
+        const header = document.createElement('div');
+        header.className = 'service-card-header';
+        const h4 = document.createElement('h4');
+        h4.textContent = s.name;
+        const price = document.createElement('span');
+        price.className = 'service-price';
+        price.textContent = formatCurrency(s.price);
+        header.appendChild(h4);
+        header.appendChild(price);
+
+        const meta = document.createElement('div');
+        meta.className = 'service-meta';
+        const dur = document.createElement('span');
+        dur.textContent = s.duration + ' min';
+        const cat = document.createElement('span');
+        cat.textContent = s.category_name || 'General';
+        meta.appendChild(dur);
+        meta.appendChild(cat);
+
+        card.appendChild(header);
+        if (s.description) {
+          const desc = document.createElement('p');
+          desc.className = 'text-sm text-secondary mb-2';
+          desc.textContent = s.description;
+          card.appendChild(desc);
+        }
+        card.appendChild(meta);
+        listEl.appendChild(card);
+      });
+    }
+
+    async function loadCategories() {
+      const res = await Api.get('/service-categories');
+      const sel = document.getElementById('svc-category');
+      sel.textContent = '';
+      const opt0 = document.createElement('option');
+      opt0.value = '';
+      opt0.textContent = 'Sin categoria';
+      sel.appendChild(opt0);
+
+      if (res.success && res.data) {
+        res.data.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          sel.appendChild(opt);
+        });
+      }
+    }
+
+    function editService(s) {
+      editingId = s.id;
+      document.getElementById('svc-name').value = s.name || '';
+      document.getElementById('svc-category').value = s.category_id || '';
+      document.getElementById('svc-duration').value = s.duration || 30;
+      document.getElementById('svc-price').value = s.price || 0;
+      document.getElementById('svc-description').value = s.description || '';
+      openModal('modal-service');
+    }
+
+    document.getElementById('btn-save-service').addEventListener('click', async () => {
+      const data = {
+        name: document.getElementById('svc-name').value.trim(),
+        category_id: document.getElementById('svc-category').value || null,
+        duration: parseInt(document.getElementById('svc-duration').value, 10),
+        price: parseFloat(document.getElementById('svc-price').value),
+        description: document.getElementById('svc-description').value.trim(),
+      };
+
+      if (!data.name || !data.duration || isNaN(data.price)) {
+        showToast(i18n.t('common.required_field'), 'error');
+        return;
+      }
+
+      let res;
+      if (editingId) {
+        res = await Api.put('/services/' + editingId, data);
+      } else {
+        res = await Api.post('/services', data);
+      }
+
+      if (res.success) {
+        showToast(res.message, 'success');
+        closeModal('modal-service');
+        editingId = null;
+        document.getElementById('service-form').reset();
+        loadServices();
+      }
+    });
+
+    loadCategories();
+    loadServices();
+  })();
+</script>

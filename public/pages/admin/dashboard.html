@@ -1,0 +1,107 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="admin.title">Panel de Administracion</h2>
+</div>
+
+<div class="dashboard-metrics mb-6" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="adm-total">0</span><span class="metric-label" data-i18n="admin.total_businesses">Total negocios</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="adm-active">0</span><span class="metric-label" data-i18n="admin.active_businesses">Activos</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="adm-trial">0</span><span class="metric-label" data-i18n="admin.trial_businesses">En prueba</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="adm-revenue">$0</span><span class="metric-label" data-i18n="admin.monthly_revenue">Ingresos mes</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="adm-signups">0</span><span class="metric-label" data-i18n="admin.new_signups">Nuevos registros</span></div></div>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title" data-i18n="admin.total_businesses">Negocios</h3>
+    <input class="form-input" type="search" id="admin-search" placeholder="Buscar..." style="max-width:250px;">
+  </div>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th data-i18n="admin.business_name">Negocio</th>
+          <th data-i18n="admin.plan">Plan</th>
+          <th data-i18n="admin.status">Estado</th>
+          <th data-i18n="admin.registered">Registro</th>
+          <th data-i18n="admin.actions">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="admin-table-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="site-footer">
+  Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a>
+</footer>
+
+<script>
+  (function () {
+    async function loadStats() {
+      const res = await Api.get('/admin/stats');
+      if (!res.success) return;
+      const d = res.data;
+      document.getElementById('adm-total').textContent = d.total_businesses;
+      document.getElementById('adm-active').textContent = d.active_businesses;
+      document.getElementById('adm-trial').textContent = d.trial_businesses;
+      document.getElementById('adm-revenue').textContent = formatCurrency(d.monthly_revenue);
+      document.getElementById('adm-signups').textContent = d.new_signups;
+    }
+
+    async function loadBusinesses(search) {
+      const url = '/admin/businesses' + (search ? '?search=' + encodeURIComponent(search) : '');
+      const res = await Api.get(url);
+      if (!res.success) return;
+
+      const tbody = document.getElementById('admin-table-body');
+      tbody.textContent = '';
+
+      (res.data || []).forEach(b => {
+        const tr = document.createElement('tr');
+
+        const tdName = document.createElement('td');
+        const strong = document.createElement('strong');
+        strong.textContent = b.name;
+        tdName.appendChild(strong);
+
+        const tdPlan = document.createElement('td');
+        tdPlan.textContent = b.plan_name || 'N/A';
+
+        const tdStatus = document.createElement('td');
+        const badge = document.createElement('span');
+        badge.className = 'badge badge-' + (b.status === 'active' ? 'confirmed' : 'cancelled');
+        badge.textContent = b.status;
+        tdStatus.appendChild(badge);
+
+        const tdDate = document.createElement('td');
+        tdDate.textContent = b.created_at ? b.created_at.substring(0, 10) : '';
+
+        const tdActions = document.createElement('td');
+        const btnToggle = document.createElement('button');
+        btnToggle.className = 'btn btn-ghost btn-sm';
+        btnToggle.textContent = b.status === 'active' ? i18n.t('admin.suspend') : i18n.t('admin.activate');
+        btnToggle.onclick = async () => {
+          const action = b.status === 'active' ? 'suspend' : 'activate';
+          await Api.post('/admin/businesses/' + b.id + '/' + action);
+          loadBusinesses();
+          loadStats();
+        };
+        tdActions.appendChild(btnToggle);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdPlan);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdActions);
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('admin-search').addEventListener('input', debounce((e) => {
+      loadBusinesses(e.target.value.trim());
+    }, 300));
+
+    loadStats();
+    loadBusinesses();
+  })();
+</script>

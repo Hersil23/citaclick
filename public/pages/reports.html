@@ -1,0 +1,121 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="reports.title">Reportes</h2>
+  <div class="flex gap-2">
+    <button class="btn btn-secondary btn-sm" id="btn-export-excel" data-i18n="reports.export_excel">Exportar Excel</button>
+    <button class="btn btn-secondary btn-sm" id="btn-export-pdf" data-i18n="reports.export_pdf">Exportar PDF</button>
+  </div>
+</div>
+
+<div class="flex gap-3 mb-6" style="flex-wrap:wrap;">
+  <div class="form-group" style="margin-bottom:0;">
+    <label class="form-label text-xs">Desde</label>
+    <input class="form-input" type="date" id="report-from" style="max-width:180px;">
+  </div>
+  <div class="form-group" style="margin-bottom:0;">
+    <label class="form-label text-xs">Hasta</label>
+    <input class="form-input" type="date" id="report-to" style="max-width:180px;">
+  </div>
+  <button class="btn btn-primary btn-sm" id="btn-load-report" style="align-self:flex-end;" data-i18n="common.search">Buscar</button>
+</div>
+
+<div class="dashboard-metrics" id="report-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-6);">
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-total">0</span><span class="metric-label" data-i18n="reports.total_appointments">Total citas</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-completed">0</span><span class="metric-label" data-i18n="reports.completed">Completadas</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-cancelled">0</span><span class="metric-label" data-i18n="reports.cancelled">Canceladas</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-rate">0%</span><span class="metric-label" data-i18n="reports.attendance_rate">Tasa asistencia</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-revenue">$0</span><span class="metric-label" data-i18n="reports.total_revenue">Ingresos</span></div></div>
+  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-avg">$0</span><span class="metric-label" data-i18n="reports.avg_ticket">Ticket promedio</span></div></div>
+</div>
+
+<div class="grid-2 gap-4 mb-6">
+  <div class="card"><h4 class="card-title mb-4" data-i18n="reports.by_day">Por dia</h4><canvas id="chart-daily" height="250"></canvas></div>
+  <div class="card"><h4 class="card-title mb-4" data-i18n="reports.by_status">Por estado</h4><canvas id="chart-status" height="250"></canvas></div>
+</div>
+
+<footer class="site-footer">
+  Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a>
+</footer>
+
+<script>
+  (function () {
+    const today = new Date();
+    document.getElementById('report-from').value = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-01';
+    document.getElementById('report-to').value = today.toISOString().substring(0, 10);
+
+    document.getElementById('btn-load-report').addEventListener('click', loadReport);
+
+    async function loadReport() {
+      const from = document.getElementById('report-from').value;
+      const to = document.getElementById('report-to').value;
+      const res = await Api.get('/reports?date_from=' + from + '&date_to=' + to);
+      if (!res.success) return;
+
+      const d = res.data;
+      document.getElementById('rep-total').textContent = d.total_appointments;
+      document.getElementById('rep-completed').textContent = d.completed;
+      document.getElementById('rep-cancelled').textContent = d.cancelled;
+      document.getElementById('rep-rate').textContent = d.attendance_rate + '%';
+      document.getElementById('rep-revenue').textContent = formatCurrency(d.total_revenue);
+      document.getElementById('rep-avg').textContent = formatCurrency(d.avg_ticket);
+
+      drawBarChart('chart-daily', d.by_day || []);
+      drawDonutChart('chart-status', d.by_status || []);
+    }
+
+    function drawBarChart(canvasId, data) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.parentElement.clientWidth - 40;
+      const h = canvas.height = 220;
+      ctx.clearRect(0, 0, w, h);
+
+      if (data.length === 0) { ctx.fillStyle = getCSS('--color-text-muted'); ctx.fillText('Sin datos', w/2-20, h/2); return; }
+
+      const max = Math.max(...data.map(d => d.count), 1);
+      const barW = Math.min(24, (w - 40) / data.length - 4);
+      const startX = 40;
+      const style = getComputedStyle(document.documentElement);
+      const barColor = style.getPropertyValue('--color-highlight').trim();
+
+      data.forEach((d, i) => {
+        const barH = (d.count / max) * (h - 40);
+        const x = startX + i * (barW + 4);
+        const y = h - 20 - barH;
+        ctx.fillStyle = barColor;
+        ctx.beginPath();
+        ctx.roundRect(x, y, barW, barH, 3);
+        ctx.fill();
+      });
+    }
+
+    function drawDonutChart(canvasId, data) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width = canvas.parentElement.clientWidth - 40;
+      const h = canvas.height = 220;
+      ctx.clearRect(0, 0, w, h);
+
+      if (data.length === 0) { ctx.fillStyle = getCSS('--color-text-muted'); ctx.fillText('Sin datos', w/2-20, h/2); return; }
+
+      const total = data.reduce((s, d) => s + d.count, 0);
+      const cx = w / 2; const cy = h / 2; const r = 80; const inner = 45;
+      const colors = { pending: '#F59E0B', confirmed: '#10B981', cancelled: '#EF4444', completed: '#3B82F6', no_show: '#8B5CF6' };
+      let angle = -Math.PI / 2;
+
+      data.forEach(d => {
+        const slice = (d.count / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, angle, angle + slice);
+        ctx.arc(cx, cy, inner, angle + slice, angle, true);
+        ctx.closePath();
+        ctx.fillStyle = colors[d.status] || '#888';
+        ctx.fill();
+        angle += slice;
+      });
+    }
+
+    function getCSS(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+    loadReport();
+  })();
+</script>

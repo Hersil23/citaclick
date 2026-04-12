@@ -1,0 +1,238 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="nav.clients">Clientes</h2>
+  <button class="btn btn-primary" onclick="openModal('modal-client')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span data-i18n="clients.new">Nuevo cliente</span>
+  </button>
+</div>
+
+<div class="search-bar mb-4">
+  <input class="form-input" type="search" id="client-search" data-i18n-placeholder="clients.search" placeholder="Buscar cliente...">
+</div>
+
+<div id="clients-list" class="cards-grid"></div>
+
+<div class="empty-state hidden" id="clients-empty">
+  <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+  <h3 class="empty-state-title" data-i18n="clients.no_clients">Aun no tienes clientes registrados</h3>
+  <p class="empty-state-desc">Los clientes se agregan automaticamente al agendar citas o puedes crearlos manualmente.</p>
+  <button class="btn btn-primary" onclick="openModal('modal-client')" data-i18n="clients.new">Nuevo cliente</button>
+</div>
+
+<div class="modal-overlay" id="modal-client">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="clients.new">Nuevo cliente</h3>
+      <button class="modal-close" onclick="closeModal('modal-client')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="client-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" data-i18n="clients.name">Nombre completo</label>
+          <input class="form-input" type="text" id="client-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="clients.phone">Telefono</label>
+          <input class="form-input" type="tel" id="client-phone">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="clients.email">Correo electronico</label>
+          <input class="form-input" type="email" id="client-email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="clients.notes">Notas</label>
+          <textarea class="form-input" id="client-notes" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-client')" data-i18n="common.cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-client" data-i18n="common.save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.02em;
+  }
+
+  .search-bar {
+    max-width: 400px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .client-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .client-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .client-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .client-info h4 {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-semibold);
+    margin-bottom: var(--space-1);
+  }
+
+  .client-info p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .client-stats {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .client-stats .stat-value {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-highlight);
+  }
+
+  .client-stats .stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  (function () {
+    const listEl = document.getElementById('clients-list');
+    const emptyEl = document.getElementById('clients-empty');
+    const searchInput = document.getElementById('client-search');
+    let editingId = null;
+
+    async function loadClients(search) {
+      const url = '/clients' + (search ? '?search=' + encodeURIComponent(search) : '');
+      const res = await Api.get(url);
+      if (!res.success) return;
+
+      const clients = res.data || [];
+      listEl.textContent = '';
+
+      if (clients.length === 0) {
+        emptyEl.classList.remove('hidden');
+        listEl.classList.add('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      listEl.classList.remove('hidden');
+
+      clients.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'client-card';
+        card.onclick = () => editClient(c);
+
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar avatar-lg';
+        avatar.textContent = getInitials(c.name);
+
+        const info = document.createElement('div');
+        info.className = 'client-info';
+        const h4 = document.createElement('h4');
+        h4.textContent = c.name;
+        const p = document.createElement('p');
+        p.textContent = c.phone || c.email || '';
+        info.appendChild(h4);
+        info.appendChild(p);
+
+        const stats = document.createElement('div');
+        stats.className = 'client-stats';
+        const val = document.createElement('div');
+        val.className = 'stat-value';
+        val.textContent = c.total_visits || 0;
+        const lbl = document.createElement('div');
+        lbl.className = 'stat-label';
+        lbl.textContent = i18n.t('clients.total_visits');
+        stats.appendChild(val);
+        stats.appendChild(lbl);
+
+        card.appendChild(avatar);
+        card.appendChild(info);
+        card.appendChild(stats);
+        listEl.appendChild(card);
+      });
+    }
+
+    function editClient(c) {
+      editingId = c.id;
+      document.getElementById('client-name').value = c.name || '';
+      document.getElementById('client-phone').value = c.phone || '';
+      document.getElementById('client-email').value = c.email || '';
+      document.getElementById('client-notes').value = c.notes || '';
+      document.querySelector('#modal-client .modal-title').textContent = i18n.t('common.edit');
+      openModal('modal-client');
+    }
+
+    document.getElementById('btn-save-client').addEventListener('click', async () => {
+      const data = {
+        name: document.getElementById('client-name').value.trim(),
+        phone: document.getElementById('client-phone').value.trim(),
+        email: document.getElementById('client-email').value.trim(),
+        notes: document.getElementById('client-notes').value.trim(),
+      };
+
+      if (!data.name) { showToast(i18n.t('common.required_field'), 'error'); return; }
+
+      let res;
+      if (editingId) {
+        res = await Api.put('/clients/' + editingId, data);
+      } else {
+        res = await Api.post('/clients', data);
+      }
+
+      if (res.success) {
+        showToast(res.message, 'success');
+        closeModal('modal-client');
+        editingId = null;
+        document.getElementById('client-form').reset();
+        loadClients();
+      }
+    });
+
+    searchInput.addEventListener('input', debounce(() => {
+      loadClients(searchInput.value.trim());
+    }, 300));
+
+    loadClients();
+  })();
+</script>
