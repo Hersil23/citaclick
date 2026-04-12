@@ -502,7 +502,8 @@ en:{nav_login:'Log in',nav_cta:'Start free',hero_tag_men:'FOR PROFESSIONALS',her
 };
 var lang=localStorage.getItem('citaclick-lang')||(navigator.language||'es').slice(0,2);
 if(lang!=='en')lang='es';
-var theme=localStorage.getItem('citaclick-theme')||'onyx';
+var theme=localStorage.getItem('citaclick-theme');
+if(theme!=='onyx'&&theme!=='blush')theme='onyx';
 
 function applyLang(){
   document.querySelectorAll('[data-t]').forEach(function(el){var k=el.getAttribute('data-t');if(T[lang]&&T[lang][k])el.textContent=T[lang][k];});
@@ -515,7 +516,7 @@ function applyTheme(){
   localStorage.setItem('citaclick-theme',theme);
   document.querySelectorAll('#theme-pill .pill-opt').forEach(function(b){b.classList.toggle('active',b.dataset.val===theme);});
 }
-document.getElementById('theme-pill').addEventListener('click',function(e){var b=e.target.closest('.pill-opt');if(!b)return;theme=b.dataset.val;applyTheme();});
+document.getElementById('theme-pill').addEventListener('click',function(e){var b=e.target.closest('.pill-opt');if(!b)return;var v=b.dataset.val;if(v!=='onyx'&&v!=='blush')return;theme=v;applyTheme();applyLang();});
 document.getElementById('lang-pill').addEventListener('click',function(e){var b=e.target.closest('.pill-opt');if(!b)return;lang=b.dataset.val;applyLang();});
 
 /* NAV SCROLL */
