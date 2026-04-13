@@ -89,8 +89,8 @@ const Router = (() => {
       const response = await fetch(route.page);
       if (!response.ok) throw new Error('Page not found');
       const html = await response.text();
-      // Safe: loading static HTML pages from our own server, never user-generated content
       view.innerHTML = html; // trusted source: own server pages
+      runScripts(view);
       window.scrollTo(0, 0);
       document.title = route.title + ' \u2014 CitaClick';
 
@@ -116,6 +116,7 @@ const Router = (() => {
       if (!response.ok) throw new Error('Catalog page not found');
       const html = await response.text();
       view.innerHTML = html; // trusted source: own server pages
+      runScripts(view);
       document.title = 'CitaClick';
       window.scrollTo(0, 0);
 
@@ -156,6 +157,18 @@ const Router = (() => {
     view.appendChild(container);
 
     document.title = '404 \u2014 CitaClick';
+  }
+
+  function runScripts(container) {
+    container.querySelectorAll('script').forEach(function(old) {
+      const s = document.createElement('script');
+      if (old.src) {
+        s.src = old.src;
+      } else {
+        s.textContent = old.textContent;
+      }
+      old.parentNode.replaceChild(s, old);
+    });
   }
 
   function getCurrentPath() {
