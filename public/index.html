@@ -100,18 +100,25 @@ ul{list-style:none}
 }
 
 /* Google Calendar style mini-cal */
-.gcal-hero{background:#fff;border-radius:10px;overflow:hidden;width:100%;max-width:320px;box-shadow:0 2px 12px rgba(0,0,0,.15);color:#333}
-.hero-men .gcal-hero{max-width:300px}
-.hero-women .gcal-hero{max-width:300px}
-.gcal-hero .gh-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #E8E8F0}
-.gcal-hero .gh-title{font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:#333}
-.gcal-hero .gh-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.gcal-hero .gh-dh{padding:6px 0;text-align:center;font-size:.6rem;font-weight:500;color:#999;text-transform:uppercase;letter-spacing:.04em}
-.gcal-hero .gh-day{padding:3px 2px 5px;text-align:center;min-height:44px;border-top:1px solid #F0F0F0;vertical-align:top}
-.gcal-hero .gh-dn{font-size:.75rem;font-weight:400;color:#666;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;margin-bottom:2px}
-.gcal-hero .gh-day.today .gh-dn{background:#E8000D;color:#fff;font-weight:700}
-.gcal-hero .gh-day.other .gh-dn{color:#CCC}
-.gcal-hero .gh-ev{display:block;margin:1px 2px;padding:2px 5px;border-radius:4px;font-size:.625rem;font-weight:500;white-space:nowrap;text-align:left;line-height:1.4}
+.gcal-hero{background:#fff;border-radius:8px;overflow:hidden;width:100%;max-width:340px;box-shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);color:#3C4043;font-family:'DM Sans',sans-serif}
+.gcal-hero .gh-hdr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff}
+.gcal-hero .gh-nav{display:flex;align-items:center;gap:2px}
+.gcal-hero .gh-nav button{width:28px;height:28px;border-radius:50%;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#5F6368;transition:background .15s}
+.gcal-hero .gh-nav button:hover{background:#F1F3F4}
+.gcal-hero .gh-nav svg{width:14px;height:14px}
+.gcal-hero .gh-title{font-size:.875rem;font-weight:500;color:#3C4043}
+.gcal-hero .gh-today-btn{padding:3px 12px;border:1px solid #DADCE0;border-radius:4px;font-size:.7rem;font-weight:500;color:#3C4043;background:none;cursor:pointer;transition:background .15s;margin-left:auto}
+.gcal-hero .gh-today-btn:hover{background:#F1F3F4}
+.gcal-hero .gh-grid{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid #DADCE0}
+.gcal-hero .gh-dh{padding:6px 0;text-align:center;font-size:.65rem;font-weight:500;color:#70757A;border-bottom:1px solid #DADCE0}
+.gcal-hero .gh-day{padding:2px 1px 4px;text-align:center;min-height:56px;border-bottom:1px solid #E8EAED;border-right:1px solid #E8EAED;cursor:pointer;transition:background .1s}
+.gcal-hero .gh-day:nth-child(7n){border-right:none}
+.gcal-hero .gh-day:hover{background:#F8F9FA}
+.gcal-hero .gh-dn{font-size:.75rem;font-weight:400;color:#70757A;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;margin-bottom:2px}
+.gcal-hero .gh-day.today .gh-dn{background:#E8000D;color:#fff;font-weight:500}
+.gcal-hero .gh-day.other{background:#F8F9FA}
+.gcal-hero .gh-day.other .gh-dn{color:#DADCE0}
+.gcal-hero .gh-ev{display:block;margin:1px 1px;padding:1px 4px;border-radius:3px;font-size:.6rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;line-height:1.5;border-left:3px solid currentColor}
 
 /* hero center */
 .hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);z-index:10;background:rgba(26,26,46,.92);border:1px solid rgba(232,0,13,.3);border-radius:20px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:2rem;text-align:center;width:clamp(280px,30vw,360px);color:var(--men-text);box-shadow:0 24px 64px rgba(0,0,0,.4);opacity:1;transition:opacity .25s ease,transform .25s ease}
@@ -314,10 +321,7 @@ ul{list-style:none}
 <body>
 
 <nav class="nav over-dark" id="nav">
-  <button class="nav-logo-btn hide-desktop" id="nav-logo-btn" aria-label="Preferencias">
-    <svg viewBox="0 0 38 38" width="28" height="28" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="var(--men-bg)" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <a href="/" class="nav-logo hide-mobile">
+  <a href="/" class="nav-logo" id="nav-logo-btn">
     <svg viewBox="0 0 38 38" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="var(--men-bg)" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span class="nav-wordmark"><span>cita</span><b>click</b></span>
   </a>
@@ -551,8 +555,10 @@ document.getElementById('lang-pill-mobile').addEventListener('click',handleLangC
 
 /* Mobile drawer */
 var drawer=document.getElementById('nav-drawer');
-document.getElementById('nav-logo-btn').addEventListener('click',function(e){e.stopPropagation();drawer.classList.toggle('open');});
-document.addEventListener('click',function(e){if(!drawer.contains(e.target)&&e.target.id!=='nav-logo-btn')drawer.classList.remove('open');});
+document.getElementById('nav-logo-btn').addEventListener('click',function(e){
+  if(window.innerWidth<768){e.preventDefault();e.stopPropagation();drawer.classList.toggle('open');}
+});
+document.addEventListener('click',function(e){if(drawer&&!drawer.contains(e.target)&&!e.target.closest('#nav-logo-btn'))drawer.classList.remove('open');});
 
 /* NAV SCROLL */
 var nav=document.getElementById('nav');
@@ -605,8 +611,14 @@ function buildMiniCals(){
 function buildOneGCal(id,mn,days,first,prevDays,td,dh,events){
   var el=document.getElementById(id);if(!el)return;el.textContent='';
   var hdr=document.createElement('div');hdr.className='gh-hdr';
+  var nav=document.createElement('div');nav.className='gh-nav';
+  var svgNS='http://www.w3.org/2000/svg';
+  var bP=document.createElement('button');bP.type='button';var sP=document.createElementNS(svgNS,'svg');sP.setAttribute('viewBox','0 0 24 24');sP.setAttribute('fill','none');sP.setAttribute('stroke','currentColor');sP.setAttribute('stroke-width','2');sP.setAttribute('stroke-linecap','round');var pP=document.createElementNS(svgNS,'polyline');pP.setAttribute('points','15 18 9 12 15 6');sP.appendChild(pP);bP.appendChild(sP);
+  var bN=document.createElement('button');bN.type='button';var sN=document.createElementNS(svgNS,'svg');sN.setAttribute('viewBox','0 0 24 24');sN.setAttribute('fill','none');sN.setAttribute('stroke','currentColor');sN.setAttribute('stroke-width','2');sN.setAttribute('stroke-linecap','round');var pN=document.createElementNS(svgNS,'polyline');pN.setAttribute('points','9 18 15 12 9 6');sN.appendChild(pN);bN.appendChild(sN);
+  nav.appendChild(bP);nav.appendChild(bN);
   var title=document.createElement('span');title.className='gh-title';title.textContent=mn;
-  hdr.appendChild(title);el.appendChild(hdr);
+  var todayBtn=document.createElement('button');todayBtn.type='button';todayBtn.className='gh-today-btn';todayBtn.textContent=lang==='es'?'Hoy':'Today';
+  hdr.appendChild(nav);hdr.appendChild(title);hdr.appendChild(todayBtn);el.appendChild(hdr);
   var grid=document.createElement('div');grid.className='gh-grid';
   dh.forEach(function(d){var dhead=document.createElement('div');dhead.className='gh-dh';dhead.textContent=d;grid.appendChild(dhead);});
   for(var i=1;i<first;i++){var pd=document.createElement('div');pd.className='gh-day other';var pdn=document.createElement('div');pdn.className='gh-dn';pdn.textContent=prevDays-first+1+i;pd.appendChild(pdn);grid.appendChild(pd);}
