@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="caballeros" data-mode="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CitaClick — Gestion de citas profesional">
+  <meta name="theme-color" content="#1A1A2E">
+  <title>CitaClick</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/icon-32.svg">
+  <link rel="apple-touch-icon" href="/assets/icons/icon-180.svg">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/variables.css">
+  <link rel="stylesheet" href="/css/reset.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+</head>
+<body>
+  <div id="app-view"></div>
+  <script src="/js/utils.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/calendar.js"></script>
+  <script src="/js/router.js"></script>
+  <script src="/js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(function(){});
+    }
+  </script>
+</body>
+</html>

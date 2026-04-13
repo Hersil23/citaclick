@@ -1,6 +1,5 @@
 const Router = (() => {
   const ROUTES = {
-    '/': { page: 'pages/login.html', auth: false, title: 'Iniciar Sesion' },
     '/login': { page: 'pages/login.html', auth: false, title: 'Iniciar Sesion' },
     '/register': { page: 'pages/register.html', auth: false, title: 'Registro' },
     '/dashboard': { page: 'pages/dashboard.html', auth: true, title: 'Dashboard' },
@@ -13,7 +12,7 @@ const Router = (() => {
     '/admin': { page: 'pages/admin/dashboard.html', auth: true, role: 'superadmin', title: 'Admin' },
   };
 
-  const PUBLIC_ROUTES = ['/login', '/register', '/'];
+  const PUBLIC_ROUTES = ['/login', '/register'];
 
   let currentPath = null;
   let onRouteChange = null;
@@ -45,6 +44,11 @@ const Router = (() => {
 
     if (path.startsWith('/negocio/')) {
       loadCatalog(path);
+      return;
+    }
+
+    if (path === '/') {
+      window.location.href = '/';
       return;
     }
 

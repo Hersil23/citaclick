@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Real files and directories serve directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Root "/" serves index.html (landing) — this is the default behavior
+# Apache serves index.html automatically for /
+
+# SPA app routes → app.html
+RewriteRule ^(login|register|dashboard|appointments|clients|services|providers|settings|reports|admin|negocio/.*)$ app.html [L]
