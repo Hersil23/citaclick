@@ -79,7 +79,7 @@ class Client
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'phone', 'email', 'notes', 'photo'];
+        $allowed = ['name', 'phone', 'email', 'notes', 'photo_url'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {

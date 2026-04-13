@@ -116,7 +116,7 @@ class CatalogController
             $body['client_email'] ?? null
         );
 
-        $stmt = $db->prepare('SELECT duration, price FROM services WHERE id = :id AND business_id = :bid LIMIT 1');
+        $stmt = $db->prepare('SELECT duration_minutes, price_usd FROM services WHERE id = :id AND business_id = :bid LIMIT 1');
         $stmt->execute([':id' => $body['service_id'], ':bid' => $businessId]);
         $service = $stmt->fetch();
 
@@ -136,7 +136,7 @@ class CatalogController
             sendJson(400, ['success' => false, 'message' => 'No hay prestadores disponibles']);
         }
 
-        $duration = (int)$service['duration'];
+        $duration = (int)$service['duration_minutes'];
         $startTime = $body['start_time'];
         $endTime = date('H:i', strtotime($startTime) + ($duration * 60));
 
@@ -162,7 +162,7 @@ class CatalogController
             'start_time'  => $startTime,
             'end_time'    => $endTime,
             'duration'    => $duration,
-            'price'       => $service['price'],
+            'price'       => $service['price_usd'],
             'notes'       => $body['notes'] ?? null,
         ]);
 

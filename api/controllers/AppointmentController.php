@@ -9,21 +9,6 @@ class AppointmentController
         $user = $args['user'];
         $query = $args['query'];
 
-        if (!empty($query['debug_schema'])) {
-            $db = Database::getInstance();
-            $schema = [];
-            $tables = ['services','clients','appointments','service_categories','provider_schedules','provider_blocked_times'];
-            foreach ($tables as $t) {
-                try {
-                    $cols = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
-                    $schema[$t] = array_map(function($c) { return $c['Field']; }, $cols);
-                } catch (\PDOException $e) {
-                    $schema[$t] = 'NOT_EXISTS';
-                }
-            }
-            sendJson(200, ['success' => true, 'schema' => $schema]);
-        }
-
         if (!empty($query['metrics'])) {
             try {
                 $metrics = Appointment::getMetrics($user['business_id']);
@@ -79,7 +64,7 @@ class AppointmentController
         }
 
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT duration, price FROM services WHERE id = :id AND business_id = :bid LIMIT 1');
+        $stmt = $db->prepare('SELECT duration_minutes, price_usd FROM services WHERE id = :id AND business_id = :bid LIMIT 1');
         $stmt->execute([':id' => $body['service_id'], ':bid' => $user['business_id']]);
         $service = $stmt->fetch();
 
@@ -87,7 +72,7 @@ class AppointmentController
             sendJson(404, ['success' => false, 'message' => 'Servicio no encontrado']);
         }
 
-        $duration = (int)$service['duration'];
+        $duration = (int)$service['duration_minutes'];
         $startTime = $body['start_time'];
         $endTime = date('H:i', strtotime($startTime) + ($duration * 60));
 
@@ -113,7 +98,7 @@ class AppointmentController
             'start_time'  => $startTime,
             'end_time'    => $endTime,
             'duration'    => $duration,
-            'price'       => $body['price'] ?? $service['price'],
+            'price'       => $body['price'] ?? $service['price_usd'],
             'notes'       => $body['notes'] ?? null,
         ]);
 

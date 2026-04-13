@@ -15,7 +15,7 @@ class ReportController
         $serviceId = $query['service_id'] ?? null;
 
         $db = Database::getInstance();
-        $where = 'a.business_id = :bid AND a.date BETWEEN :from AND :to';
+        $where = 'a.business_id = :bid AND a.appointment_date BETWEEN :from AND :to';
         $params = [':bid' => $user['business_id'], ':from' => $dateFrom, ':to' => $dateTo];
 
         if ($providerId) {
@@ -28,44 +28,49 @@ class ReportController
             $params[':sid'] = $serviceId;
         }
 
-        $stmt = $db->prepare("SELECT COUNT(*) as total FROM appointments a WHERE {$where}");
-        $stmt->execute($params);
-        $total = (int)$stmt->fetch()['total'];
+        try {
+            $stmt = $db->prepare("SELECT COUNT(*) as total FROM appointments a WHERE {$where}");
+            $stmt->execute($params);
+            $total = (int)$stmt->fetch()['total'];
 
-        $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM appointments a WHERE {$where} AND a.status = 'completed'");
-        $stmt->execute($params);
-        $completed = (int)$stmt->fetch()['cnt'];
+            $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM appointments a WHERE {$where} AND a.status = 'completed'");
+            $stmt->execute($params);
+            $completed = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM appointments a WHERE {$where} AND a.status = 'cancelled'");
-        $stmt->execute($params);
-        $cancelled = (int)$stmt->fetch()['cnt'];
+            $stmt = $db->prepare("SELECT COUNT(*) as cnt FROM appointments a WHERE {$where} AND a.status = 'cancelled'");
+            $stmt->execute($params);
+            $cancelled = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare("SELECT COALESCE(SUM(a.price), 0) as revenue FROM appointments a WHERE {$where} AND a.status = 'completed'");
-        $stmt->execute($params);
-        $revenue = (float)$stmt->fetch()['revenue'];
+            $stmt = $db->prepare("SELECT COALESCE(SUM(a.price_charged), 0) as revenue FROM appointments a WHERE {$where} AND a.status = 'completed'");
+            $stmt->execute($params);
+            $revenue = (float)$stmt->fetch()['revenue'];
 
-        $attended = $total - $cancelled;
-        $attendanceRate = $total > 0 ? round(($attended / $total) * 100, 1) : 0;
-        $avgTicket = $completed > 0 ? round($revenue / $completed, 2) : 0;
+            $attended = $total - $cancelled;
+            $attendanceRate = $total > 0 ? round(($attended / $total) * 100, 1) : 0;
+            $avgTicket = $completed > 0 ? round($revenue / $completed, 2) : 0;
 
-        $stmt = $db->prepare("
-            SELECT a.date, COUNT(*) as count
-            FROM appointments a
-            WHERE {$where} AND a.status != 'cancelled'
-            GROUP BY a.date
-            ORDER BY a.date
-        ");
-        $stmt->execute($params);
-        $byDay = $stmt->fetchAll();
+            $stmt = $db->prepare("
+                SELECT a.appointment_date, COUNT(*) as count
+                FROM appointments a
+                WHERE {$where} AND a.status != 'cancelled'
+                GROUP BY a.appointment_date
+                ORDER BY a.appointment_date
+            ");
+            $stmt->execute($params);
+            $byDay = $stmt->fetchAll();
 
-        $stmt = $db->prepare("
-            SELECT a.status, COUNT(*) as count
-            FROM appointments a
-            WHERE {$where}
-            GROUP BY a.status
-        ");
-        $stmt->execute($params);
-        $byStatus = $stmt->fetchAll();
+            $stmt = $db->prepare("
+                SELECT a.status, COUNT(*) as count
+                FROM appointments a
+                WHERE {$where}
+                GROUP BY a.status
+            ");
+            $stmt->execute($params);
+            $byStatus = $stmt->fetchAll();
+        } catch (\PDOException $e) {
+            $total = 0; $completed = 0; $cancelled = 0; $revenue = 0;
+            $attendanceRate = 0; $avgTicket = 0; $byDay = []; $byStatus = [];
+        }
 
         sendJson(200, [
             'success' => true,

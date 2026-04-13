@@ -9,22 +9,22 @@ class Appointment
         $db = Database::getInstance();
         $stmt = $db->prepare('
             INSERT INTO appointments
-            (business_id, provider_id, client_id, service_id, date, start_time, end_time,
-             duration, price, notes, status, created_at)
+            (business_id, provider_id, client_id, service_id, appointment_date, start_time, end_time,
+             status, price_charged, currency, notes)
             VALUES
-            (:bid, :pid, :cid, :sid, :date, :start, :end, :dur, :price, :notes, "pending", NOW())
+            (:bid, :pid, :cid, :sid, :date, :start, :end, "pending", :price, :currency, :notes)
         ');
         $stmt->execute([
-            ':bid'   => $data['business_id'],
-            ':pid'   => $data['provider_id'],
-            ':cid'   => $data['client_id'],
-            ':sid'   => $data['service_id'],
-            ':date'  => $data['date'],
-            ':start' => $data['start_time'],
-            ':end'   => $data['end_time'],
-            ':dur'   => $data['duration'],
-            ':price' => $data['price'] ?? 0,
-            ':notes' => $data['notes'] ?? null,
+            ':bid'      => $data['business_id'],
+            ':pid'      => $data['provider_id'],
+            ':cid'      => $data['client_id'],
+            ':sid'      => $data['service_id'],
+            ':date'     => $data['date'] ?? $data['appointment_date'],
+            ':start'    => $data['start_time'],
+            ':end'      => $data['end_time'],
+            ':price'    => $data['price'] ?? $data['price_charged'] ?? 0,
+            ':currency' => $data['currency'] ?? 'USD',
+            ':notes'    => $data['notes'] ?? null,
         ]);
         return (int)$db->lastInsertId();
     }
@@ -35,7 +35,7 @@ class Appointment
         $stmt = $db->prepare('
             SELECT a.*,
                    c.name AS client_name, c.phone AS client_phone, c.email AS client_email,
-                   s.name AS service_name, s.duration AS service_duration,
+                   s.name AS service_name, s.duration_minutes AS service_duration,
                    p.name AS provider_name
             FROM appointments a
             LEFT JOIN clients c ON c.id = a.client_id
@@ -71,12 +71,12 @@ class Appointment
         }
 
         if (!empty($filters['date_from'])) {
-            $where[] = 'a.date >= :date_from';
+            $where[] = 'a.appointment_date >= :date_from';
             $params[':date_from'] = $filters['date_from'];
         }
 
         if (!empty($filters['date_to'])) {
-            $where[] = 'a.date <= :date_to';
+            $where[] = 'a.appointment_date <= :date_to';
             $params[':date_to'] = $filters['date_to'];
         }
 
@@ -102,7 +102,7 @@ class Appointment
             LEFT JOIN services s ON s.id = a.service_id
             LEFT JOIN providers p ON p.id = a.provider_id
             WHERE {$whereClause}
-            ORDER BY a.date DESC, a.start_time ASC
+            ORDER BY a.appointment_date DESC, a.start_time ASC
             LIMIT {$limit} OFFSET {$offset}
         ");
         $stmt->execute($params);
@@ -131,7 +131,7 @@ class Appointment
         $fields = [];
         $params = [':id' => $id];
 
-        $allowed = ['date', 'start_time', 'end_time', 'duration', 'price', 'notes',
+        $allowed = ['appointment_date', 'start_time', 'end_time', 'price_charged', 'currency', 'notes',
                      'provider_id', 'service_id', 'client_id', 'status'];
 
         foreach ($allowed as $field) {
@@ -140,11 +140,19 @@ class Appointment
                 $params[":{$field}"] = $data[$field];
             }
         }
+        // Map legacy keys
+        if (array_key_exists('date', $data) && !array_key_exists('appointment_date', $data)) {
+            $fields[] = "appointment_date = :appointment_date";
+            $params[":appointment_date"] = $data['date'];
+        }
+        if (array_key_exists('price', $data) && !array_key_exists('price_charged', $data)) {
+            $fields[] = "price_charged = :price_charged";
+            $params[":price_charged"] = $data['price'];
+        }
 
         if (empty($fields)) return false;
 
         $fieldStr = implode(', ', $fields);
-
         $stmt = $db->prepare("UPDATE appointments SET {$fieldStr} WHERE id = :id");
         return $stmt->execute($params);
     }
@@ -156,9 +164,9 @@ class Appointment
         $dayOfWeek = date('N', strtotime($date));
 
         $stmt = $db->prepare('
-            SELECT start_time, end_time, slot_duration
+            SELECT start_time, end_time, slot_minutes
             FROM provider_schedules
-            WHERE provider_id = :pid AND day_of_week = :dow AND is_active = 1
+            WHERE provider_id = :pid AND day_of_week = :dow AND is_available = 1
             LIMIT 1
         ');
         $stmt->execute([':pid' => $providerId, ':dow' => $dayOfWeek]);
@@ -168,8 +176,7 @@ class Appointment
 
         $stmt = $db->prepare('
             SELECT id FROM provider_blocked_times
-            WHERE provider_id = :pid
-              AND :date BETWEEN start_date AND end_date
+            WHERE provider_id = :pid AND blocked_date = :date
         ');
         $stmt->execute([':pid' => $providerId, ':date' => $date]);
         if ($stmt->fetch()) return [];
@@ -177,13 +184,13 @@ class Appointment
         $stmt = $db->prepare('
             SELECT start_time, end_time
             FROM appointments
-            WHERE provider_id = :pid AND date = :date AND status NOT IN ("cancelled")
+            WHERE provider_id = :pid AND appointment_date = :date AND status NOT IN ("cancelled")
             ORDER BY start_time
         ');
         $stmt->execute([':pid' => $providerId, ':date' => $date]);
         $booked = $stmt->fetchAll();
 
-        $slotDuration = $duration ?: (int)$schedule['slot_duration'] ?: 30;
+        $slotDuration = $duration ?: (int)$schedule['slot_minutes'] ?: 30;
         $slots = [];
         $current = strtotime($schedule['start_time']);
         $end = strtotime($schedule['end_time']);
@@ -220,7 +227,7 @@ class Appointment
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
 
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND date = :today AND status != "cancelled"');
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND appointment_date = :today AND status != "cancelled"');
         $stmt->execute([':bid' => $businessId, ':today' => $today]);
         $todayCount = (int)$stmt->fetch()['cnt'];
 
@@ -232,7 +239,7 @@ class Appointment
         $stmt->execute([':bid' => $businessId]);
         $clientCount = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare('SELECT COALESCE(SUM(price), 0) as total FROM appointments WHERE business_id = :bid AND date BETWEEN :start AND :end AND status = "completed"');
+        $stmt = $db->prepare('SELECT COALESCE(SUM(price_charged), 0) as total FROM appointments WHERE business_id = :bid AND appointment_date BETWEEN :start AND :end AND status = "completed"');
         $stmt->execute([':bid' => $businessId, ':start' => $monthStart, ':end' => $monthEnd]);
         $revenue = (float)$stmt->fetch()['total'];
 

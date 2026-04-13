@@ -45,7 +45,7 @@ class Provider
             ':uid'    => $data['user_id'] ?? null,
             ':name'   => $data['name'],
             ':bio'    => $data['bio'] ?? null,
-            ':avatar' => $data['photo'] ?? $data['avatar_url'] ?? null,
+            ':avatar' => $data['avatar_url'] ?? $data['photo'] ?? null,
         ]);
         return (int)$db->lastInsertId();
     }
@@ -63,7 +63,6 @@ class Provider
                 $params[":{$f}"] = $data[$f];
             }
         }
-        // Support legacy 'photo' key mapping to avatar_url
         if (array_key_exists('photo', $data) && !array_key_exists('avatar_url', $data)) {
             $fields[] = "avatar_url = :avatar_url";
             $params[":avatar_url"] = $data['photo'];
@@ -96,18 +95,18 @@ class Provider
         $db->prepare('DELETE FROM provider_schedules WHERE provider_id = :pid')->execute([':pid' => $providerId]);
 
         $stmt = $db->prepare('
-            INSERT INTO provider_schedules (provider_id, day_of_week, start_time, end_time, slot_duration, is_active)
-            VALUES (:pid, :dow, :start, :end, :slot, :active)
+            INSERT INTO provider_schedules (provider_id, day_of_week, start_time, end_time, slot_minutes, is_available)
+            VALUES (:pid, :dow, :start, :end, :slot, :available)
         ');
 
         foreach ($schedules as $s) {
             $stmt->execute([
-                ':pid'    => $providerId,
-                ':dow'    => $s['day_of_week'],
-                ':start'  => $s['start_time'],
-                ':end'    => $s['end_time'],
-                ':slot'   => $s['slot_duration'] ?? 30,
-                ':active' => $s['is_active'] ?? 1,
+                ':pid'       => $providerId,
+                ':dow'       => $s['day_of_week'],
+                ':start'     => $s['start_time'],
+                ':end'       => $s['end_time'],
+                ':slot'      => $s['slot_minutes'] ?? $s['slot_duration'] ?? 30,
+                ':available' => $s['is_available'] ?? $s['is_active'] ?? 1,
             ]);
         }
     }
@@ -116,13 +115,12 @@ class Provider
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO provider_blocked_times (provider_id, start_date, end_date, start_time, end_time, reason, created_at)
-            VALUES (:pid, :sd, :ed, :st, :et, :reason, NOW())
+            INSERT INTO provider_blocked_times (provider_id, blocked_date, start_time, end_time, reason)
+            VALUES (:pid, :bd, :st, :et, :reason)
         ');
         $stmt->execute([
             ':pid'    => $providerId,
-            ':sd'     => $data['start_date'],
-            ':ed'     => $data['end_date'] ?? $data['start_date'],
+            ':bd'     => $data['blocked_date'] ?? $data['start_date'] ?? $data['date'],
             ':st'     => $data['start_time'] ?? null,
             ':et'     => $data['end_time'] ?? null,
             ':reason' => $data['reason'] ?? null,
@@ -135,7 +133,7 @@ class Provider
         $db = Database::getInstance();
         $today = date('Y-m-d');
 
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE provider_id = :pid AND date = :today AND status != "cancelled"');
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE provider_id = :pid AND appointment_date = :today AND status != "cancelled"');
         $stmt->execute([':pid' => $providerId, ':today' => $today]);
         $todayCount = (int)$stmt->fetch()['cnt'];
 
@@ -143,7 +141,7 @@ class Provider
         $stmt->execute([':pid' => $providerId]);
         $pending = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE provider_id = :pid AND date = :today AND status = "completed"');
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE provider_id = :pid AND appointment_date = :today AND status = "completed"');
         $stmt->execute([':pid' => $providerId, ':today' => $today]);
         $completed = (int)$stmt->fetch()['cnt'];
 
