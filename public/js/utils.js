@@ -1,6 +1,8 @@
 function loadFooter() {
   const existing = document.querySelector('.site-footer');
   if (existing) return;
+  const inView = document.querySelector('#app-view .site-footer');
+  if (inView) return;
 
   const footer = document.createElement('footer');
   footer.className = 'site-footer';
