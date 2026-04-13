@@ -149,7 +149,21 @@ foreach ($routes as $route => $config) {
         'query' => $_GET,
     ];
 
-    $controller->$action($args);
+    try {
+        $controller->$action($args);
+    } catch (\PDOException $e) {
+        sendJson(500, [
+            'success' => false,
+            'message' => 'Error de base de datos',
+            'debug' => $e->getMessage(),
+        ]);
+    } catch (\Exception $e) {
+        sendJson(500, [
+            'success' => false,
+            'message' => 'Error interno del servidor',
+            'debug' => $e->getMessage(),
+        ]);
+    }
     $matched = true;
     break;
 }

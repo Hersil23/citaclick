@@ -13,13 +13,18 @@ function ensureTables(): void
         return;
     }
 
-    // Quick check: if appointments table exists, skip migration
-    try {
-        $db->query("SELECT 1 FROM appointments LIMIT 1");
-        return; // All core tables likely exist
-    } catch (\PDOException $e) {
-        // Table missing — run migration
+    // Quick check: if all core tables exist, skip migration
+    $coreTables = ['clients', 'services', 'appointments', 'token_blacklist', 'rate_limits'];
+    $allExist = true;
+    foreach ($coreTables as $t) {
+        try {
+            $db->query("SELECT 1 FROM `{$t}` LIMIT 1");
+        } catch (\PDOException $e) {
+            $allExist = false;
+            break;
+        }
     }
+    if ($allExist) return;
 
     $tables = [
         'service_categories' => "
