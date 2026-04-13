@@ -253,6 +253,51 @@
     text-align: center;
   }
 
+  .schedule-break {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    padding-left: 120px;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .schedule-break.hidden { display: none; }
+
+  .schedule-break label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .schedule-break input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--color-highlight);
+  }
+
+  .schedule-break input[type="time"] {
+    padding: var(--space-1);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    font-size: var(--text-xs);
+    max-width: 100px;
+  }
+
+  .break-times { display: flex; align-items: center; gap: var(--space-1); }
+  .break-times.inactive { opacity: 0.3; pointer-events: none; }
+
+  @media (max-width: 639px) {
+    .schedule-break {
+      padding-left: 0;
+    }
+  }
+
   @media (max-width: 375px) {
     .schedule-row {
       padding: var(--space-2);
@@ -337,15 +382,26 @@
       container.textContent = '';
 
       for (var d = 1; d <= 7; d++) {
-        var existing = schedules.find(function(s) { return s.day_of_week == d; });
-        var isActive = existing ? (existing.is_available == 1) : (d <= 6);
-        var startTime = existing ? existing.start_time : '08:00';
-        var endTime = existing ? existing.end_time : '18:00';
-        var slotMin = existing ? (existing.slot_minutes || 30) : 30;
+        // Find all blocks for this day (may be 2 if there's a break)
+        var dayBlocks = schedules.filter(function(s) { return s.day_of_week == d; });
+        var hasBreak = dayBlocks.length >= 2;
+        var block1 = dayBlocks[0] || null;
+        var block2 = dayBlocks[1] || null;
+
+        var isActive = block1 ? (block1.is_available == 1) : (d <= 6);
+        var startTime = block1 ? block1.start_time : '08:00';
+        var endTime = hasBreak ? block2.end_time : (block1 ? block1.end_time : '18:00');
+        var breakStart = hasBreak ? block1.end_time : '12:00';
+        var breakEnd = hasBreak ? block2.start_time : '14:00';
+        var slotMin = block1 ? (block1.slot_minutes || 30) : 30;
+
+        // Wrapper for day row + break row
+        var wrapper = document.createElement('div');
+        wrapper.className = 'schedule-day-wrapper';
+        wrapper.dataset.dow = d;
 
         var row = document.createElement('div');
         row.className = 'schedule-row' + (isActive ? '' : ' disabled');
-        row.dataset.dow = d;
 
         // Toggle + day name
         var toggle = document.createElement('label');
@@ -353,9 +409,13 @@
         var chk = document.createElement('input');
         chk.type = 'checkbox';
         chk.checked = isActive;
-        chk.addEventListener('change', (function(r) {
-          return function() { r.classList.toggle('disabled', !this.checked); };
-        })(row));
+        chk.className = 'sched-active';
+        chk.addEventListener('change', (function(r, br) {
+          return function() {
+            r.classList.toggle('disabled', !this.checked);
+            br.classList.toggle('hidden', !this.checked);
+          };
+        })(row, null)); // will set breakRow ref below
         toggle.appendChild(chk);
         toggle.appendChild(document.createTextNode(dayNames[d - 1]));
 
@@ -363,36 +423,57 @@
         var times = document.createElement('div');
         times.className = 'schedule-times';
         var startInput = document.createElement('input');
-        startInput.type = 'time';
-        startInput.value = startTime.substring(0, 5);
-        startInput.className = 'sched-start';
-        var sep = document.createElement('span');
-        sep.className = 'sep';
-        sep.textContent = 'a';
+        startInput.type = 'time'; startInput.value = startTime.substring(0, 5); startInput.className = 'sched-start';
+        var sep = document.createElement('span'); sep.className = 'sep'; sep.textContent = 'a';
         var endInput = document.createElement('input');
-        endInput.type = 'time';
-        endInput.value = endTime.substring(0, 5);
-        endInput.className = 'sched-end';
-        times.appendChild(startInput);
-        times.appendChild(sep);
-        times.appendChild(endInput);
+        endInput.type = 'time'; endInput.value = endTime.substring(0, 5); endInput.className = 'sched-end';
+        times.appendChild(startInput); times.appendChild(sep); times.appendChild(endInput);
 
         // Slot duration
         var slot = document.createElement('div');
         slot.className = 'schedule-slot';
         var slotInput = document.createElement('input');
-        slotInput.type = 'number';
-        slotInput.value = slotMin;
-        slotInput.min = 5;
-        slotInput.step = 5;
-        slotInput.className = 'sched-slot';
-        slot.appendChild(slotInput);
-        slot.appendChild(document.createTextNode('min'));
+        slotInput.type = 'number'; slotInput.value = slotMin; slotInput.min = 5; slotInput.step = 5; slotInput.className = 'sched-slot';
+        slot.appendChild(slotInput); slot.appendChild(document.createTextNode('min'));
 
-        row.appendChild(toggle);
-        row.appendChild(times);
-        row.appendChild(slot);
-        container.appendChild(row);
+        row.appendChild(toggle); row.appendChild(times); row.appendChild(slot);
+
+        // Break row
+        var breakRow = document.createElement('div');
+        breakRow.className = 'schedule-break' + (isActive ? '' : ' hidden');
+
+        var breakLabel = document.createElement('label');
+        var breakChk = document.createElement('input');
+        breakChk.type = 'checkbox'; breakChk.checked = hasBreak; breakChk.className = 'break-active';
+        breakLabel.appendChild(breakChk);
+        breakLabel.appendChild(document.createTextNode('Descanso'));
+
+        var breakTimes = document.createElement('div');
+        breakTimes.className = 'break-times' + (hasBreak ? '' : ' inactive');
+        var bStart = document.createElement('input');
+        bStart.type = 'time'; bStart.value = breakStart.substring(0, 5); bStart.className = 'break-start';
+        var bSep = document.createElement('span'); bSep.textContent = 'a'; bSep.style.margin = '0 2px';
+        var bEnd = document.createElement('input');
+        bEnd.type = 'time'; bEnd.value = breakEnd.substring(0, 5); bEnd.className = 'break-end';
+        breakTimes.appendChild(bStart); breakTimes.appendChild(bSep); breakTimes.appendChild(bEnd);
+
+        breakChk.addEventListener('change', (function(bt) {
+          return function() { bt.classList.toggle('inactive', !this.checked); };
+        })(breakTimes));
+
+        breakRow.appendChild(breakLabel); breakRow.appendChild(breakTimes);
+
+        // Fix the chk change handler to reference breakRow
+        chk.addEventListener('change', (function(r, br) {
+          return function() {
+            r.classList.toggle('disabled', !this.checked);
+            br.classList.toggle('hidden', !this.checked);
+          };
+        })(row, breakRow));
+
+        wrapper.appendChild(row);
+        wrapper.appendChild(breakRow);
+        container.appendChild(wrapper);
       }
     }
 
@@ -400,15 +481,34 @@
       if (!currentProviderId) { showToast('No se encontro prestador', 'error'); return; }
 
       var schedules = [];
-      document.querySelectorAll('#schedule-form .schedule-row').forEach(function(row) {
-        var chk = row.querySelector('input[type="checkbox"]');
-        schedules.push({
-          day_of_week: parseInt(row.dataset.dow, 10),
-          start_time: row.querySelector('.sched-start').value,
-          end_time: row.querySelector('.sched-end').value,
-          slot_minutes: parseInt(row.querySelector('.sched-slot').value, 10) || 30,
-          is_available: chk.checked ? 1 : 0,
-        });
+      document.querySelectorAll('#schedule-form .schedule-day-wrapper').forEach(function(wrapper) {
+        var dow = parseInt(wrapper.dataset.dow, 10);
+        var row = wrapper.querySelector('.schedule-row');
+        var isActive = row.querySelector('.sched-active').checked;
+        var start = row.querySelector('.sched-start').value;
+        var end = row.querySelector('.sched-end').value;
+        var slotMin = parseInt(row.querySelector('.sched-slot').value, 10) || 30;
+        var hasBreak = wrapper.querySelector('.break-active').checked;
+
+        if (hasBreak && isActive) {
+          var breakStart = wrapper.querySelector('.break-start').value;
+          var breakEnd = wrapper.querySelector('.break-end').value;
+          // Block 1: morning (start -> breakStart)
+          schedules.push({
+            day_of_week: dow, start_time: start, end_time: breakStart,
+            slot_minutes: slotMin, is_available: 1,
+          });
+          // Block 2: afternoon (breakEnd -> end)
+          schedules.push({
+            day_of_week: dow, start_time: breakEnd, end_time: end,
+            slot_minutes: slotMin, is_available: 1,
+          });
+        } else {
+          schedules.push({
+            day_of_week: dow, start_time: start, end_time: end,
+            slot_minutes: slotMin, is_available: isActive ? 1 : 0,
+          });
+        }
       });
 
       var res = await Api.put('/providers/' + currentProviderId + '/schedule', { schedules: schedules });

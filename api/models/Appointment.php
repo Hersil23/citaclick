@@ -167,16 +167,15 @@ class Appointment
             SELECT start_time, end_time, slot_minutes
             FROM provider_schedules
             WHERE provider_id = :pid AND day_of_week = :dow AND is_available = 1
-            LIMIT 1
+            ORDER BY start_time
         ');
         $stmt->execute([':pid' => $providerId, ':dow' => $dayOfWeek]);
-        $schedule = $stmt->fetch();
+        $blocks = $stmt->fetchAll();
 
-        if (!$schedule) {
-            // Default schedule: Mon-Sat 8:00-18:00 if none configured
+        if (empty($blocks)) {
             $dow = (int)$dayOfWeek;
             if ($dow >= 1 && $dow <= 6) {
-                $schedule = ['start_time' => '08:00', 'end_time' => '18:00', 'slot_minutes' => 30];
+                $blocks = [['start_time' => '08:00', 'end_time' => '18:00', 'slot_minutes' => 30]];
             } else {
                 return [];
             }
@@ -198,31 +197,33 @@ class Appointment
         $stmt->execute([':pid' => $providerId, ':date' => $date]);
         $booked = $stmt->fetchAll();
 
-        $slotDuration = $duration ?: (int)$schedule['slot_minutes'] ?: 30;
         $slots = [];
-        $current = strtotime($schedule['start_time']);
-        $end = strtotime($schedule['end_time']);
+        foreach ($blocks as $block) {
+            $slotDuration = $duration ?: (int)$block['slot_minutes'] ?: 30;
+            $current = strtotime($block['start_time']);
+            $end = strtotime($block['end_time']);
 
-        while ($current + ($slotDuration * 60) <= $end) {
-            $slotStart = date('H:i', $current);
-            $slotEnd = date('H:i', $current + ($slotDuration * 60));
+            while ($current + ($slotDuration * 60) <= $end) {
+                $slotStart = date('H:i', $current);
+                $slotEnd = date('H:i', $current + ($slotDuration * 60));
 
-            $conflict = false;
-            foreach ($booked as $b) {
-                if ($slotStart < $b['end_time'] && $slotEnd > $b['start_time']) {
-                    $conflict = true;
-                    break;
+                $conflict = false;
+                foreach ($booked as $b) {
+                    if ($slotStart < $b['end_time'] && $slotEnd > $b['start_time']) {
+                        $conflict = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!$conflict) {
-                $slots[] = [
-                    'start_time' => $slotStart,
-                    'end_time'   => $slotEnd,
-                ];
-            }
+                if (!$conflict) {
+                    $slots[] = [
+                        'start_time' => $slotStart,
+                        'end_time'   => $slotEnd,
+                    ];
+                }
 
-            $current += $slotDuration * 60;
+                $current += $slotDuration * 60;
+            }
         }
 
         return $slots;
