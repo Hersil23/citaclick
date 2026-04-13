@@ -1,366 +1,414 @@
-<div class="reg-page">
-  <div class="reg-topbar">
-    <a href="/" class="reg-logo"><svg viewBox="0 0 38 38" width="28" height="28" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="#F8F8FA" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="reg-wordmark"><span>cita</span><b>click</b></span></a>
-    <div class="reg-toggles">
-      <div class="lpill" id="reg-lang-pill"><button class="lpill-opt active" data-val="es">ES</button><button class="lpill-opt" data-val="en">EN</button></div>
+<div class="rg" id="rg-page">
+
+<header class="rg-header">
+  <a href="/" class="rg-logo"><svg viewBox="0 0 38 38" width="26" height="26" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="rg-wm"><span>cita</span><b>click</b></span></a>
+  <div class="rg-steps" id="rg-steps">
+    <div class="rs done" data-s="1"><div class="rs-c">1</div><span>Negocio</span></div>
+    <div class="rs-line"></div>
+    <div class="rs" data-s="2"><div class="rs-c">2</div><span>Cuenta</span></div>
+    <div class="rs-line"></div>
+    <div class="rs" data-s="3"><div class="rs-c">3</div><span>Tema</span></div>
+    <div class="rs-line"></div>
+    <div class="rs" data-s="4"><div class="rs-c">4</div><span>Plan</span></div>
+  </div>
+  <div class="rg-hdr-right hide-mobile">
+    <div class="rg-pill" id="rg-theme-pill"><button type="button" class="rp-o active" data-val="onyx">Onyx</button><button type="button" class="rp-o" data-val="blush">Blush</button></div>
+    <div class="rg-pill" id="rg-lang-pill"><button type="button" class="rp-o active" data-val="es">ES</button><button type="button" class="rp-o" data-val="en">EN</button></div>
+  </div>
+</header>
+
+<main class="rg-main">
+  <div class="rg-back" id="rg-back"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg><span id="rg-back-text" data-rt="back_home">Volver al inicio</span></div>
+
+  <!-- STEP 1 -->
+  <div class="rg-step active" data-step="1" id="rs1">
+    <h1 class="rg-title" data-rt="s1_title">&#191;C&#243;mo describes tu actividad?</h1>
+    <p class="rg-sub" data-rt="s1_sub">Esto nos ayuda a configurar CitaClick para ti</p>
+
+    <div class="rg-group-label" data-rt="group_indie">Profesional independiente</div>
+    <div class="bz-grid" id="bz-indie">
+      <button type="button" class="bz" data-type="barber_indie" data-group="indie"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="4"/><path d="M11 11L24 24"/><circle cx="24" cy="24" r="4"/><path d="M24 8L8 24"/></svg><span data-rt="bz_barber">Barbero / Estilista</span></button>
+      <button type="button" class="bz" data-type="nails_indie" data-group="indie"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 14V8a2 2 0 0 0-4 0"/><path d="M18 13V6a2 2 0 0 0-4 0v2"/><path d="M14 13.5V8a2 2 0 0 0-4 0v10"/><path d="M22 10a2 2 0 0 1 4 0v8a10 10 0 0 1-10 10h-2a8 8 0 0 1-6-2.7l-3.3-3.3a2 2 0 0 1 2.8-2.8L10 22"/></svg><span data-rt="bz_nails">Manicurista / Esteticista</span></button>
+      <button type="button" class="bz" data-type="psych_indie" data-group="indie"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4a10 10 0 0 0-10 10c0 4.5 3 8.5 7 10v2h6v-2c4-1.5 7-5.5 7-10a10 10 0 0 0-10-10z"/><path d="M13 26v2h6v-2"/><path d="M12 14c0-2.2 1.8-4 4-4"/></svg><span data-rt="bz_psych">Psic&#243;logo / Terapeuta</span></button>
+      <button type="button" class="bz" data-type="legal_indie" data-group="indie"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="24" height="18" rx="2"/><path d="M20 10V6a4 4 0 0 0-8 0v4"/><circle cx="16" cy="20" r="2"/></svg><span data-rt="bz_legal">Abogado / Consultor</span></button>
+      <button type="button" class="bz" data-type="other_indie" data-group="indie"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="12" r="6"/><path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10"/><path d="M24 6l2 2-2 2"/></svg><span data-rt="bz_other_indie">Otro profesional</span></button>
     </div>
+
+    <div class="rg-group-label" data-rt="group_biz">Local o negocio</div>
+    <div class="bz-grid" id="bz-biz">
+      <button type="button" class="bz" data-type="barbershop" data-group="biz"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="6" width="4" height="22" rx="2"/><rect x="20" y="6" width="4" height="22" rx="2"/><path d="M8 10h4"/><path d="M20 10h4"/><path d="M8 18h4"/><path d="M20 18h4"/></svg><span data-rt="bz_barbershop">Barber&#237;a / Peluquer&#237;a</span></button>
+      <button type="button" class="bz" data-type="salon" data-group="biz"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28h24"/><path d="M16 4c-6 0-10 6-10 12h20c0-6-4-12-10-12z"/><path d="M16 4v8"/><path d="M10 16v12"/><path d="M22 16v12"/></svg><span data-rt="bz_salon">Sal&#243;n de belleza</span></button>
+      <button type="button" class="bz" data-type="wellness" data-group="biz"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="10"/><path d="M16 6c-2 4-2 8 0 10s2 6 0 10"/><path d="M6 16h20"/></svg><span data-rt="bz_wellness">Centro de bienestar</span></button>
+      <button type="button" class="bz" data-type="office" data-group="biz"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="24" height="20" rx="2"/><path d="M4 14h24"/><rect x="10" y="18" width="4" height="4"/><rect x="18" y="18" width="4" height="4"/><path d="M12 4v4"/><path d="M20 4v4"/></svg><span data-rt="bz_office">Consultorio / Despacho</span></button>
+      <button type="button" class="bz" data-type="other_biz" data-group="biz"><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 28V12l12-8 12 8v16"/><path d="M12 28v-8h8v8"/></svg><span data-rt="bz_other_biz">Otro negocio</span></button>
+    </div>
+
+    <div class="rg-field" style="margin-top:1.5rem">
+      <label class="rg-label" id="rg-name-label" data-rt="biz_name">Nombre de tu negocio</label>
+      <input type="text" class="rg-input" id="r-name" placeholder="Ej: Sal&#243;n Rose">
+      <div class="rg-slug" id="r-slug-preview"></div>
+    </div>
+    <input type="hidden" id="r-biz-type" value="">
+    <input type="hidden" id="r-biz-group" value="">
   </div>
 
-  <div class="reg-progress" id="reg-progress">
-    <div class="rp-step done" data-s="1"><div class="rp-circle">1</div><span data-rt="step_biz">Negocio</span></div>
-    <div class="rp-line"></div>
-    <div class="rp-step" data-s="2"><div class="rp-circle">2</div><span data-rt="step_account">Cuenta</span></div>
-    <div class="rp-line"></div>
-    <div class="rp-step" data-s="3"><div class="rp-circle">3</div><span data-rt="step_theme">Tema</span></div>
-    <div class="rp-line"></div>
-    <div class="rp-step" data-s="4"><div class="rp-circle">4</div><span data-rt="step_plan">Plan</span></div>
+  <!-- STEP 2 -->
+  <div class="rg-step" data-step="2" id="rs2">
+    <h1 class="rg-title" data-rt="s2_title">Crea tu cuenta</h1>
+    <div class="rg-field"><label class="rg-label" data-rt="full_name">Nombre completo</label><div class="rg-iw"><svg class="rg-ii" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg><input type="text" class="rg-input rg-inp-icon" id="r-fullname" data-rt-ph="ph_fullname" placeholder="Tu nombre completo"></div></div>
+    <div class="rg-field"><label class="rg-label" data-rt="email">Correo electr&#243;nico</label><div class="rg-iw"><svg class="rg-ii" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><input type="email" class="rg-input rg-inp-icon" id="r-email" placeholder="correo@ejemplo.com" autocomplete="email"><div class="rg-valid-icon" id="r-email-valid"></div></div></div>
+    <div class="rg-field"><label class="rg-label" data-rt="phone">Tel&#233;fono</label><div style="display:flex;gap:.5rem"><select class="rg-select" id="r-pcode"><option value="+58">+58 VE</option><option value="+57">+57 CO</option><option value="+52">+52 MX</option><option value="+1">+1 US</option><option value="+34">+34 ES</option></select><input type="tel" class="rg-input" id="r-phone" style="flex:1"></div></div>
+    <div class="rg-field"><label class="rg-label" data-rt="password">Contrase&#241;a</label><div class="rg-iw"><svg class="rg-ii" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" class="rg-input rg-inp-icon" id="r-pass" minlength="8" autocomplete="new-password"><button type="button" class="rg-eye" id="r-eye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="pw-meter"><div class="pw-seg" id="pw1"></div><div class="pw-seg" id="pw2"></div><div class="pw-seg" id="pw3"></div><div class="pw-seg" id="pw4"></div></div><span class="pw-label" id="pw-label"></span></div>
+    <div class="rg-field"><label class="rg-label" data-rt="confirm_pass">Confirmar contrase&#241;a</label><div class="rg-iw"><svg class="rg-ii" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="password" class="rg-input rg-inp-icon" id="r-pass2" autocomplete="new-password"><div class="rg-valid-icon" id="r-pass2-valid"></div></div></div>
+    <div class="rg-divider"><span data-rt="or_register">o reg&#237;strate con</span></div>
+    <button type="button" class="rg-btn-google" id="r-google"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg><span data-rt="google_btn">Continuar con Google</span></button>
   </div>
 
-  <div class="reg-card">
-    <!-- STEP 1 -->
-    <div class="reg-step active" data-step="1">
-      <h2 class="reg-title" data-rt="s1_title">&#191;Qu&#233; tipo de negocio tienes?</h2>
-      <div class="biz-grid" id="biz-grid">
-        <button type="button" class="biz-card" data-type="barbershop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12L18 18"/><circle cx="18" cy="18" r="3"/><path d="M18 6L6 18"/></svg><span data-rt="biz_barber">Barber&#237;a / Peluquer&#237;a</span></button>
-        <button type="button" class="biz-card" data-type="salon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 2a8 8 0 0 0-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg><span data-rt="biz_salon">Sal&#243;n de belleza</span></button>
-        <button type="button" class="biz-card" data-type="nails"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M18 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg><span data-rt="biz_nails">Manicure / Est&#233;tica</span></button>
-        <button type="button" class="biz-card" data-type="psychology"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><path d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5 7.5V20h6v-2.5c2.9-1.2 5-4.1 5-7.5a8 8 0 0 0-8-8z"/><path d="M10 20v2h4v-2"/></svg><span data-rt="biz_psych">Psicolog&#237;a / Terapia</span></button>
-        <button type="button" class="biz-card" data-type="legal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg><span data-rt="biz_legal">Legal / Consultor&#237;a</span></button>
-        <button type="button" class="biz-card" data-type="other"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><span data-rt="biz_other">Otro</span></button>
-      </div>
-      <div class="lf-group" style="margin-top:1.5rem">
-        <label class="lf-label" data-rt="biz_name_label">Nombre de tu negocio</label>
-        <input type="text" id="r-biz-name" class="rf-input" required>
-        <div class="slug-preview" id="slug-preview"></div>
-      </div>
-      <input type="hidden" id="r-biz-type" value="">
-      <div class="reg-nav"><div></div><button type="button" class="lf-btn-primary reg-next" id="r-next-1" data-rt="continue">Continuar &#8594;</button></div>
+  <!-- STEP 3 -->
+  <div class="rg-step" data-step="3" id="rs3">
+    <h1 class="rg-title" data-rt="s3_title">&#191;C&#243;mo se ver&#225; tu CitaClick?</h1>
+    <p class="rg-sub" data-rt="s3_sub">Podr&#225;s cambiarlo despu&#233;s desde configuraci&#243;n</p>
+    <div class="theme-grid">
+      <button type="button" class="th-card" data-theme-val="caballeros">
+        <div class="th-preview th-onyx"><div class="th-side"></div><div class="th-body"><div class="th-row"><div class="th-metric"></div><div class="th-metric"></div><div class="th-metric"></div></div><div class="th-cal"><div class="th-cal-row"><div></div><div></div><div class="th-cal-today"></div><div></div><div></div></div><div class="th-cal-ev"></div></div></div></div>
+        <div class="th-name">Onyx</div>
+        <div class="th-tag" style="color:#E8000D">Elegante &middot; Profesional</div>
+        <div class="th-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 12 10 16 18 8"/></svg></div>
+      </button>
+      <button type="button" class="th-card" data-theme-val="damas">
+        <div class="th-preview th-blush"><div class="th-side" style="background:#E8D0DC"></div><div class="th-body" style="background:#FDF6F9"><div class="th-row"><div class="th-metric" style="background:#F2E4EC"></div><div class="th-metric" style="background:#F2E4EC"></div><div class="th-metric" style="background:#F2E4EC"></div></div><div class="th-cal" style="border-color:#E8D0DC"><div class="th-cal-row"><div></div><div></div><div class="th-cal-today" style="background:#B784A7"></div><div></div><div></div></div><div class="th-cal-ev" style="background:#E8D0DC"></div></div></div></div>
+        <div class="th-name" style="color:#4A2C3A">Blush</div>
+        <div class="th-tag" style="color:#B784A7">Suave &middot; Sofisticado</div>
+        <div class="th-check" style="background:#B784A7"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 12 10 16 18 8"/></svg></div>
+      </button>
     </div>
-
-    <!-- STEP 2 -->
-    <div class="reg-step" data-step="2">
-      <h2 class="reg-title" data-rt="s2_title">Crea tu cuenta</h2>
-      <div class="lf-group"><label class="lf-label" data-rt="full_name">Nombre completo</label><input type="text" id="r-name" class="rf-input" required></div>
-      <div class="lf-group"><label class="lf-label" data-rt="email_label">Correo electr&#243;nico</label><input type="email" id="r-email" class="rf-input" required autocomplete="email"></div>
-      <div class="lf-group"><label class="lf-label" data-rt="phone_label">Tel&#233;fono</label>
-        <div style="display:flex;gap:.5rem"><select id="r-phone-code" class="rf-input" style="width:90px;flex-shrink:0"><option>+58</option><option>+57</option><option>+52</option><option>+1</option><option>+34</option></select><input type="tel" id="r-phone" class="rf-input" style="flex:1"></div>
-      </div>
-      <div class="lf-group"><label class="lf-label" data-rt="pass_label">Contrase&#241;a</label><input type="password" id="r-pass" class="rf-input" required autocomplete="new-password" minlength="8">
-        <div class="pw-meter"><div class="pw-bar" id="pw-bar"></div></div>
-        <span class="pw-text" id="pw-text"></span>
-      </div>
-      <div class="lf-group"><label class="lf-label" data-rt="confirm_pass">Confirmar contrase&#241;a</label><input type="password" id="r-pass2" class="rf-input" required autocomplete="new-password"></div>
-      <div class="lf-divider"><span data-rt="or_register">o reg&#237;strate con</span></div>
-      <button type="button" class="lf-btn-social lf-btn-google" id="r-google"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg><span data-rt="google_btn">Continuar con Google</span></button>
-      <div class="reg-nav"><button type="button" class="rf-btn-sec reg-prev" data-rt="back">&#8592; Atr&#225;s</button><button type="button" class="lf-btn-primary reg-next" id="r-next-2" data-rt="continue">Continuar &#8594;</button></div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div class="reg-step" data-step="3">
-      <h2 class="reg-title" data-rt="s3_title">&#191;C&#243;mo se ver&#225; tu CitaClick?</h2>
-      <div class="theme-grid">
-        <button type="button" class="theme-card" data-theme-val="caballeros">
-          <div class="theme-preview-onyx"><div class="tp-bar"></div><div class="tp-body"><div class="tp-accent"></div><div class="tp-line"></div><div class="tp-line short"></div></div></div>
-          <div class="theme-name">Onyx</div>
-          <div class="theme-desc" data-rt="theme_onyx_desc">Elegante y profesional</div>
-          <div class="theme-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 12 10 16 18 8"/></svg></div>
-        </button>
-        <button type="button" class="theme-card" data-theme-val="damas">
-          <div class="theme-preview-blush"><div class="tp-bar" style="background:#B784A7"></div><div class="tp-body" style="background:#FDF6F9"><div class="tp-accent" style="background:#C9A0DC"></div><div class="tp-line" style="background:#E8D0DC"></div><div class="tp-line short" style="background:#E8D0DC"></div></div></div>
-          <div class="theme-name">Blush</div>
-          <div class="theme-desc" data-rt="theme_blush_desc">Suave y sofisticado</div>
-          <div class="theme-check"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 12 10 16 18 8"/></svg></div>
-        </button>
-      </div>
-      <input type="hidden" id="r-theme" value="">
-      <p class="reg-hint" data-rt="theme_hint">Podr&#225;s cambiarlo despu&#233;s desde configuraci&#243;n</p>
-      <div class="reg-nav"><button type="button" class="rf-btn-sec reg-prev" data-rt="back">&#8592; Atr&#225;s</button><button type="button" class="lf-btn-primary reg-next" id="r-next-3" data-rt="continue">Continuar &#8594;</button></div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div class="reg-step" data-step="4">
-      <h2 class="reg-title" data-rt="s4_title">Empieza con 21 d&#237;as gratis</h2>
-      <div class="rplan-period" id="rplan-period">
-        <button class="rp-btn active" data-period="monthly" data-rt="monthly">Mensual</button>
-        <button class="rp-btn" data-period="quarterly" data-rt="quarterly">Trimestral -10%</button>
-        <button class="rp-btn" data-period="semiannual" data-rt="semiannual">Semestral -15%</button>
-        <button class="rp-btn" data-period="annual" data-rt="annual">Anual -20%</button>
-      </div>
-      <div class="rplan-grid">
-        <button type="button" class="rplan-card" data-plan="Standard">
-          <div class="rplan-name">Standard</div>
-          <div class="rplan-price" id="rp-standard">$7<small>/mes</small></div>
-          <ul class="rplan-features"><li data-rt="pf_1prov">1 Prestador de servicio</li><li data-rt="pf_dash">Dashboard completo</li><li data-rt="pf_notif">Notificaciones WhatsApp + Email</li><li data-rt="pf_nocat">Sin cat&#225;logo p&#250;blico</li></ul>
-        </button>
-        <button type="button" class="rplan-card featured" data-plan="Premium">
-          <div class="rplan-badge" data-rt="popular">Recomendado</div>
-          <div class="rplan-name">Premium</div>
-          <div class="rplan-price" id="rp-premium">$13<small>/mes</small></div>
-          <ul class="rplan-features"><li data-rt="pf_all_std">Todo lo del Standard</li><li data-rt="pf_catalog">Cat&#225;logo p&#250;blico + Link + QR</li><li data-rt="pf_maps">Google Maps integrado</li><li data-rt="pf_asst">1 Asistente adicional</li></ul>
-        </button>
-        <button type="button" class="rplan-card" data-plan="Salon VIP">
-          <div class="rplan-name">Sal&#243;n VIP</div>
-          <div class="rplan-price" id="rp-vip"><span class="rplan-from" data-rt="from">desde </span>$25<small>/mes</small></div>
-          <ul class="rplan-features"><li data-rt="pf_all_prem">Todo lo del Premium</li><li data-rt="pf_5prov">Admin + Asistente + hasta 5 prestadores</li><li data-rt="pf_multi">Multi-dashboard por prestador</li><li data-rt="pf_extra">+$5 por prestador adicional</li></ul>
-        </button>
-      </div>
-      <input type="hidden" id="r-plan" value="">
-      <div class="reg-nav"><button type="button" class="rf-btn-sec reg-prev" data-rt="back">&#8592; Atr&#225;s</button><button type="button" class="lf-btn-primary" id="r-submit" data-rt="create_btn">Crear mi cuenta gratis</button></div>
-      <p class="reg-micro" data-rt="no_card">Sin tarjeta de cr&#233;dito &middot; Cancela cuando quieras</p>
-    </div>
-
-    <div class="reg-error" id="r-error"></div>
+    <input type="hidden" id="r-theme" value="">
   </div>
 
-  <p class="reg-switch" data-rt="has_account">&#191;Ya tienes cuenta? <a href="/login" data-link data-rt="login_link">Inicia sesi&#243;n</a></p>
-  <footer class="site-footer" style="position:static;margin-top:1.5rem;font-size:.7rem;color:#B0B0CC">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer" style="color:#B0B0CC">@herasi.dev</a></footer>
+  <!-- STEP 4 -->
+  <div class="rg-step" data-step="4" id="rs4">
+    <h1 class="rg-title" data-rt="s4_title">Empieza con 21 d&#237;as gratis</h1>
+    <div class="rg-period" id="rg-period"><button type="button" class="rg-per active" data-p="monthly" data-rt="monthly">Mensual</button><button type="button" class="rg-per" data-p="quarterly" data-rt="quarterly">Trimestral -10%</button><button type="button" class="rg-per" data-p="semiannual" data-rt="semiannual">Semestral -15%</button><button type="button" class="rg-per" data-p="annual" data-rt="annual">Anual -20%</button></div>
+    <div class="pl-grid">
+      <button type="button" class="pl" data-plan="Standard">
+        <div class="pl-name">Standard</div>
+        <div class="pl-price" id="pl-std">$7<small>/mes</small></div>
+        <div class="pl-billing" data-rt="billed_monthly">Facturado mensualmente</div>
+        <ul class="pl-feat"><li class="yes" data-rt="pf_1">1 Profesional independiente</li><li class="yes" data-rt="pf_2">Dashboard completo</li><li class="yes" data-rt="pf_3">Calendario mes/semana/d&#237;a</li><li class="yes" data-rt="pf_4">Notificaciones WhatsApp + Email</li><li class="yes" data-rt="pf_5">Recordatorios autom&#225;ticos</li><li class="no" data-rt="pf_6n">Sin cat&#225;logo p&#250;blico</li><li class="no" data-rt="pf_7n">Sin QR</li></ul>
+        <div class="pl-cta" data-rt="choose_std">Elegir Standard</div>
+      </button>
+      <button type="button" class="pl featured" data-plan="Premium">
+        <div class="pl-badge" data-rt="most_popular">M&#193;S POPULAR</div>
+        <div class="pl-name">Premium</div>
+        <div class="pl-price" id="pl-prem">$13<small>/mes</small></div>
+        <div class="pl-billing" data-rt="billed_monthly">Facturado mensualmente</div>
+        <ul class="pl-feat"><li class="yes" data-rt="pf_all_std">Todo lo de Standard</li><li class="yes" data-rt="pf_cat">Cat&#225;logo p&#250;blico</li><li class="yes" data-rt="pf_qr">Link + QR descargable</li><li class="yes" data-rt="pf_maps">Google Maps integrado</li><li class="yes" data-rt="pf_asst">1 Asistente adicional</li><li class="yes" data-rt="pf_curr">Precios en USD y moneda local</li></ul>
+        <div class="pl-cta pl-cta-red" data-rt="choose_prem">Elegir Premium</div>
+      </button>
+      <button type="button" class="pl" data-plan="Salon VIP">
+        <div class="pl-name">Sal&#243;n VIP</div>
+        <div class="pl-price" id="pl-vip"><span class="pl-from" data-rt="from">desde </span>$25<small>/mes</small></div>
+        <div class="pl-billing" data-rt="vip_base">Admin + Asistente + 1 Prestador</div>
+        <div class="pl-note" data-rt="vip_extra">+$5 por prestador adicional (m&#225;x. 5)</div>
+        <ul class="pl-feat"><li class="yes" data-rt="pf_all_prem">Todo lo de Premium</li><li class="yes" data-rt="pf_5p">Hasta 5 prestadores activos</li><li class="yes" data-rt="pf_dash_p">Dashboard individual por prestador</li><li class="yes" data-rt="pf_roles">Roles: Admin &middot; Asistente &middot; Prestador</li><li class="yes" data-rt="pf_global">Vista global del sal&#243;n</li></ul>
+        <div class="pl-cta" data-rt="choose_vip">Elegir Sal&#243;n VIP</div>
+      </button>
+    </div>
+    <p class="rg-trial-note" data-rt="trial_note">Todos los planes incluyen 21 d&#237;as gratis. Sin tarjeta de cr&#233;dito. Cancela cuando quieras.</p>
+    <input type="hidden" id="r-plan" value="">
+  </div>
+
+  <div class="rg-error" id="rg-error"></div>
+
+  <div class="rg-nav" id="rg-nav">
+    <button type="button" class="rg-btn-back" id="rg-btn-back" style="visibility:hidden"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg><span data-rt="back">Atr&#225;s</span></button>
+    <button type="button" class="rg-btn-next" id="rg-btn-next" data-rt="continue">Continuar &#8594;</button>
+  </div>
+
+  <p class="rg-switch" data-rt="has_account">&#191;Ya tienes cuenta? <a href="/login" data-link data-rt="login_link">Inicia sesi&#243;n</a></p>
+</main>
+
+<footer class="site-footer rg-footer">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a></footer>
 </div>
 
 <style>
-.reg-page{min-height:100dvh;background:#F8F8FA;display:flex;flex-direction:column;align-items:center;padding:1rem 1rem 2rem}
-.reg-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:560px;margin-bottom:1.5rem}
-.reg-logo{display:flex;align-items:center;gap:.5rem}
-.reg-wordmark{font-family:system-ui,sans-serif;font-size:1.1rem;letter-spacing:-.5px;color:#1A1A2E}
-.reg-wordmark b{font-weight:700;color:#E8000D}
-.reg-wordmark span{font-weight:500}
-.reg-toggles{display:flex;gap:.5rem}
-.lpill{display:flex;background:rgba(15,15,30,.08);border-radius:999px;padding:2px;gap:2px}
-.lpill-opt{padding:4px 10px;font-size:.65rem;font-weight:700;border-radius:999px;letter-spacing:.04em;color:rgba(26,26,46,.4);transition:all .3s;white-space:nowrap;cursor:pointer}
-.lpill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.lpill-opt:hover:not(.active){color:rgba(26,26,46,.6)}
+.rg{min-height:100dvh;background:#F8F8FA;display:flex;flex-direction:column;font-family:'DM Sans',sans-serif}
 
-.reg-progress{display:flex;align-items:center;gap:0;margin-bottom:2rem;max-width:400px;width:100%}
-.rp-step{display:flex;flex-direction:column;align-items:center;gap:.375rem;flex-shrink:0;position:relative}
-.rp-circle{width:32px;height:32px;border-radius:50%;border:2px solid #D8D8E4;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#8888A0;background:#fff;transition:all .3s}
-.rp-step span{font-size:.65rem;font-weight:600;color:#8888A0;white-space:nowrap}
-.rp-step.done .rp-circle{background:#E8000D;border-color:#E8000D;color:#fff}
-.rp-step.done span{color:#E8000D}
-.rp-step.completed .rp-circle{background:#E8000D;border-color:#E8000D;color:#fff;font-size:0}
-.rp-step.completed .rp-circle::after{content:'\2713';font-size:.75rem}
-.rp-line{flex:1;height:2px;background:#D8D8E4;margin:0 .25rem;margin-bottom:1.25rem;transition:background .3s}
-.rp-line.filled{background:#E8000D}
+/* HEADER */
+.rg-header{position:sticky;top:0;z-index:50;height:64px;background:#fff;border-bottom:1px solid #E2E2EA;display:flex;align-items:center;padding:0 1.25rem;gap:1rem}
+.rg-logo{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.rg-wm{font-family:system-ui,sans-serif;font-size:1rem;letter-spacing:-.5px;color:#1A1A2E}
+.rg-wm b{font-weight:700;color:#E8000D}
+.rg-wm span{font-weight:500}
+.rg-steps{display:flex;align-items:center;gap:0;margin:0 auto}
+.rs{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0}
+.rs-c{width:36px;height:36px;border-radius:50%;border:2px solid #E2E2EA;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#9A9AB0;background:#fff;transition:all .3s}
+.rs span{font-size:.7rem;font-weight:500;color:#9A9AB0;white-space:nowrap}
+.rs.done .rs-c{background:#E8000D;border-color:#E8000D;color:#fff;box-shadow:0 0 0 4px rgba(232,0,13,.15)}
+.rs.done span{color:#E8000D;font-weight:600}
+.rs.completed .rs-c{background:#E8000D;border-color:#E8000D;color:#fff;font-size:0}
+.rs.completed .rs-c::after{content:'\2713';font-size:.8rem}
+.rs.completed span{color:#E8000D}
+.rs-line{width:32px;height:2px;background:#E2E2EA;margin:0 4px 18px;transition:background .3s}
+.rs-line.filled{background:#E8000D}
+.rg-hdr-right{display:flex;gap:.5rem;flex-shrink:0}
+.rg-pill{display:flex;background:#F0F0F5;border-radius:999px;padding:2px;gap:2px}
+.rp-o{padding:4px 10px;font-size:.65rem;font-weight:700;border-radius:999px;color:#9A9AB0;transition:all .25s;cursor:pointer;border:none;background:none;letter-spacing:.03em}
+.rp-o.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+@media(max-width:767px){.rs-c{width:28px;height:28px;font-size:.65rem}.rs span{display:none}.rs-line{width:20px;margin-bottom:0}}
 
-.reg-card{background:#fff;border:1px solid #E8E8F0;border-radius:16px;padding:clamp(1.5rem,4vw,2.5rem);width:100%;max-width:560px;box-shadow:0 4px 24px rgba(0,0,0,.04)}
-.reg-step{display:none;animation:rf-fade .3s ease both}
-.reg-step.active{display:block}
-@keyframes rf-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.reg-title{font-family:'Playfair Display',serif;font-size:1.375rem;font-weight:600;color:#1A1A2E;margin-bottom:1.5rem;letter-spacing:-.02em}
+/* MAIN */
+.rg-main{flex:1;max-width:600px;width:100%;margin:0 auto;padding:1.5rem 1rem 1rem}
+@media(min-width:768px){.rg-main{padding:2rem 2rem 1rem}}
+.rg-back{display:flex;align-items:center;gap:.35rem;font-size:.8125rem;font-weight:500;color:#5A5A7A;cursor:pointer;margin-bottom:1.25rem;transition:color .15s}
+.rg-back:hover{color:#1A1A2E}
 
-.biz-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
-@media(min-width:480px){.biz-grid{grid-template-columns:repeat(3,1fr)}}
-.biz-card{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1.25rem .75rem;border:2px solid #E8E8F0;border-radius:12px;background:#fff;cursor:pointer;transition:all .2s;color:#4A4A68}
-.biz-card:hover{border-color:#B0B0CC}
-.biz-card.selected{border-color:#E8000D;background:rgba(232,0,13,.04);color:#E8000D}
-.biz-card svg{color:inherit}
-.biz-card span{font-size:.75rem;font-weight:600;text-align:center}
+/* STEPS */
+.rg-step{display:none}
+.rg-step.active{display:block;animation:rs-in .3s ease both}
+.rg-step.exit-left{animation:rs-out-l .25s ease both}
+.rg-step.enter-right{animation:rs-in-r .3s ease both}
+@keyframes rs-in{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes rs-out-l{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-30px)}}
+@keyframes rs-in-r{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.rg-step,.rg-step.exit-left,.rg-step.enter-right{animation:none}}
+.rg-title{font-family:'Playfair Display',serif;font-size:clamp(1.375rem,3vw,1.75rem);font-weight:600;color:#1A1A2E;margin-bottom:.375rem;letter-spacing:-.02em}
+.rg-sub{font-size:.8125rem;color:#9A9AB0;margin-bottom:1.5rem}
 
-.rf-input{width:100%;padding:11px 14px;border:1.5px solid #D8D8E4;border-radius:10px;font-size:.875rem;color:#1A1A2E;background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
-.rf-input:focus{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
-.rf-input.shake{animation:rf-shake .4s ease}
-@keyframes rf-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+/* BIZ CARDS */
+.rg-group-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9A9AB0;margin-bottom:.75rem;margin-top:1.25rem}
+.rg-group-label:first-of-type{margin-top:0}
+.bz-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.625rem}
+@media(min-width:540px){.bz-grid{grid-template-columns:repeat(3,1fr)}}
+.bz{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1.125rem 1rem;border:1.5px solid #E2E2EA;border-radius:12px;background:#fff;cursor:pointer;transition:all .2s;position:relative;text-align:center}
+.bz svg{color:#9A9AB0;transition:color .2s}
+.bz span{font-size:.8125rem;font-weight:500;color:#5A5A7A;transition:color .2s}
+.bz:hover{border-color:#E8000D;background:rgba(232,0,13,.02);transform:translateY(-2px)}
+.bz:hover svg{color:#E8000D}
+.bz.selected{border:2px solid #E8000D;background:rgba(232,0,13,.04);box-shadow:0 4px 12px rgba(232,0,13,.12)}
+.bz.selected svg{color:#E8000D}
+.bz.selected span{color:#E8000D;font-weight:600}
+.bz.selected::after{content:'\2713';position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:#E8000D;color:#fff;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-.slug-preview{font-size:.7rem;color:#8888A0;margin-top:.375rem;height:1rem}
+/* FIELDS */
+.rg-field{margin-bottom:1rem}
+.rg-label{display:block;font-size:.75rem;font-weight:600;color:#5A5A7A;margin-bottom:.3rem}
+.rg-input{width:100%;padding:12px 14px;border:1.5px solid #E2E2EA;border-radius:12px;font-size:.875rem;color:#1A1A2E;background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-box-shadow:0 0 0px 1000px #fff inset;-webkit-text-fill-color:#1A1A2E}
+.rg-input:focus{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
+.rg-input.error{border-color:#EF4444}
+.rg-input.shake{animation:rg-shake .4s ease}
+@keyframes rg-shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.rg-slug{font-size:.75rem;color:#9A9AB0;margin-top:.35rem;min-height:1rem}
+.rg-iw{display:flex;align-items:center;background:#fff;border:1.5px solid #E2E2EA;border-radius:12px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.rg-iw:focus-within{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
+.rg-ii{width:18px;height:18px;margin-left:14px;color:#9A9AB0;flex-shrink:0}
+.rg-inp-icon{border:none;border-radius:0;padding:12px 12px 12px 10px;-webkit-box-shadow:none;box-shadow:none}
+.rg-inp-icon:focus{box-shadow:none}
+.rg-eye{width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#9A9AB0;flex-shrink:0;cursor:pointer;transition:color .15s}
+.rg-eye:hover{color:#1A1A2E}
+.rg-eye svg{width:18px;height:18px}
+.rg-valid-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem}
+.rg-select{padding:12px 10px;border:1.5px solid #E2E2EA;border-radius:12px;font-size:.8125rem;color:#1A1A2E;background:#fff;outline:none;width:100px;flex-shrink:0;-webkit-appearance:none}
+.rg-select:focus{border-color:#E8000D}
+.pw-meter{display:flex;gap:3px;margin-top:.375rem}
+.pw-seg{flex:1;height:4px;border-radius:2px;background:#E2E2EA;transition:background .3s}
+.pw-label{font-size:.65rem;font-weight:600;display:block;margin-top:.25rem;min-height:.875rem}
+.rg-divider{display:flex;align-items:center;gap:.75rem;margin:1.25rem 0;color:#9A9AB0;font-size:.75rem}
+.rg-divider::before,.rg-divider::after{content:'';flex:1;height:1px;background:#E2E2EA}
+.rg-btn-google{width:100%;padding:10px;border-radius:12px;font-size:.875rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.5rem;cursor:pointer;border:1.5px solid #E2E2EA;background:#fff;color:#333;transition:transform .15s,box-shadow .15s}
+.rg-btn-google:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.06)}
 
-.pw-meter{height:4px;background:#E8E8F0;border-radius:2px;margin-top:.375rem;overflow:hidden}
-.pw-bar{height:100%;width:0;border-radius:2px;transition:width .3s,background .3s}
-.pw-text{font-size:.65rem;font-weight:600;margin-top:.25rem;display:block;min-height:.875rem}
-
+/* THEME CARDS */
 .theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
-.theme-card{text-align:center;border:2px solid #E8E8F0;border-radius:14px;padding:1.25rem;cursor:pointer;transition:all .2s;position:relative;background:#fff}
-.theme-card:hover{border-color:#B0B0CC}
-.theme-card.selected{border-color:#E8000D;box-shadow:0 0 0 2px #E8000D}
-.theme-preview-onyx,.theme-preview-blush{border-radius:8px;overflow:hidden;border:1px solid #E8E8F0;margin-bottom:.75rem}
-.tp-bar{height:20px;background:#1A1A2E}
-.tp-body{padding:.5rem;background:#F5F5F5;display:flex;flex-direction:column;gap:.35rem;min-height:40px}
-.tp-accent{width:35%;height:6px;border-radius:3px;background:#E8000D}
-.tp-line{width:70%;height:4px;border-radius:2px;background:#D8D8E4}
-.tp-line.short{width:45%}
-.theme-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:#1A1A2E;margin-bottom:.125rem}
-.theme-desc{font-size:.75rem;color:#8888A0}
-.theme-check{display:none;position:absolute;top:.75rem;right:.75rem;width:24px;height:24px;border-radius:50%;background:#E8000D;align-items:center;justify-content:center}
-.theme-card.selected .theme-check{display:flex}
-.theme-check svg{width:14px;height:14px}
-.reg-hint{font-size:.75rem;color:#8888A0;text-align:center;margin-top:1rem}
+@media(max-width:479px){.theme-grid{grid-template-columns:1fr}}
+.th-card{border:2px solid #E2E2EA;border-radius:16px;padding:1.25rem;cursor:pointer;transition:all .2s;position:relative;background:#fff;text-align:center}
+.th-card:hover{border-color:#999}
+.th-card.selected{box-shadow:0 0 0 3px #E8000D;border-color:#E8000D;transform:scale(1.02)}
+.th-card[data-theme-val="damas"].selected{box-shadow:0 0 0 3px #B784A7;border-color:#B784A7}
+.th-preview{border-radius:10px;overflow:hidden;display:flex;height:140px;margin-bottom:.75rem;border:1px solid #E2E2EA}
+@media(min-width:768px){.th-preview{height:180px}}
+.th-onyx{background:#0D0D1A}
+.th-blush{background:#FDF6F9;border-color:#EBDCE6}
+.th-side{width:40px;background:#16213E;flex-shrink:0}
+.th-body{flex:1;padding:.5rem;display:flex;flex-direction:column;gap:.4rem;background:#1A1A2E}
+.th-row{display:flex;gap:.3rem}
+.th-metric{flex:1;height:18px;border-radius:4px;background:#16213E}
+.th-cal{flex:1;border:1px solid #2A2A44;border-radius:4px;padding:.25rem;display:flex;flex-direction:column;gap:.2rem}
+.th-cal-row{display:flex;gap:2px}
+.th-cal-row div{flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.04)}
+.th-cal-today{background:#E8000D!important;border-radius:50%}
+.th-cal-ev{height:6px;width:60%;border-radius:2px;background:rgba(232,0,13,.3)}
+.th-name{font-family:'Playfair Display',serif;font-size:1.125rem;font-weight:600;margin-bottom:.15rem}
+.th-tag{font-size:.75rem;font-weight:500}
+.th-check{display:none;position:absolute;top:.75rem;right:.75rem;width:26px;height:26px;border-radius:50%;background:#E8000D;align-items:center;justify-content:center}
+.th-card.selected .th-check{display:flex}
+.th-check svg{width:14px;height:14px}
 
-.rplan-period{display:flex;gap:3px;background:rgba(26,26,46,.04);border-radius:10px;padding:3px;margin-bottom:1.5rem;flex-wrap:wrap}
-.rp-btn{padding:7px 14px;font-size:.7rem;font-weight:600;border-radius:8px;color:rgba(26,26,46,.4);transition:all .2s;white-space:nowrap;flex:1;text-align:center}
-.rp-btn.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.rplan-grid{display:flex;flex-direction:column;gap:.75rem}
-@media(min-width:540px){.rplan-grid{flex-direction:row}.rplan-grid>*{flex:1}}
-.rplan-card{text-align:left;padding:1.25rem;border:2px solid #E8E8F0;border-radius:14px;background:#fff;cursor:pointer;transition:all .2s;position:relative}
-.rplan-card:hover{border-color:#B0B0CC}
-.rplan-card.selected{border-color:#E8000D;box-shadow:0 0 0 2px #E8000D}
-.rplan-card.featured{background:#1A1A2E;color:#F0F0F8;border-color:rgba(232,0,13,.3)}
-.rplan-badge{position:absolute;top:-.625rem;right:1rem;background:#E8000D;color:#fff;font-size:.6rem;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.04em}
-.rplan-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;margin-bottom:.25rem}
-.rplan-price{font-size:1.5rem;font-weight:700;margin-bottom:.75rem;letter-spacing:-.02em}
-.rplan-price small{font-size:.75rem;font-weight:400;opacity:.5}
-.rplan-from{font-size:.75rem;font-weight:400;opacity:.5}
-.rplan-features{font-size:.7rem;display:flex;flex-direction:column;gap:.35rem;opacity:.7}
-.rplan-features li{padding-left:.875rem;position:relative}
-.rplan-features li::before{content:'';position:absolute;left:0;top:5px;width:5px;height:5px;border-radius:50%;background:#10B981}
-.rplan-card.featured .rplan-features li::before{background:#E8000D}
+/* PLAN CARDS */
+.pl-grid{display:flex;flex-direction:column;gap:.75rem}
+@media(min-width:640px){.pl-grid{flex-direction:row}.pl-grid>*{flex:1}}
+.pl{text-align:left;padding:1.25rem;border:1.5px solid #E2E2EA;border-radius:14px;background:#fff;cursor:pointer;transition:all .2s;position:relative}
+.pl:hover{border-color:#999;transform:translateY(-2px)}
+.pl.selected{border:2px solid #E8000D;box-shadow:0 0 0 2px rgba(232,0,13,.15)}
+.pl.featured{border:2px solid #E8000D;box-shadow:0 8px 32px rgba(232,0,13,.12)}
+@media(min-width:640px){.pl.featured{transform:scale(1.03)}.pl.featured:hover{transform:scale(1.05)}}
+.pl-badge{position:absolute;top:-.5rem;right:1rem;background:#E8000D;color:#fff;font-size:.575rem;font-weight:700;padding:3px 10px;border-radius:10px;letter-spacing:.04em}
+.pl-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:#1A1A2E;margin-bottom:.25rem}
+.pl-price{font-size:1.75rem;font-weight:700;color:#1A1A2E;letter-spacing:-.02em}
+.pl-price small{font-size:.75rem;font-weight:400;color:#9A9AB0}
+.pl-from{font-size:.75rem;font-weight:400;color:#9A9AB0}
+.pl-billing{font-size:.7rem;color:#9A9AB0;margin-bottom:.75rem}
+.pl-note{font-size:.65rem;color:#E8000D;font-weight:500;margin-bottom:.5rem}
+.pl-feat{font-size:.7rem;display:flex;flex-direction:column;gap:.3rem;margin-bottom:1rem}
+.pl-feat li{padding-left:1rem;position:relative;color:#5A5A7A}
+.pl-feat li.yes::before{content:'';position:absolute;left:0;top:4px;width:8px;height:5px;border-left:2px solid #E8000D;border-bottom:2px solid #E8000D;transform:rotate(-45deg)}
+.pl-feat li.no{color:#C0C0CC;text-decoration:line-through}
+.pl-feat li.no::before{content:'\00d7';position:absolute;left:0;top:0;color:#C0C0CC;font-size:.7rem}
+.pl-cta{text-align:center;padding:8px;border:1.5px solid #E2E2EA;border-radius:10px;font-size:.8125rem;font-weight:600;color:#5A5A7A;transition:all .15s}
+.pl:hover .pl-cta{border-color:#1A1A2E;color:#1A1A2E}
+.pl-cta-red{background:#E8000D;color:#fff!important;border-color:#E8000D!important}
+.rg-period{display:flex;gap:3px;background:#F0F0F5;border-radius:10px;padding:3px;margin-bottom:1.5rem;flex-wrap:wrap}
+.rg-per{padding:6px 12px;font-size:.7rem;font-weight:600;border-radius:8px;color:#9A9AB0;transition:all .2s;white-space:nowrap;flex:1;text-align:center;cursor:pointer;border:none;background:none}
+.rg-per.active{background:#E8000D;color:#fff;box-shadow:0 1px 4px rgba(232,0,13,.2)}
+.rg-trial-note{font-size:.75rem;color:#9A9AB0;text-align:center;margin-top:1.25rem;line-height:1.5}
 
-.reg-nav{display:flex;justify-content:space-between;gap:.75rem;margin-top:1.75rem}
-.rf-btn-sec{padding:11px 20px;background:transparent;border:1.5px solid #D8D8E4;border-radius:10px;font-size:.875rem;font-weight:500;color:#4A4A68;cursor:pointer;transition:all .15s}
-.rf-btn-sec:hover{border-color:#1A1A2E;color:#1A1A2E}
-.reg-error{font-size:.75rem;color:#EF4444;text-align:center;margin-top:.75rem;min-height:1rem}
-.reg-micro{font-size:.7rem;color:#8888A0;text-align:center;margin-top:1rem}
-.reg-switch{font-size:.8125rem;color:#8888A0;text-align:center;margin-top:1.5rem}
-.reg-switch a{color:#E8000D;font-weight:600}
-.reg-footer{font-size:.7rem;color:#B0B0CC;text-align:center;margin-top:1.5rem}
-.reg-footer a{color:#B0B0CC;transition:color .15s}
-.reg-footer a:hover{color:#E8000D}
+/* NAV */
+.rg-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:.75rem}
+.rg-btn-back{display:flex;align-items:center;gap:.3rem;padding:10px 16px;font-size:.875rem;font-weight:500;color:#5A5A7A;border:1.5px solid #E2E2EA;border-radius:12px;cursor:pointer;background:none;transition:all .15s}
+.rg-btn-back:hover{border-color:#1A1A2E;color:#1A1A2E}
+.rg-btn-next{padding:12px 28px;font-size:.9375rem;font-weight:600;color:#fff;background:#E8000D;border:none;border-radius:12px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.rg-btn-next:hover{box-shadow:0 6px 20px rgba(232,0,13,.25);transform:translateY(-1px)}
+.rg-btn-next:active{transform:translateY(0)}
+.rg-btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.rg-error{font-size:.75rem;color:#EF4444;text-align:center;min-height:.875rem;margin-top:.5rem}
+.rg-switch{font-size:.8125rem;color:#9A9AB0;text-align:center;margin-top:1rem}
+.rg-switch a{color:#E8000D;font-weight:600}
+@media(max-width:479px){.rg-nav{flex-direction:column-reverse}.rg-btn-next,.rg-btn-back{width:100%;justify-content:center}}
 
-@media(prefers-reduced-motion:reduce){.reg-step{animation:none}}
+/* FOOTER */
+.rg-footer{text-align:center;padding:.75rem;font-size:.7rem;color:#9A9AB0}
+.rg-footer a{color:#9A9AB0;transition:color .15s}
+.rg-footer a:hover{color:#E8000D}
 </style>
 
 <script>
 (function(){
-var RT={
-es:{step_biz:'Negocio',step_account:'Cuenta',step_theme:'Tema',step_plan:'Plan',s1_title:'\u00bfQu\u00e9 tipo de negocio tienes?',biz_barber:'Barber\u00eda / Peluquer\u00eda',biz_salon:'Sal\u00f3n de belleza',biz_nails:'Manicure / Est\u00e9tica',biz_psych:'Psicolog\u00eda / Terapia',biz_legal:'Legal / Consultor\u00eda',biz_other:'Otro',biz_name_label:'Nombre de tu negocio',continue:'Continuar \u2192',back:'\u2190 Atr\u00e1s',s2_title:'Crea tu cuenta',full_name:'Nombre completo',email_label:'Correo electr\u00f3nico',phone_label:'Tel\u00e9fono',pass_label:'Contrase\u00f1a',confirm_pass:'Confirmar contrase\u00f1a',or_register:'o reg\u00edstrate con',google_btn:'Continuar con Google',s3_title:'\u00bfC\u00f3mo se ver\u00e1 tu CitaClick?',theme_onyx_desc:'Elegante y profesional',theme_blush_desc:'Suave y sofisticado',theme_hint:'Podr\u00e1s cambiarlo despu\u00e9s desde configuraci\u00f3n',s4_title:'Empieza con 21 d\u00edas gratis',monthly:'Mensual',quarterly:'Trimestral -10%',semiannual:'Semestral -15%',annual:'Anual -20%',pf_1prov:'1 Prestador de servicio',pf_dash:'Dashboard completo',pf_notif:'Notificaciones WhatsApp + Email',pf_nocat:'Sin cat\u00e1logo p\u00fablico',pf_all_std:'Todo lo del Standard',pf_catalog:'Cat\u00e1logo p\u00fablico + Link + QR',pf_maps:'Google Maps integrado',pf_asst:'1 Asistente adicional',popular:'Recomendado',pf_all_prem:'Todo lo del Premium',pf_5prov:'Admin + Asistente + hasta 5 prestadores',pf_multi:'Multi-dashboard por prestador',pf_extra:'+$5 por prestador adicional',from:'desde ',create_btn:'Crear mi cuenta gratis',no_card:'Sin tarjeta de cr\u00e9dito \u00b7 Cancela cuando quieras',has_account:'\u00bfYa tienes cuenta? ',login_link:'Inicia sesi\u00f3n',pw_weak:'D\u00e9bil',pw_medium:'Media',pw_strong:'Fuerte',err_type:'Selecciona un tipo de negocio',err_name:'Ingresa el nombre de tu negocio',err_fields:'Completa todos los campos',err_pass8:'La contrase\u00f1a debe tener al menos 8 caracteres',err_match:'Las contrase\u00f1as no coinciden',err_theme:'Selecciona un tema',err_plan:'Selecciona un plan'},
-en:{step_biz:'Business',step_account:'Account',step_theme:'Theme',step_plan:'Plan',s1_title:'What type of business do you have?',biz_barber:'Barbershop / Salon',biz_salon:'Beauty salon',biz_nails:'Nails / Aesthetics',biz_psych:'Psychology / Therapy',biz_legal:'Legal / Consulting',biz_other:'Other',biz_name_label:'Business name',continue:'Continue \u2192',back:'\u2190 Back',s2_title:'Create your account',full_name:'Full name',email_label:'Email address',phone_label:'Phone',pass_label:'Password',confirm_pass:'Confirm password',or_register:'or sign up with',google_btn:'Continue with Google',s3_title:'How will your CitaClick look?',theme_onyx_desc:'Elegant and professional',theme_blush_desc:'Soft and sophisticated',theme_hint:'You can change it later in settings',s4_title:'Start with 21 free days',monthly:'Monthly',quarterly:'Quarterly -10%',semiannual:'Semiannual -15%',annual:'Annual -20%',pf_1prov:'1 Service provider',pf_dash:'Full dashboard',pf_notif:'WhatsApp + Email notifications',pf_nocat:'No public catalog',pf_all_std:'Everything in Standard',pf_catalog:'Public catalog + Link + QR',pf_maps:'Google Maps integrated',pf_asst:'1 Extra assistant',popular:'Recommended',pf_all_prem:'Everything in Premium',pf_5prov:'Admin + Assistant + up to 5 providers',pf_multi:'Multi-dashboard per provider',pf_extra:'+$5 per additional provider',from:'from ',create_btn:'Create my free account',no_card:'No credit card \u00b7 Cancel anytime',has_account:'Already have an account? ',login_link:'Sign in',pw_weak:'Weak',pw_medium:'Medium',pw_strong:'Strong',err_type:'Select a business type',err_name:'Enter your business name',err_fields:'Complete all fields',err_pass8:'Password must be at least 8 characters',err_match:'Passwords do not match',err_theme:'Select a theme',err_plan:'Select a plan'}
-};
-var lang=localStorage.getItem('citaclick-lang')||(navigator.language||'es').slice(0,2);
-if(lang!=='en')lang='es';
-var step=1;
-var basePrices={Standard:7,Premium:13,'Salon VIP':25};
-var discounts={monthly:1,quarterly:.9,semiannual:.85,annual:.8};
-var period='monthly';
+var RT={es:{back_home:'Volver al inicio',back:'Atr\u00e1s',continue:'Continuar \u2192',s1_title:'\u00bfC\u00f3mo describes tu actividad?',s1_sub:'Esto nos ayuda a configurar CitaClick para ti',group_indie:'Profesional independiente',group_biz:'Local o negocio',bz_barber:'Barbero / Estilista',bz_nails:'Manicurista / Esteticista',bz_psych:'Psic\u00f3logo / Terapeuta',bz_legal:'Abogado / Consultor',bz_other_indie:'Otro profesional',bz_barbershop:'Barber\u00eda / Peluquer\u00eda',bz_salon:'Sal\u00f3n de belleza',bz_wellness:'Centro de bienestar',bz_office:'Consultorio / Despacho',bz_other_biz:'Otro negocio',biz_name:'Nombre de tu negocio',indie_name:'Tu nombre profesional',ph_biz:'Ej: Sal\u00f3n Rose',ph_indie:'Ej: Mar\u00eda Gonz\u00e1lez',s2_title:'Crea tu cuenta',full_name:'Nombre completo',email:'Correo electr\u00f3nico',phone:'Tel\u00e9fono',password:'Contrase\u00f1a',confirm_pass:'Confirmar contrase\u00f1a',ph_fullname:'Tu nombre completo',or_register:'o reg\u00edstrate con',google_btn:'Continuar con Google',s3_title:'\u00bfC\u00f3mo se ver\u00e1 tu CitaClick?',s3_sub:'Podr\u00e1s cambiarlo despu\u00e9s desde configuraci\u00f3n',s4_title:'Empieza con 21 d\u00edas gratis',monthly:'Mensual',quarterly:'Trimestral -10%',semiannual:'Semestral -15%',annual:'Anual -20%',billed_monthly:'Facturado mensualmente',from:'desde ',vip_base:'Admin + Asistente + 1 Prestador',vip_extra:'+$5 por prestador adicional (m\u00e1x. 5)',pf_1:'1 Profesional independiente',pf_2:'Dashboard completo',pf_3:'Calendario mes/semana/d\u00eda',pf_4:'Notificaciones WhatsApp + Email',pf_5:'Recordatorios autom\u00e1ticos',pf_6n:'Sin cat\u00e1logo p\u00fablico',pf_7n:'Sin QR',pf_all_std:'Todo lo de Standard',pf_cat:'Cat\u00e1logo p\u00fablico',pf_qr:'Link + QR descargable',pf_maps:'Google Maps integrado',pf_asst:'1 Asistente adicional',pf_curr:'Precios en USD y moneda local',pf_all_prem:'Todo lo de Premium',pf_5p:'Hasta 5 prestadores activos',pf_dash_p:'Dashboard individual por prestador',pf_roles:'Roles: Admin \u00b7 Asistente \u00b7 Prestador',pf_global:'Vista global del sal\u00f3n',choose_std:'Elegir Standard',choose_prem:'Elegir Premium',choose_vip:'Elegir Sal\u00f3n VIP',most_popular:'M\u00c1S POPULAR',trial_note:'Todos los planes incluyen 21 d\u00edas gratis. Sin tarjeta de cr\u00e9dito. Cancela cuando quieras.',create_btn:'Crear mi cuenta gratis \u2192',has_account:'\u00bfYa tienes cuenta? ',login_link:'Inicia sesi\u00f3n',pw_vweak:'Muy d\u00e9bil',pw_weak:'D\u00e9bil',pw_medium:'Media',pw_strong:'Fuerte',err_type:'Selecciona tu tipo de actividad',err_name:'Escribe un nombre',err_fields:'Completa todos los campos',err_email:'Email no v\u00e1lido',err_pass:'M\u00ednimo 8 caracteres',err_match:'Las contrase\u00f1as no coinciden',err_theme:'Selecciona un tema',err_plan:'Selecciona un plan'},
+en:{back_home:'Back to home',back:'Back',continue:'Continue \u2192',s1_title:'How do you describe your activity?',s1_sub:'This helps us set up CitaClick for you',group_indie:'Independent professional',group_biz:'Location or business',bz_barber:'Barber / Stylist',bz_nails:'Nail tech / Esthetician',bz_psych:'Psychologist / Therapist',bz_legal:'Lawyer / Consultant',bz_other_indie:'Other professional',bz_barbershop:'Barbershop / Salon',bz_salon:'Beauty salon',bz_wellness:'Wellness center',bz_office:'Office / Practice',bz_other_biz:'Other business',biz_name:'Business name',indie_name:'Your professional name',ph_biz:'E.g. Rose Salon',ph_indie:'E.g. Maria Gonzalez',s2_title:'Create your account',full_name:'Full name',email:'Email address',phone:'Phone',password:'Password',confirm_pass:'Confirm password',ph_fullname:'Your full name',or_register:'or sign up with',google_btn:'Continue with Google',s3_title:'How will your CitaClick look?',s3_sub:'You can change it later in settings',s4_title:'Start with 21 free days',monthly:'Monthly',quarterly:'Quarterly -10%',semiannual:'Semiannual -15%',annual:'Annual -20%',billed_monthly:'Billed monthly',from:'from ',vip_base:'Admin + Assistant + 1 Provider',vip_extra:'+$5 per additional provider (max. 5)',pf_1:'1 Independent professional',pf_2:'Full dashboard',pf_3:'Calendar month/week/day',pf_4:'WhatsApp + Email notifications',pf_5:'Automatic reminders',pf_6n:'No public catalog',pf_7n:'No QR',pf_all_std:'Everything in Standard',pf_cat:'Public catalog',pf_qr:'Link + downloadable QR',pf_maps:'Google Maps integrated',pf_asst:'1 Extra assistant',pf_curr:'Prices in USD and local currency',pf_all_prem:'Everything in Premium',pf_5p:'Up to 5 active providers',pf_dash_p:'Individual dashboard per provider',pf_roles:'Roles: Admin \u00b7 Assistant \u00b7 Provider',pf_global:'Global salon view',choose_std:'Choose Standard',choose_prem:'Choose Premium',choose_vip:'Choose Sal\u00f3n VIP',most_popular:'MOST POPULAR',trial_note:'All plans include 21 free days. No credit card. Cancel anytime.',create_btn:'Create my free account \u2192',has_account:'Already have an account? ',login_link:'Sign in',pw_vweak:'Very weak',pw_weak:'Weak',pw_medium:'Medium',pw_strong:'Strong',err_type:'Select your activity type',err_name:'Enter a name',err_fields:'Complete all fields',err_email:'Invalid email',err_pass:'Minimum 8 characters',err_match:'Passwords do not match',err_theme:'Select a theme',err_plan:'Select a plan'}};
+var lang=localStorage.getItem('citaclick-lang')||(navigator.language||'es').slice(0,2);if(lang!=='en')lang='es';
+var step=1,period='monthly';
+var prices={Standard:7,Premium:13,'Salon VIP':25};
+var disc={monthly:1,quarterly:.9,semiannual:.85,annual:.8};
 
-function applyRT(){
-  document.querySelectorAll('[data-rt]').forEach(function(el){
-    var k=el.getAttribute('data-rt');
-    if(RT[lang]&&RT[lang][k]){
-      if(el.querySelector('a[data-rt]')){var a=el.querySelector('a[data-rt]');el.firstChild.textContent=RT[lang][k];a.textContent=RT[lang][a.getAttribute('data-rt')];}
-      else el.textContent=RT[lang][k];
-    }
-  });
-  document.querySelectorAll('#reg-lang-pill .lpill-opt').forEach(function(b){b.classList.toggle('active',b.dataset.val===lang);});
-  updatePrices();
-}
+function t(k){return RT[lang]&&RT[lang][k]?RT[lang][k]:k;}
+function applyRT(){document.querySelectorAll('[data-rt]').forEach(function(el){var k=el.getAttribute('data-rt');var v=t(k);if(el.querySelector('a[data-rt]')){var a=el.querySelector('a[data-rt]');el.firstChild.textContent=v;a.textContent=t(a.getAttribute('data-rt'));}else el.textContent=v;});document.querySelectorAll('#rg-lang-pill .rp-o').forEach(function(b){b.classList.toggle('active',b.dataset.val===lang);});updatePrices();}
 
-document.getElementById('reg-lang-pill').addEventListener('click',function(e){var b=e.target.closest('.lpill-opt');if(!b)return;lang=b.dataset.val;localStorage.setItem('citaclick-lang',lang);applyRT();});
+document.getElementById('rg-lang-pill').querySelectorAll('.rp-o').forEach(function(b){b.addEventListener('click',function(){lang=this.dataset.val;localStorage.setItem('citaclick-lang',lang);applyRT();});});
+document.getElementById('rg-theme-pill').querySelectorAll('.rp-o').forEach(function(b){b.addEventListener('click',function(){var v=this.dataset.val;localStorage.setItem('citaclick-theme',v);document.querySelectorAll('#rg-theme-pill .rp-o').forEach(function(x){x.classList.toggle('active',x.dataset.val===v);});});});
 
 function goStep(n){
+  var old=document.querySelector('.rg-step.active');
   step=n;
-  document.querySelectorAll('.reg-step').forEach(function(s){s.classList.remove('active');});
-  var target=document.querySelector('[data-step="'+n+'"]');if(target)target.classList.add('active');
-  document.querySelectorAll('.rp-step').forEach(function(s,i){
-    var sn=parseInt(s.dataset.s);
-    s.classList.remove('done','completed');
-    if(sn<n)s.classList.add('completed');
-    else if(sn===n)s.classList.add('done');
-  });
-  document.querySelectorAll('.rp-line').forEach(function(l,i){l.classList.toggle('filled',i<n-1);});
+  document.querySelectorAll('.rg-step').forEach(function(s){s.classList.remove('active','exit-left','enter-right');s.style.display='none';});
+  var target=document.querySelector('[data-step="'+n+'"]');target.style.display='block';target.classList.add('active');
+  document.querySelectorAll('.rs').forEach(function(s,i){var sn=parseInt(s.dataset.s);s.classList.remove('done','completed');if(sn<n)s.classList.add('completed');else if(sn===n)s.classList.add('done');});
+  document.querySelectorAll('.rs-line').forEach(function(l,i){l.classList.toggle('filled',i<n-1);});
+  document.getElementById('rg-btn-back').style.visibility=n===1?'hidden':'visible';
+  document.getElementById('rg-back-text').textContent=n===1?t('back_home'):t('back');
+  if(n===4){document.getElementById('rg-btn-next').textContent=t('create_btn');}else{document.getElementById('rg-btn-next').textContent=t('continue');}
+  document.getElementById('rg-error').textContent='';
   sessionStorage.setItem('reg-step',n);
-  document.getElementById('r-error').textContent='';
 }
 
-function showError(msg){document.getElementById('r-error').textContent=msg;}
-function shakeField(id){var el=document.getElementById(id);if(el){el.classList.add('shake');setTimeout(function(){el.classList.remove('shake');},400);}}
+function showErr(msg){document.getElementById('rg-error').textContent=msg;}
+function shake(id){var el=document.getElementById(id);if(el){el.classList.add('shake');setTimeout(function(){el.classList.remove('shake');},400);}}
 
-document.getElementById('biz-grid').addEventListener('click',function(e){
-  var card=e.target.closest('.biz-card');if(!card)return;
-  document.querySelectorAll('.biz-card').forEach(function(c){c.classList.remove('selected');});
+/* BIZ CARDS */
+document.querySelectorAll('.bz').forEach(function(card){card.addEventListener('click',function(){
+  document.querySelectorAll('.bz').forEach(function(c){c.classList.remove('selected');});
   card.classList.add('selected');
   document.getElementById('r-biz-type').value=card.dataset.type;
+  document.getElementById('r-biz-group').value=card.dataset.group;
+  var isIndie=card.dataset.group==='indie';
+  document.getElementById('rg-name-label').textContent=isIndie?t('indie_name'):t('biz_name');
+  document.getElementById('r-name').placeholder=isIndie?t('ph_indie'):t('ph_biz');
+});});
+
+document.getElementById('r-name').addEventListener('input',function(){
+  var v=this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  document.getElementById('r-slug-preview').textContent=v?'Tu enlace: citaclick.net/'+v:'';
 });
 
-document.getElementById('r-biz-name').addEventListener('input',function(){
-  var slug=this.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-  document.getElementById('slug-preview').textContent=slug?slug+'.citaclick.net':'';
-});
+/* THEME CARDS */
+document.querySelectorAll('.th-card').forEach(function(c){c.addEventListener('click',function(){
+  document.querySelectorAll('.th-card').forEach(function(x){x.classList.remove('selected');});
+  c.classList.add('selected');document.getElementById('r-theme').value=c.dataset.themeVal;
+});});
 
-document.querySelectorAll('.theme-card').forEach(function(card){
-  card.addEventListener('click',function(){
-    document.querySelectorAll('.theme-card').forEach(function(c){c.classList.remove('selected');});
-    card.classList.add('selected');
-    document.getElementById('r-theme').value=card.dataset.themeVal;
-  });
-});
+/* PLAN CARDS */
+document.querySelectorAll('.pl').forEach(function(c){c.addEventListener('click',function(){
+  document.querySelectorAll('.pl').forEach(function(x){x.classList.remove('selected');});
+  c.classList.add('selected');document.getElementById('r-plan').value=c.dataset.plan;
+});});
 
-document.querySelectorAll('.rplan-card').forEach(function(card){
-  card.addEventListener('click',function(){
-    document.querySelectorAll('.rplan-card').forEach(function(c){c.classList.remove('selected');});
-    card.classList.add('selected');
-    document.getElementById('r-plan').value=card.dataset.plan;
-  });
-});
-
-document.getElementById('rplan-period').addEventListener('click',function(e){
-  var b=e.target.closest('.rp-btn');if(!b)return;
-  period=b.dataset.period;
-  document.querySelectorAll('.rp-btn').forEach(function(p){p.classList.toggle('active',p.dataset.period===period);});
-  updatePrices();
-});
-
-function updatePrices(){
-  var d=discounts[period];var mo=lang==='en'?'/mo':'/mes';
-  document.getElementById('rp-standard').textContent='$'+(basePrices.Standard*d).toFixed(2).replace(/\.00$/,'');
-  document.getElementById('rp-standard').insertAdjacentHTML('beforeend','<small>'+mo+'</small>');
-  document.getElementById('rp-premium').textContent='$'+(basePrices.Premium*d).toFixed(2).replace(/\.00$/,'');
-  document.getElementById('rp-premium').insertAdjacentHTML('beforeend','<small>'+mo+'</small>');
-  var vipEl=document.getElementById('rp-vip');
-  vipEl.textContent='';
-  var sp=document.createElement('span');sp.className='rplan-from';sp.textContent=RT[lang].from||'desde ';vipEl.appendChild(sp);
-  vipEl.appendChild(document.createTextNode('$'+(basePrices['Salon VIP']*d).toFixed(2).replace(/\.00$/,'')));
-  var sm=document.createElement('small');sm.textContent=mo;vipEl.appendChild(sm);
+/* PERIOD */
+document.getElementById('rg-period').addEventListener('click',function(e){var b=e.target.closest('.rg-per');if(!b)return;period=b.dataset.p;document.querySelectorAll('.rg-per').forEach(function(p){p.classList.toggle('active',p.dataset.p===period);});updatePrices();});
+function updatePrices(){var d=disc[period];var mo=lang==='en'?'/mo':'/mes';
+  document.getElementById('pl-std').textContent='$'+(prices.Standard*d).toFixed(2).replace(/\.00$/,'');document.getElementById('pl-std').insertAdjacentHTML('beforeend','<small>'+mo+'</small>');
+  document.getElementById('pl-prem').textContent='$'+(prices.Premium*d).toFixed(2).replace(/\.00$/,'');document.getElementById('pl-prem').insertAdjacentHTML('beforeend','<small>'+mo+'</small>');
+  var ve=document.getElementById('pl-vip');ve.textContent='';var sp=document.createElement('span');sp.className='pl-from';sp.textContent=t('from');ve.appendChild(sp);ve.appendChild(document.createTextNode('$'+(prices['Salon VIP']*d).toFixed(2).replace(/\.00$/,'')));var sm=document.createElement('small');sm.textContent=mo;ve.appendChild(sm);
 }
 
+/* PASSWORD */
 document.getElementById('r-pass').addEventListener('input',function(){
-  var v=this.value;var score=0;
-  if(v.length>=8)score++;if(v.length>=12)score++;if(/[A-Z]/.test(v))score++;if(/[0-9]/.test(v))score++;if(/[^A-Za-z0-9]/.test(v))score++;
-  var bar=document.getElementById('pw-bar');var txt=document.getElementById('pw-text');
-  if(v.length===0){bar.style.width='0';txt.textContent='';return;}
-  if(score<=2){bar.style.width='33%';bar.style.background='#EF4444';txt.textContent=RT[lang].pw_weak;txt.style.color='#EF4444';}
-  else if(score<=3){bar.style.width='66%';bar.style.background='#F59E0B';txt.textContent=RT[lang].pw_medium;txt.style.color='#F59E0B';}
-  else{bar.style.width='100%';bar.style.background='#10B981';txt.textContent=RT[lang].pw_strong;txt.style.color='#10B981';}
+  var v=this.value;var s=0;if(v.length>=6)s++;if(v.length>=8)s++;if(v.length>=12)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  var colors=['#EF4444','#F59E0B','#F59E0B','#10B981'];var labels=[t('pw_vweak'),t('pw_weak'),t('pw_medium'),t('pw_strong')];
+  var level=v.length===0?-1:s<=2?0:s<=3?1:s<=4?2:3;
+  for(var i=0;i<4;i++){document.getElementById('pw'+(i+1)).style.background=i<=level?colors[level]:'#E2E2EA';}
+  document.getElementById('pw-label').textContent=level>=0?labels[level]:'';document.getElementById('pw-label').style.color=level>=0?colors[level]:'';
 });
+document.getElementById('r-pass2').addEventListener('input',function(){
+  var match=this.value===document.getElementById('r-pass').value&&this.value.length>0;
+  document.getElementById('r-pass2-valid').textContent=this.value.length===0?'':match?'\u2713':'\u2717';
+  document.getElementById('r-pass2-valid').style.color=match?'#10B981':'#EF4444';
+});
+document.getElementById('r-email').addEventListener('input',function(){
+  var valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value);
+  document.getElementById('r-email-valid').textContent=this.value.length===0?'':valid?'\u2713':'\u2717';
+  document.getElementById('r-email-valid').style.color=valid?'#10B981':'#EF4444';
+});
+document.getElementById('r-eye').addEventListener('click',function(){var i=document.getElementById('r-pass');i.type=i.type==='password'?'text':'password';});
 
-document.getElementById('r-next-1').addEventListener('click',function(){
-  if(!document.getElementById('r-biz-type').value){showError(RT[lang].err_type);return;}
-  if(!document.getElementById('r-biz-name').value.trim()){shakeField('r-biz-name');showError(RT[lang].err_name);return;}
-  goStep(2);
+/* NAVIGATION */
+document.getElementById('rg-btn-next').addEventListener('click',async function(){
+  if(step===1){
+    if(!document.getElementById('r-biz-type').value){showErr(t('err_type'));return;}
+    if(!document.getElementById('r-name').value.trim()){shake('r-name');showErr(t('err_name'));return;}
+    goStep(2);
+  }else if(step===2){
+    var fn=document.getElementById('r-fullname').value.trim();var em=document.getElementById('r-email').value.trim();var pw=document.getElementById('r-pass').value;var pw2=document.getElementById('r-pass2').value;
+    if(!fn||!em){showErr(t('err_fields'));return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){shake('r-email');showErr(t('err_email'));return;}
+    if(pw.length<8){shake('r-pass');showErr(t('err_pass'));return;}
+    if(pw!==pw2){shake('r-pass2');showErr(t('err_match'));return;}
+    goStep(3);
+  }else if(step===3){
+    if(!document.getElementById('r-theme').value){showErr(t('err_theme'));return;}
+    goStep(4);
+  }else if(step===4){
+    if(!document.getElementById('r-plan').value){showErr(t('err_plan'));return;}
+    var btn=this;btn.disabled=true;btn.textContent='...';
+    var data={business_type:document.getElementById('r-biz-type').value,business_name:document.getElementById('r-name').value.trim(),slug:document.getElementById('r-name').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),email:document.getElementById('r-email').value.trim(),password:document.getElementById('r-pass').value,theme:document.getElementById('r-theme').value,plan:document.getElementById('r-plan').value};
+    var res=await Auth.register(data);
+    if(res.success){sessionStorage.removeItem('reg-step');Router.navigate('/dashboard');}
+    else{showErr(res.message||'Error');btn.disabled=false;btn.textContent=t('create_btn');}
+  }
 });
-document.getElementById('r-next-2').addEventListener('click',function(){
-  var name=document.getElementById('r-name').value.trim();
-  var email=document.getElementById('r-email').value.trim();
-  var pass=document.getElementById('r-pass').value;
-  var pass2=document.getElementById('r-pass2').value;
-  if(!name||!email){showError(RT[lang].err_fields);return;}
-  if(pass.length<8){shakeField('r-pass');showError(RT[lang].err_pass8);return;}
-  if(pass!==pass2){shakeField('r-pass2');showError(RT[lang].err_match);return;}
-  goStep(3);
-});
-document.getElementById('r-next-3').addEventListener('click',function(){
-  if(!document.getElementById('r-theme').value){showError(RT[lang].err_theme);return;}
-  goStep(4);
-});
-
-document.querySelectorAll('.reg-prev').forEach(function(b){b.addEventListener('click',function(){goStep(step-1);});});
-
-document.getElementById('r-submit').addEventListener('click',async function(){
-  if(!document.getElementById('r-plan').value){showError(RT[lang].err_plan);return;}
-  var btn=this;btn.disabled=true;btn.textContent='...';
-  var data={
-    business_type:document.getElementById('r-biz-type').value,
-    business_name:document.getElementById('r-biz-name').value.trim(),
-    slug:document.getElementById('r-biz-name').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
-    email:document.getElementById('r-email').value.trim(),
-    password:document.getElementById('r-pass').value,
-    theme:document.getElementById('r-theme').value,
-    plan:document.getElementById('r-plan').value,
-  };
-  var res=await Auth.register(data);
-  if(res.success){sessionStorage.removeItem('reg-step');Router.navigate('/dashboard');}
-  else{showError(res.message||'Error');btn.disabled=false;btn.textContent=RT[lang].create_btn;}
-});
-
+document.getElementById('rg-btn-back').addEventListener('click',function(){if(step===1){window.location.href='/';}else{goStep(step-1);}});
+document.getElementById('rg-back').addEventListener('click',function(){if(step===1){window.location.href='/';}else{goStep(step-1);}});
 document.getElementById('r-google').addEventListener('click',function(){Auth.loginWithGoogle();});
 
-var savedStep=parseInt(sessionStorage.getItem('reg-step')||'1');
-if(savedStep>=1&&savedStep<=4)goStep(savedStep);else goStep(1);
+var saved=parseInt(sessionStorage.getItem('reg-step')||'1');if(saved>=1&&saved<=4)goStep(saved);else goStep(1);
 applyRT();
 })();
 </script>
