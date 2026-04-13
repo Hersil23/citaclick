@@ -26,7 +26,7 @@ class AdminController
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
         $stmt = $db->prepare("
-            SELECT COALESCE(SUM(p.price), 0) as revenue
+            SELECT COALESCE(SUM(p.price_monthly), 0) as revenue
             FROM subscriptions s
             JOIN plans p ON p.id = s.plan_id
             WHERE s.status = 'active' AND s.start_date <= :end AND (s.end_date IS NULL OR s.end_date >= :start)
@@ -77,7 +77,7 @@ class AdminController
         }
 
         $stmt = $db->prepare("
-            SELECT b.*, p.name AS plan_name, p.slug AS plan_slug,
+            SELECT b.*, p.name AS plan_name, p.price_monthly,
                    s.status AS sub_status, s.end_date
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = 'active'
@@ -98,9 +98,9 @@ class AdminController
         $body = $args['body'];
         $db = Database::getInstance();
 
-        if (!empty($body['plan_slug'])) {
-            $stmt = $db->prepare('SELECT id FROM plans WHERE slug = :slug LIMIT 1');
-            $stmt->execute([':slug' => $body['plan_slug']]);
+        if (!empty($body['plan_name'])) {
+            $stmt = $db->prepare('SELECT id FROM plans WHERE name = :name LIMIT 1');
+            $stmt->execute([':name' => $body['plan_name']]);
             $plan = $stmt->fetch();
 
             if ($plan) {

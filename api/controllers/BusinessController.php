@@ -10,7 +10,7 @@ class BusinessController
         $db = Database::getInstance();
 
         $stmt = $db->prepare('
-            SELECT b.*, p.slug AS plan_slug, p.name AS plan_name,
+            SELECT b.*, p.name AS plan_name, p.price_monthly, p.max_providers,
                    s.status AS sub_status, s.start_date, s.end_date
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"

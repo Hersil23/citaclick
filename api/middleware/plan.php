@@ -25,7 +25,7 @@ function checkPlanFeature(int $businessId, string $feature): bool
     $db = Database::getInstance();
 
     $stmt = $db->prepare('
-        SELECT p.slug
+        SELECT p.name
         FROM subscriptions s
         JOIN plans p ON p.id = s.plan_id
         WHERE s.business_id = :bid
@@ -45,22 +45,22 @@ function checkPlanFeature(int $businessId, string $feature): bool
         return false;
     }
 
-    $plan = $row['slug'];
+    $plan = $row['name'];
 
-    if (in_array($feature, $salonVipFeatures, true) && $plan !== 'salon_vip') {
+    if (in_array($feature, $salonVipFeatures, true) && $plan !== 'Salon VIP') {
         sendJson(403, [
             'success' => false,
             'message' => 'Esta funcionalidad requiere el plan Salon VIP',
-            'data' => ['required_plan' => 'salon_vip'],
+            'data' => ['required_plan' => 'Salon VIP'],
         ]);
         return false;
     }
 
-    if (in_array($feature, $premiumFeatures, true) && $plan === 'standard') {
+    if (in_array($feature, $premiumFeatures, true) && $plan === 'Standard') {
         sendJson(403, [
             'success' => false,
             'message' => 'Esta funcionalidad requiere el plan Premium o superior',
-            'data' => ['required_plan' => 'premium'],
+            'data' => ['required_plan' => 'Premium'],
         ]);
         return false;
     }
@@ -73,7 +73,7 @@ function getBusinessPlan(int $businessId): ?string
     $db = Database::getInstance();
 
     $stmt = $db->prepare('
-        SELECT p.slug
+        SELECT p.name
         FROM subscriptions s
         JOIN plans p ON p.id = s.plan_id
         WHERE s.business_id = :bid
@@ -85,5 +85,5 @@ function getBusinessPlan(int $businessId): ?string
     $stmt->execute([':bid' => $businessId]);
     $row = $stmt->fetch();
 
-    return $row ? $row['slug'] : null;
+    return $row ? $row['name'] : null;
 }

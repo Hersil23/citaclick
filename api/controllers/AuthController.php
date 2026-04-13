@@ -121,8 +121,8 @@ class AuthController
 
         $slug = $this->generateUniqueSlug($db, $slug);
 
-        $stmt = $db->prepare('SELECT id FROM plans WHERE slug = :slug LIMIT 1');
-        $stmt->execute([':slug' => $planSlug]);
+        $stmt = $db->prepare('SELECT id FROM plans WHERE name = :name LIMIT 1');
+        $stmt->execute([':name' => $planSlug]);
         $plan = $stmt->fetch();
 
         if (!$plan) {

@@ -13,7 +13,7 @@ class CatalogController
 
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            SELECT b.*, p.slug AS plan_slug
+            SELECT b.*, p.name AS plan_name, p.has_catalog
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -27,7 +27,7 @@ class CatalogController
             sendJson(404, ['success' => false, 'message' => 'Negocio no encontrado']);
         }
 
-        if ($business['plan_slug'] === 'standard') {
+        if (empty($business['has_catalog'])) {
             sendJson(403, ['success' => false, 'message' => 'Catalogo no disponible en este plan']);
         }
 

@@ -24,7 +24,7 @@ class ProviderController
         $plan = getBusinessPlan($user['business_id']);
         $current = Provider::countByBusiness($user['business_id']);
 
-        $limits = ['standard' => 1, 'premium' => 2, 'salon_vip' => 5];
+        $limits = ['Standard' => 1, 'Premium' => 2, 'Salon VIP' => 5];
         $maxProviders = $limits[$plan] ?? 1;
 
         if ($current >= $maxProviders) {

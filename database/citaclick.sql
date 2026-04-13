@@ -4,19 +4,22 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE TABLE IF NOT EXISTS `plans` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
-  `slug` VARCHAR(50) NOT NULL UNIQUE,
-  `price` DECIMAL(8,2) NOT NULL DEFAULT 0,
-  `trial_days` INT NOT NULL DEFAULT 21,
   `max_providers` INT NOT NULL DEFAULT 1,
-  `features` JSON NULL,
+  `has_catalog` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_qr` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_assistant` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_dollar_api` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_google_maps` TINYINT(1) NOT NULL DEFAULT 0,
+  `price_monthly` DECIMAL(8,2) NOT NULL DEFAULT 0,
+  `trial_days` INT NOT NULL DEFAULT 21,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `plans` (`name`, `slug`, `price`, `trial_days`, `max_providers`) VALUES
-  ('Standard', 'standard', 7.00, 21, 1),
-  ('Premium', 'premium', 13.00, 21, 2),
-  ('Salon VIP', 'salon_vip', 25.00, 21, 5)
+INSERT INTO `plans` (`name`, `max_providers`, `has_catalog`, `has_qr`, `has_assistant`, `has_dollar_api`, `has_google_maps`, `price_monthly`, `trial_days`) VALUES
+  ('Standard',  1, 0, 0, 0, 0, 0,  7.00, 21),
+  ('Premium',   2, 1, 1, 1, 1, 1, 13.00, 21),
+  ('Salon VIP', 5, 1, 1, 1, 1, 1, 25.00, 21)
 ON DUPLICATE KEY UPDATE `name`=VALUES(`name`);
 
 CREATE TABLE IF NOT EXISTS `businesses` (
