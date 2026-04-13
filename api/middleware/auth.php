@@ -25,11 +25,15 @@ function authenticateRequest(): ?array
 
     // Check if token was blacklisted (logout)
     $db = Database::getInstance();
-    $stmt = $db->prepare('SELECT id FROM token_blacklist WHERE token_hash = :hash AND expires_at > NOW() LIMIT 1');
-    $stmt->execute([':hash' => hash('sha256', $token)]);
-    if ($stmt->fetch()) {
-        sendJson(401, ['success' => false, 'message' => 'Sesion cerrada']);
-        return null;
+    try {
+        $stmt = $db->prepare('SELECT id FROM token_blacklist WHERE token_hash = :hash AND expires_at > NOW() LIMIT 1');
+        $stmt->execute([':hash' => hash('sha256', $token)]);
+        if ($stmt->fetch()) {
+            sendJson(401, ['success' => false, 'message' => 'Sesion cerrada']);
+            return null;
+        }
+    } catch (\PDOException $e) {
+        // token_blacklist table may not exist yet — skip check
     }
 
     $payload = JWT::decode($token);

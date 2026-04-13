@@ -189,6 +189,23 @@
   background-color: var(--color-surface-sunken);
 }
 
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-logout-btn:hover {
+  background-color: var(--color-error);
+  color: var(--color-text-inverse);
+}
+
 .sidebar-user-info {
   flex: 1;
   min-width: 0;

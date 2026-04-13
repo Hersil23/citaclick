@@ -1,6 +1,6 @@
 <div class="page-header">
   <h2 class="page-title" data-i18n="nav.clients">Clientes</h2>
-  <button class="btn btn-primary" onclick="openModal('modal-client')">
+  <button class="btn btn-primary" id="btn-new-client">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     <span data-i18n="clients.new">Nuevo cliente</span>
   </button>
@@ -16,7 +16,7 @@
   <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
   <h3 class="empty-state-title" data-i18n="clients.no_clients">Aun no tienes clientes registrados</h3>
   <p class="empty-state-desc">Los clientes se agregan automaticamente al agendar citas o puedes crearlos manualmente.</p>
-  <button class="btn btn-primary" onclick="openModal('modal-client')" data-i18n="clients.new">Nuevo cliente</button>
+  <button class="btn btn-primary" id="btn-new-client-empty" data-i18n="clients.new">Nuevo cliente</button>
 </div>
 
 <div class="modal-overlay" id="modal-client">
@@ -35,7 +35,37 @@
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="clients.phone">Telefono</label>
-          <input class="form-input" type="tel" id="client-phone">
+          <div class="phone-input-group">
+            <select class="form-input phone-code-select" id="client-pcode">
+              <option value="+58">+58 VE</option>
+              <option value="+57">+57 CO</option>
+              <option value="+52">+52 MX</option>
+              <option value="+1">+1 US/CA</option>
+              <option value="+34">+34 ES</option>
+              <option value="+44">+44 UK</option>
+              <option value="+55">+55 BR</option>
+              <option value="+56">+56 CL</option>
+              <option value="+54">+54 AR</option>
+              <option value="+51">+51 PE</option>
+              <option value="+593">+593 EC</option>
+              <option value="+507">+507 PA</option>
+              <option value="+506">+506 CR</option>
+              <option value="+503">+503 SV</option>
+              <option value="+502">+502 GT</option>
+              <option value="+505">+505 NI</option>
+              <option value="+504">+504 HN</option>
+              <option value="+591">+591 BO</option>
+              <option value="+595">+595 PY</option>
+              <option value="+598">+598 UY</option>
+              <option value="+809">+809 DO</option>
+              <option value="+53">+53 CU</option>
+              <option value="+33">+33 FR</option>
+              <option value="+49">+49 DE</option>
+              <option value="+39">+39 IT</option>
+              <option value="+351">+351 PT</option>
+            </select>
+            <input class="form-input phone-number-input" type="tel" id="client-phone" placeholder="4121234567">
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="clients.email">Correo electronico</label>
@@ -132,6 +162,21 @@
     color: var(--color-text-muted);
   }
 
+  .phone-input-group {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .phone-code-select {
+    width: 110px;
+    flex-shrink: 0;
+  }
+
+  .phone-number-input {
+    flex: 1;
+    min-width: 0;
+  }
+
   @media (max-width: 375px) {
     .cards-grid {
       grid-template-columns: 1fr;
@@ -139,6 +184,10 @@
 
     .page-title {
       font-size: var(--text-xl);
+    }
+
+    .phone-code-select {
+      width: 90px;
     }
   }
 </style>
@@ -206,7 +255,24 @@
     function editClient(c) {
       editingId = c.id;
       document.getElementById('client-name').value = c.name || '';
-      document.getElementById('client-phone').value = c.phone || '';
+      // Parse phone: if starts with +, split code and number
+      const phone = c.phone || '';
+      const pcodeEl = document.getElementById('client-pcode');
+      const phoneEl = document.getElementById('client-phone');
+      let matched = false;
+      if (phone) {
+        for (let i = 0; i < pcodeEl.options.length; i++) {
+          if (phone.startsWith(pcodeEl.options[i].value)) {
+            pcodeEl.value = pcodeEl.options[i].value;
+            phoneEl.value = phone.slice(pcodeEl.options[i].value.length);
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) phoneEl.value = phone;
+      } else {
+        phoneEl.value = '';
+      }
       document.getElementById('client-email').value = c.email || '';
       document.getElementById('client-notes').value = c.notes || '';
       document.querySelector('#modal-client .modal-title').textContent = i18n.t('common.edit');
@@ -214,9 +280,12 @@
     }
 
     document.getElementById('btn-save-client').addEventListener('click', async () => {
+      const pcode = document.getElementById('client-pcode').value;
+      const pnum = document.getElementById('client-phone').value.trim();
+      const fullPhone = pnum ? pcode + pnum : '';
       const data = {
         name: document.getElementById('client-name').value.trim(),
-        phone: document.getElementById('client-phone').value.trim(),
+        phone: fullPhone,
         email: document.getElementById('client-email').value.trim(),
         notes: document.getElementById('client-notes').value.trim(),
       };
@@ -238,6 +307,17 @@
         loadClients();
       }
     });
+
+    function openNewClient() {
+      editingId = null;
+      document.getElementById('client-form').reset();
+      document.querySelector('#modal-client .modal-title').textContent = i18n.t('clients.new') || 'Nuevo cliente';
+      openModal('modal-client');
+    }
+
+    document.getElementById('btn-new-client').addEventListener('click', openNewClient);
+    var btnEmpty = document.getElementById('btn-new-client-empty');
+    if (btnEmpty) btnEmpty.addEventListener('click', openNewClient);
 
     searchInput.addEventListener('input', debounce(() => {
       loadClients(searchInput.value.trim());
