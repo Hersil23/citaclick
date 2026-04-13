@@ -1,8 +1,8 @@
 function loadFooter() {
-  const existing = document.querySelector('.site-footer');
-  if (existing) return;
-  const inView = document.querySelector('#app-view .site-footer');
-  if (inView) return;
+  if (document.querySelector('.site-footer')) return;
+
+  const appMain = document.querySelector('.app-main');
+  if (!appMain) return;
 
   const footer = document.createElement('footer');
   footer.className = 'site-footer';
@@ -15,12 +15,7 @@ function loadFooter() {
   link.textContent = '@herasi.dev';
   footer.appendChild(link);
 
-  const appMain = document.querySelector('.app-main');
-  if (appMain) {
-    appMain.appendChild(footer);
-  } else {
-    document.body.appendChild(footer);
-  }
+  appMain.appendChild(footer);
 }
 
 async function loadComponent(name, selector) {

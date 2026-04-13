@@ -7,7 +7,6 @@ const App = (() => {
   function init() {
     applyTheme(getTheme());
     applyMode(getMode());
-    loadFooter();
 
     if (typeof i18n !== 'undefined' && i18n.init) {
       i18n.init();
