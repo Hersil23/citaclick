@@ -37,18 +37,20 @@ function getRouteParam(string $path, string $pattern): ?array
 
 $method = $_SERVER['REQUEST_METHOD'];
 $rawUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-if (isset($_GET['debug'])) {
-    sendJson(200, [
-        'raw_uri' => $rawUri,
-        'request_uri' => $_SERVER['REQUEST_URI'],
-        'script_name' => $_SERVER['SCRIPT_NAME'],
-        'method' => $method,
-    ]);
-}
-
 $uri = preg_replace('#^/api#', '', $rawUri);
 $uri = rtrim($uri, '/') ?: '/';
+
+if ($uri === '/debug' || $rawUri === '/api/routes/index.php') {
+    sendJson(200, [
+        'raw_uri' => $rawUri,
+        'parsed_uri' => $uri,
+        'request_uri' => $_SERVER['REQUEST_URI'],
+        'script_name' => $_SERVER['SCRIPT_NAME'],
+        'doc_root' => $_SERVER['DOCUMENT_ROOT'],
+        'method' => $method,
+        'php' => PHP_VERSION,
+    ]);
+}
 
 $routes = [
     'POST /auth/login'          => ['AuthController', 'login'],
