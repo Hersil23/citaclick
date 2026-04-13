@@ -175,7 +175,7 @@
       var tdClient=document.createElement('td');
       var strong=document.createElement('strong');strong.textContent=a.client_name||'';tdClient.appendChild(strong);
       var tdService=document.createElement('td');tdService.textContent=a.service_name||'';
-      var tdDate=document.createElement('td');tdDate.textContent=a.date||'';
+      var tdDate=document.createElement('td');tdDate.textContent=a.appointment_date||a.date||'';
       var tdTime=document.createElement('td');tdTime.textContent=a.start_time||'';
       var tdProvider=document.createElement('td');tdProvider.textContent=a.provider_name||'';
       var tdStatus=document.createElement('td');
@@ -196,7 +196,7 @@
       info.appendChild(h4);info.appendChild(p);
       var timeDiv=document.createElement('div');timeDiv.className='appt-card-time';
       var timeSpan=document.createElement('div');timeSpan.className='time';timeSpan.textContent=a.start_time||'';
-      var dateSpan=document.createElement('div');dateSpan.className='date';dateSpan.textContent=a.date||'';
+      var dateSpan=document.createElement('div');dateSpan.className='date';dateSpan.textContent=a.appointment_date||a.date||'';
       timeDiv.appendChild(timeSpan);timeDiv.appendChild(dateSpan);
       var badgeMobile=document.createElement('span');badgeMobile.className='badge badge-'+(a.status||'pending');badgeMobile.textContent=i18n.t('appointments.status.'+(a.status||'pending'));
       timeDiv.appendChild(badgeMobile);
@@ -213,10 +213,9 @@
       [i18n.t('clients.phone'),a.client_phone||''],
       [i18n.t('nav.services'),a.service_name],
       [i18n.t('nav.providers'),a.provider_name],
-      [i18n.t('common.date'),a.date],
+      [i18n.t('common.date'),a.appointment_date||a.date],
       [i18n.t('common.time'),a.start_time+' - '+(a.end_time||'')],
-      [i18n.t('appointments.duration'),(a.duration||'')+' min'],
-      [i18n.t('appointments.price'),formatCurrency(a.price)],
+      [i18n.t('appointments.price'),formatCurrency(a.price_charged||a.price||0)],
       [i18n.t('common.status'),a.status],
       [i18n.t('appointments.notes'),a.notes||''],
     ];
@@ -267,7 +266,7 @@
     var ssel=document.getElementById('appt-service');ssel.textContent='';
     var sopt0=document.createElement('option');sopt0.value='';sopt0.textContent=i18n.t('appointments.select_service');ssel.appendChild(sopt0);
     if(sRes.success&&sRes.data)sRes.data.forEach(function(s){
-      var o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.duration+'min - $'+s.price+')';o.dataset.price=s.price;o.dataset.duration=s.duration;ssel.appendChild(o);
+      var o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+(s.duration_minutes||s.duration||30)+'min - $'+(s.price_usd||s.price||0)+')';o.dataset.price=s.price_usd||s.price||0;o.dataset.duration=s.duration_minutes||s.duration||30;ssel.appendChild(o);
     });
 
     var pRes=await Api.get('/providers');
@@ -312,8 +311,8 @@
     document.getElementById('appt-modal-title').textContent=i18n.t('common.edit');
     document.getElementById('appt-client').value=a.client_id||'';
     document.getElementById('appt-service').value=a.service_id||'';
-    document.getElementById('appt-date').value=a.date||'';
-    document.getElementById('appt-price').value=a.price||'';
+    document.getElementById('appt-date').value=a.appointment_date||a.date||'';
+    document.getElementById('appt-price').value=a.price_charged||a.price||'';
     document.getElementById('appt-notes').value=a.notes||'';
     if(a.provider_id)document.getElementById('appt-provider').value=a.provider_id;
     openModal('modal-appointment');

@@ -172,7 +172,15 @@ class Appointment
         $stmt->execute([':pid' => $providerId, ':dow' => $dayOfWeek]);
         $schedule = $stmt->fetch();
 
-        if (!$schedule) return [];
+        if (!$schedule) {
+            // Default schedule: Mon-Sat 8:00-18:00 if none configured
+            $dow = (int)$dayOfWeek;
+            if ($dow >= 1 && $dow <= 6) {
+                $schedule = ['start_time' => '08:00', 'end_time' => '18:00', 'slot_minutes' => 30];
+            } else {
+                return [];
+            }
+        }
 
         $stmt = $db->prepare('
             SELECT id FROM provider_blocked_times

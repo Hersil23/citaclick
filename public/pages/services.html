@@ -130,14 +130,14 @@
         h4.textContent = s.name;
         const price = document.createElement('span');
         price.className = 'service-price';
-        price.textContent = formatCurrency(s.price);
+        price.textContent = formatCurrency(s.price_usd || s.price || 0);
         header.appendChild(h4);
         header.appendChild(price);
 
         const meta = document.createElement('div');
         meta.className = 'service-meta';
         const dur = document.createElement('span');
-        dur.textContent = s.duration + ' min';
+        dur.textContent = (s.duration_minutes || s.duration || 0) + ' min';
         const cat = document.createElement('span');
         cat.textContent = s.category_name || 'General';
         meta.appendChild(dur);
@@ -178,8 +178,8 @@
       editingId = s.id;
       document.getElementById('svc-name').value = s.name || '';
       document.getElementById('svc-category').value = s.category_id || '';
-      document.getElementById('svc-duration').value = s.duration || 30;
-      document.getElementById('svc-price').value = s.price || 0;
+      document.getElementById('svc-duration').value = s.duration_minutes || s.duration || 30;
+      document.getElementById('svc-price').value = s.price_usd || s.price || 0;
       document.getElementById('svc-description').value = s.description || '';
       openModal('modal-service');
     }

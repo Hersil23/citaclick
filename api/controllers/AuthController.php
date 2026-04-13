@@ -197,6 +197,21 @@ class AuthController
                 ':uid'  => $userId,
                 ':name' => $businessName,
             ]);
+            $providerId = (int)$db->lastInsertId();
+
+            // Create default schedule Mon-Sat 8:00-18:00
+            $scheduleStmt = $db->prepare('
+                INSERT INTO provider_schedules (provider_id, day_of_week, start_time, end_time, slot_minutes, is_available)
+                VALUES (:pid, :dow, :start, :end, 30, 1)
+            ');
+            for ($dow = 1; $dow <= 6; $dow++) {
+                $scheduleStmt->execute([
+                    ':pid'   => $providerId,
+                    ':dow'   => $dow,
+                    ':start' => '08:00',
+                    ':end'   => '18:00',
+                ]);
+            }
 
             $db->commit();
 
