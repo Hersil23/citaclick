@@ -109,22 +109,30 @@ const Router = (() => {
       }
     }
 
-    // For /dashboard, reload the dashboard content area
+    // For /dashboard, reload the full dashboard content (HTML + style + script)
     if (route.isLayout) {
       var appContent = document.querySelector('.app-content');
       if (appContent) {
         try {
           var resp = await fetch(route.page);
-          var html = await resp.text();
+          var fullHtml = await resp.text();
           var temp = document.createElement('div');
           // Safe: own server pages
-          temp.innerHTML = html;
+          temp.innerHTML = fullHtml;
+
+          // Get inner HTML of app-content + all style/script tags from the page
           var innerContent = temp.querySelector('.app-content');
-          if (innerContent) {
-            // Safe: own server pages
-            appContent.innerHTML = innerContent.innerHTML;
-            runScripts(appContent);
-          }
+          var styles = temp.querySelectorAll('style');
+          var scripts = temp.querySelectorAll('script');
+
+          var parts = [];
+          if (innerContent) parts.push(innerContent.innerHTML);
+          styles.forEach(function(s) { parts.push(s.outerHTML); });
+          scripts.forEach(function(s) { parts.push(s.outerHTML); });
+
+          // Safe: own server pages
+          appContent.innerHTML = parts.join('\n');
+          runScripts(appContent);
         } catch (e) {}
       }
       window.scrollTo(0, 0);
