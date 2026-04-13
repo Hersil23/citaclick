@@ -17,7 +17,7 @@ class CatalogController
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
             LEFT JOIN plans p ON p.id = s.plan_id
-            WHERE b.slug = :slug AND b.status = "active"
+            WHERE b.slug = :slug AND b.is_active = 1
             LIMIT 1
         ');
         $stmt->execute([':slug' => $slug]);
@@ -42,9 +42,9 @@ class CatalogController
         $services = $stmt->fetchAll();
 
         $stmt = $db->prepare('
-            SELECT id, name, bio, photo
+            SELECT id, name, bio, avatar_url
             FROM providers
-            WHERE business_id = :bid AND status = "active"
+            WHERE business_id = :bid AND is_active = 1
             ORDER BY name
         ');
         $stmt->execute([':bid' => $business['id']]);
@@ -66,7 +66,7 @@ class CatalogController
                     'name'        => $business['name'],
                     'slug'        => $business['slug'],
                     'description' => $business['description'] ?? '',
-                    'logo'        => $business['logo'] ?? null,
+                    'logo'        => $business['logo_url'] ?? null,
                     'theme'       => $business['theme'],
                     'address'     => $business['address'] ?? '',
                     'phone'       => $business['phone'] ?? '',
@@ -88,7 +88,7 @@ class CatalogController
         $body = $args['body'];
 
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT id FROM businesses WHERE slug = :slug AND status = "active" LIMIT 1');
+        $stmt = $db->prepare('SELECT id FROM businesses WHERE slug = :slug AND is_active = 1 LIMIT 1');
         $stmt->execute([':slug' => $slug]);
         $business = $stmt->fetch();
 
@@ -126,7 +126,7 @@ class CatalogController
 
         $providerId = $body['provider_id'] ?? null;
         if (!$providerId) {
-            $stmt = $db->prepare('SELECT id FROM providers WHERE business_id = :bid AND status = "active" ORDER BY id LIMIT 1');
+            $stmt = $db->prepare('SELECT id FROM providers WHERE business_id = :bid AND is_active = 1 ORDER BY id LIMIT 1');
             $stmt->execute([':bid' => $businessId]);
             $prov = $stmt->fetch();
             $providerId = $prov ? (int)$prov['id'] : null;

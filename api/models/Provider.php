@@ -37,15 +37,15 @@ class Provider
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO providers (business_id, user_id, name, bio, photo, status, created_at, updated_at)
-            VALUES (:bid, :uid, :name, :bio, :photo, "active", NOW(), NOW())
+            INSERT INTO providers (business_id, user_id, name, bio, avatar_url, is_active, created_at)
+            VALUES (:bid, :uid, :name, :bio, :avatar, 1, NOW())
         ');
         $stmt->execute([
-            ':bid'   => $data['business_id'],
-            ':uid'   => $data['user_id'] ?? null,
-            ':name'  => $data['name'],
-            ':bio'   => $data['bio'] ?? null,
-            ':photo' => $data['photo'] ?? null,
+            ':bid'    => $data['business_id'],
+            ':uid'    => $data['user_id'] ?? null,
+            ':name'   => $data['name'],
+            ':bio'    => $data['bio'] ?? null,
+            ':avatar' => $data['photo'] ?? $data['avatar_url'] ?? null,
         ]);
         return (int)$db->lastInsertId();
     }
@@ -55,7 +55,7 @@ class Provider
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'bio', 'photo', 'status'];
+        $allowed = ['name', 'bio', 'avatar_url', 'is_active'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {
@@ -63,9 +63,13 @@ class Provider
                 $params[":{$f}"] = $data[$f];
             }
         }
+        // Support legacy 'photo' key mapping to avatar_url
+        if (array_key_exists('photo', $data) && !array_key_exists('avatar_url', $data)) {
+            $fields[] = "avatar_url = :avatar_url";
+            $params[":avatar_url"] = $data['photo'];
+        }
 
         if (empty($fields)) return false;
-        $fields[] = 'updated_at = NOW()';
         $stmt = $db->prepare('UPDATE providers SET ' . implode(', ', $fields) . ' WHERE id = :id');
         return $stmt->execute($params);
     }
@@ -73,7 +77,7 @@ class Provider
     public static function countByBusiness(int $businessId): int
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM providers WHERE business_id = :bid AND status = "active"');
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM providers WHERE business_id = :bid AND is_active = 1');
         $stmt->execute([':bid' => $businessId]);
         return (int)$stmt->fetch()['cnt'];
     }

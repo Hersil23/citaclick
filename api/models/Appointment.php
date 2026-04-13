@@ -10,9 +10,9 @@ class Appointment
         $stmt = $db->prepare('
             INSERT INTO appointments
             (business_id, provider_id, client_id, service_id, date, start_time, end_time,
-             duration, price, notes, status, created_at, updated_at)
+             duration, price, notes, status, created_at)
             VALUES
-            (:bid, :pid, :cid, :sid, :date, :start, :end, :dur, :price, :notes, "pending", NOW(), NOW())
+            (:bid, :pid, :cid, :sid, :date, :start, :end, :dur, :price, :notes, "pending", NOW())
         ');
         $stmt->execute([
             ':bid'   => $data['business_id'],
@@ -114,7 +114,7 @@ class Appointment
         $db = Database::getInstance();
         $stmt = $db->prepare('
             UPDATE appointments
-            SET status = :status, cancelled_by = :cby, cancel_reason = :reason, updated_at = NOW()
+            SET status = :status, cancelled_by = :cby, cancel_reason = :reason
             WHERE id = :id
         ');
         return $stmt->execute([
@@ -143,7 +143,6 @@ class Appointment
 
         if (empty($fields)) return false;
 
-        $fields[] = 'updated_at = NOW()';
         $fieldStr = implode(', ', $fields);
 
         $stmt = $db->prepare("UPDATE appointments SET {$fieldStr} WHERE id = :id");

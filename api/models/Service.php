@@ -45,8 +45,8 @@ class Service
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO services (business_id, category_id, name, description, duration, price, image, status, created_at, updated_at)
-            VALUES (:bid, :cid, :name, :desc, :dur, :price, :img, "active", NOW(), NOW())
+            INSERT INTO services (business_id, category_id, name, description, duration, price, image, status, created_at)
+            VALUES (:bid, :cid, :name, :desc, :dur, :price, :img, "active", NOW())
         ');
         $stmt->execute([
             ':bid'   => $data['business_id'],
@@ -75,7 +75,6 @@ class Service
         }
 
         if (empty($fields)) return false;
-        $fields[] = 'updated_at = NOW()';
         $stmt = $db->prepare('UPDATE services SET ' . implode(', ', $fields) . ' WHERE id = :id');
         return $stmt->execute($params);
     }

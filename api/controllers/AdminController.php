@@ -11,14 +11,14 @@ class AdminController
         $stmt = $db->query('SELECT COUNT(*) as cnt FROM businesses');
         $totalBusinesses = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->query("SELECT COUNT(*) as cnt FROM businesses WHERE status = 'active'");
+        $stmt = $db->query("SELECT COUNT(*) as cnt FROM businesses WHERE is_active = 1");
         $activeBusinesses = (int)$stmt->fetch()['cnt'];
 
         $stmt = $db->prepare("
             SELECT COUNT(DISTINCT s.business_id) as cnt
             FROM subscriptions s
-            WHERE s.status = 'active' AND s.end_date >= CURDATE()
-              AND s.start_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            WHERE s.status = 'active' AND s.ends_at >= NOW()
+              AND s.starts_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
         ");
         $stmt->execute();
         $trialBusinesses = (int)$stmt->fetch()['cnt'];
@@ -29,9 +29,9 @@ class AdminController
             SELECT COALESCE(SUM(p.price_monthly), 0) as revenue
             FROM subscriptions s
             JOIN plans p ON p.id = s.plan_id
-            WHERE s.status = 'active' AND s.start_date <= :end AND (s.end_date IS NULL OR s.end_date >= :start)
+            WHERE s.status = 'active' AND s.start_date <= :end AND (s.ends_at IS NULL OR s.ends_at >= NOW())
         ");
-        $stmt->execute([':start' => $monthStart, ':end' => $monthEnd]);
+        $stmt->execute([':end' => $monthEnd]);
         $monthlyRevenue = (float)$stmt->fetch()['revenue'];
 
         $stmt = $db->prepare("
@@ -65,11 +65,6 @@ class AdminController
         $where = '1=1';
         $params = [];
 
-        if (!empty($query['status'])) {
-            $where .= ' AND b.status = :status';
-            $params[':status'] = $query['status'];
-        }
-
         if (!empty($query['search'])) {
             $where .= ' AND (b.name LIKE :search OR b.slug LIKE :search2)';
             $params[':search'] = '%' . $query['search'] . '%';
@@ -78,7 +73,7 @@ class AdminController
 
         $stmt = $db->prepare("
             SELECT b.*, p.name AS plan_name, p.price_monthly,
-                   s.status AS sub_status, s.end_date
+                   s.status AS sub_status, s.ends_at
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = 'active'
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -104,14 +99,14 @@ class AdminController
             $plan = $stmt->fetch();
 
             if ($plan) {
-                $db->prepare("UPDATE subscriptions SET plan_id = :pid, updated_at = NOW() WHERE business_id = :bid AND status = 'active'")
+                $db->prepare("UPDATE subscriptions SET plan_id = :pid WHERE business_id = :bid AND status = 'active'")
                    ->execute([':pid' => $plan['id'], ':bid' => $id]);
             }
         }
 
-        if (!empty($body['status'])) {
-            $db->prepare('UPDATE businesses SET status = :status, updated_at = NOW() WHERE id = :id')
-               ->execute([':status' => $body['status'], ':id' => $id]);
+        if (!empty($body['is_active'])) {
+            $db->prepare('UPDATE businesses SET is_active = :active WHERE id = :id')
+               ->execute([':active' => $body['is_active'], ':id' => $id]);
         }
 
         sendJson(200, ['success' => true, 'message' => 'Negocio actualizado']);
@@ -121,7 +116,7 @@ class AdminController
     {
         $id = (int)$args['params']['id'];
         $db = Database::getInstance();
-        $db->prepare("UPDATE businesses SET status = 'suspended', updated_at = NOW() WHERE id = :id")
+        $db->prepare("UPDATE businesses SET is_active = 0 WHERE id = :id")
            ->execute([':id' => $id]);
 
         sendJson(200, ['success' => true, 'message' => 'Negocio suspendido']);
@@ -131,7 +126,7 @@ class AdminController
     {
         $id = (int)$args['params']['id'];
         $db = Database::getInstance();
-        $db->prepare("UPDATE businesses SET status = 'active', updated_at = NOW() WHERE id = :id")
+        $db->prepare("UPDATE businesses SET is_active = 1 WHERE id = :id")
            ->execute([':id' => $id]);
 
         sendJson(200, ['success' => true, 'message' => 'Negocio activado']);

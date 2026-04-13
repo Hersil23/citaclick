@@ -53,7 +53,7 @@ class User
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'email', 'phone', 'photo', 'role', 'status'];
+        $allowed = ['name', 'email', 'phone', 'avatar_url', 'role', 'is_active'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {
@@ -68,7 +68,6 @@ class User
         }
 
         if (empty($fields)) return false;
-        $fields[] = 'updated_at = NOW()';
         $stmt = $db->prepare('UPDATE users SET ' . implode(', ', $fields) . ' WHERE id = :id');
         return $stmt->execute($params);
     }

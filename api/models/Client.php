@@ -48,8 +48,8 @@ class Client
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO clients (business_id, name, phone, email, notes, created_at, updated_at)
-            VALUES (:bid, :name, :phone, :email, :notes, NOW(), NOW())
+            INSERT INTO clients (business_id, name, phone, email, notes, created_at)
+            VALUES (:bid, :name, :phone, :email, :notes, NOW())
         ');
         $stmt->execute([
             ':bid'   => $data['business_id'],
@@ -76,7 +76,6 @@ class Client
         }
 
         if (empty($fields)) return false;
-        $fields[] = 'updated_at = NOW()';
         $stmt = $db->prepare('UPDATE clients SET ' . implode(', ', $fields) . ' WHERE id = :id');
         return $stmt->execute($params);
     }

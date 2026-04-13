@@ -9,7 +9,7 @@ class Business
         $db = Database::getInstance();
         $stmt = $db->prepare('
             SELECT b.*, p.name AS plan_name, p.price_monthly, p.max_providers,
-                   s.status AS sub_status, s.start_date, s.end_date
+                   s.status AS sub_status, s.start_date, s.ends_at
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -23,7 +23,7 @@ class Business
     public static function findBySlug(string $slug): ?array
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT * FROM businesses WHERE slug = :slug AND status = "active" LIMIT 1');
+        $stmt = $db->prepare('SELECT * FROM businesses WHERE slug = :slug AND is_active = 1 LIMIT 1');
         $stmt->execute([':slug' => $slug]);
         $row = $stmt->fetch();
         return $row ?: null;
@@ -34,9 +34,10 @@ class Business
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'description', 'logo', 'address', 'phone', 'theme',
+        $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency', 'price_mode', 'exchange_rate', 'status', 'business_type'];
+                     'currency_code', 'currency_mode', 'is_active', 'business_type',
+                     'city', 'country'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {
@@ -46,7 +47,6 @@ class Business
         }
 
         if (empty($fields)) return false;
-        $fields[] = 'updated_at = NOW()';
         $stmt = $db->prepare('UPDATE businesses SET ' . implode(', ', $fields) . ' WHERE id = :id');
         return $stmt->execute($params);
     }

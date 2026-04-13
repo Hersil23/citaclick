@@ -11,7 +11,7 @@ class BusinessController
 
         $stmt = $db->prepare('
             SELECT b.*, p.name AS plan_name, p.price_monthly, p.max_providers,
-                   s.status AS sub_status, s.start_date, s.end_date
+                   s.status AS sub_status, s.start_date, s.ends_at
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -37,9 +37,9 @@ class BusinessController
         $fields = [];
         $params = [':bid' => $user['business_id']];
 
-        $allowed = ['name', 'description', 'logo', 'address', 'phone', 'theme',
+        $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency', 'price_mode', 'exchange_rate'];
+                     'currency_code', 'currency_mode', 'city', 'country'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $body)) {
@@ -51,8 +51,6 @@ class BusinessController
         if (empty($fields)) {
             sendJson(400, ['success' => false, 'message' => 'No hay campos para actualizar']);
         }
-
-        $fields[] = 'updated_at = NOW()';
         $fieldStr = implode(', ', $fields);
 
         $stmt = $db->prepare("UPDATE businesses SET {$fieldStr} WHERE id = :bid");
