@@ -52,7 +52,7 @@ class AuthController
         // Login successful — clear rate limit history
         clearAttempts($email . '|' . $ip, 'login');
 
-        if ($user['status'] === 'suspended') {
+        if (!($user['is_active'] ?? true)) {
             sendJson(403, [
                 'success' => false,
                 'message' => 'Tu cuenta ha sido suspendida',
@@ -76,7 +76,7 @@ class AuthController
                     'name'          => $user['name'],
                     'email'         => $user['email'],
                     'role'          => $user['role'],
-                    'photo'         => $user['photo'],
+                    'photo'         => $user['avatar_url'] ?? null,
                     'business_id'   => (int)$user['business_id'],
                     'business_name' => $user['business_name'],
                     'slug'          => $user['slug'],
@@ -189,8 +189,8 @@ class AuthController
             ]);
 
             $stmt = $db->prepare('
-                INSERT INTO providers (business_id, user_id, name, status, created_at, updated_at)
-                VALUES (:bid, :uid, :name, "active", NOW(), NOW())
+                INSERT INTO providers (business_id, user_id, name, is_active, created_at)
+                VALUES (:bid, :uid, :name, 1, NOW())
             ');
             $stmt->execute([
                 ':bid'  => $businessId,
@@ -218,6 +218,7 @@ class AuthController
                         'email'         => $email,
                         'role'          => 'owner',
                         'photo'         => null,
+                        'business_type' => $businessType,
                         'business_id'   => $businessId,
                         'business_name' => $businessName,
                         'slug'          => $slug,
@@ -227,19 +228,10 @@ class AuthController
             ]);
         } catch (\Exception $e) {
             $db->rollBack();
-            $cols = [];
-            try {
-                $tables = ['subscriptions', 'businesses', 'users', 'providers'];
-                foreach ($tables as $t) {
-                    $c = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
-                    $cols[$t] = array_map(function($r){ return $r['Field']; }, $c);
-                }
-            } catch (\Exception $ignored) {}
             sendJson(500, [
                 'success' => false,
                 'message' => 'Error al crear la cuenta. Intenta nuevamente.',
                 'debug' => $e->getMessage(),
-                'schema' => $cols,
             ]);
         }
     }
@@ -372,7 +364,7 @@ class AuthController
                     'name'          => $user['name'],
                     'email'         => $user['email'],
                     'role'          => $user['role'],
-                    'photo'         => $user['photo'],
+                    'photo'         => $user['avatar_url'] ?? null,
                     'business_id'   => (int)$user['business_id'],
                     'business_name' => $user['business_name'],
                     'slug'          => $user['slug'],

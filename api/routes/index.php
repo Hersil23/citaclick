@@ -46,27 +46,6 @@ $rawUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = preg_replace('#^/api#', '', $rawUri);
 $uri = rtrim($uri, '/') ?: '/';
 
-// TEMPORARY: Schema diagnostic — DELETE after fixing registration
-if ($uri === '/debug/schema' || $uri === '/debug' || preg_match('#/debug#', $uri)) {
-    try {
-        $db = Database::getInstance();
-        $tables = ['plans', 'businesses', 'users', 'subscriptions', 'providers'];
-        $schema = [];
-        foreach ($tables as $t) {
-            try {
-                $cols = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
-                $schema[$t] = array_map(function($c) { return $c['Field'] . ' (' . $c['Type'] . ')'; }, $cols);
-            } catch (\Exception $e2) {
-                $schema[$t] = 'ERROR: ' . $e2->getMessage();
-            }
-        }
-        $plans = $db->query("SELECT id, name FROM plans")->fetchAll();
-        sendJson(200, ['success' => true, 'uri' => $uri, 'method' => $method, 'raw' => $rawUri, 'schema' => $schema, 'plans' => $plans]);
-    } catch (\Exception $e) {
-        sendJson(500, ['success' => false, 'error' => $e->getMessage(), 'uri' => $uri, 'raw' => $rawUri]);
-    }
-}
-
 $routes = [
     'POST /auth/login'          => ['AuthController', 'login'],
     'POST /auth/register'       => ['AuthController', 'register'],

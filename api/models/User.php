@@ -25,7 +25,7 @@ class User
     public static function findByBusiness(int $businessId): array
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT id, name, email, role, phone, photo, status, created_at FROM users WHERE business_id = :bid ORDER BY name');
+        $stmt = $db->prepare('SELECT id, name, email, role, phone, avatar_url, is_active, created_at FROM users WHERE business_id = :bid ORDER BY name');
         $stmt->execute([':bid' => $businessId]);
         return $stmt->fetchAll();
     }
