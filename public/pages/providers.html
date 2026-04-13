@@ -1,0 +1,170 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="nav.providers">Prestadores</h2>
+  <button class="btn btn-primary" id="btn-add-provider" onclick="openModal('modal-provider')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span data-i18n="providers.new">Agregar prestador</span>
+  </button>
+</div>
+
+<div id="providers-list" class="cards-grid"></div>
+
+<div class="modal-overlay" id="modal-provider">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 class="modal-title" id="provider-modal-title" data-i18n="providers.new">Agregar prestador</h3>
+      <button class="modal-close" onclick="closeModal('modal-provider')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="provider-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" data-i18n="providers.name">Nombre</label>
+          <input class="form-input" type="text" id="prov-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="providers.bio">Biografia</label>
+          <textarea class="form-input" id="prov-bio" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="providers.role">Rol</label>
+          <select class="form-input" id="prov-role">
+            <option value="provider" data-i18n="providers.roles.provider">Prestador</option>
+            <option value="assistant" data-i18n="providers.roles.assistant">Asistente</option>
+            <option value="admin" data-i18n="providers.roles.admin">Administrador</option>
+          </select>
+        </div>
+
+        <h4 style="margin:var(--space-5) 0 var(--space-3);font-family:var(--font-display);font-weight:var(--weight-semibold);" data-i18n="providers.schedule">Horario</h4>
+        <div id="schedule-editor"></div>
+
+        <h4 style="margin:var(--space-5) 0 var(--space-3);font-family:var(--font-display);font-weight:var(--weight-semibold);" data-i18n="providers.blocked_times">Tiempos bloqueados</h4>
+        <div class="flex gap-3" style="flex-wrap:wrap;">
+          <div class="form-group" style="flex:1;min-width:140px;"><label class="form-label">Fecha inicio</label><input class="form-input" type="date" id="block-start"></div>
+          <div class="form-group" style="flex:1;min-width:140px;"><label class="form-label">Fecha fin</label><input class="form-input" type="date" id="block-end"></div>
+          <div class="form-group" style="flex:1;min-width:140px;"><label class="form-label">Motivo</label><input class="form-input" type="text" id="block-reason" placeholder="Vacaciones, dia libre..."></div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-add-block">Agregar bloqueo</button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-provider')" data-i18n="common.cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-provider" data-i18n="common.save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .provider-card{background:var(--color-surface-raised);border:1px solid var(--color-border-light);border-radius:var(--radius-lg);padding:var(--space-5);display:flex;align-items:flex-start;gap:var(--space-4);transition:box-shadow var(--transition-fast),transform var(--transition-fast);cursor:pointer}
+  .provider-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+  .provider-info{flex:1;min-width:0}
+  .provider-info h4{font-family:var(--font-display);font-size:var(--text-base);font-weight:var(--weight-semibold);margin-bottom:var(--space-1)}
+  .provider-info p{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-2)}
+  .schedule-day{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-light);font-size:var(--text-sm)}
+  .schedule-day label{min-width:80px;font-weight:var(--weight-medium)}
+  .schedule-day input[type="time"]{padding:var(--space-1) var(--space-2);border:1px solid var(--color-input-border);border-radius:var(--radius-sm);background:var(--color-input-bg);color:var(--color-text);font-size:var(--text-sm)}
+  .schedule-day input[type="number"]{width:60px;padding:var(--space-1) var(--space-2);border:1px solid var(--color-input-border);border-radius:var(--radius-sm);background:var(--color-input-bg);color:var(--color-text);font-size:var(--text-sm)}
+</style>
+
+<script>
+(function(){
+  var editingId=null;
+  var dayNames=i18n.getLocale()==='es'?['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  async function loadProviders(){
+    var res=await Api.get('/providers');
+    var list=document.getElementById('providers-list');list.textContent='';
+    if(!res.success||!res.data||res.data.length===0){
+      var empty=document.createElement('div');empty.className='empty-state';
+      var h=document.createElement('h3');h.className='empty-state-title';h.textContent=i18n.t('providers.max_reached');
+      empty.appendChild(h);list.appendChild(empty);return;
+    }
+    res.data.forEach(function(p){
+      var card=document.createElement('div');card.className='provider-card';
+      card.addEventListener('click',function(){editProvider(p);});
+      var avatar=document.createElement('div');avatar.className='avatar avatar-lg';avatar.textContent=getInitials(p.name);
+      var info=document.createElement('div');info.className='provider-info';
+      var h4=document.createElement('h4');h4.textContent=p.name;
+      var bio=document.createElement('p');bio.textContent=p.bio||'';
+      var meta=document.createElement('div');meta.className='flex gap-2';
+      var roleBadge=document.createElement('span');roleBadge.className='badge badge-completed';roleBadge.textContent=i18n.t('providers.roles.'+(p.role||'provider'));
+      var statusBadge=document.createElement('span');statusBadge.className='badge badge-'+(p.status==='active'?'confirmed':'cancelled');statusBadge.textContent=p.status==='active'?i18n.t('providers.active'):i18n.t('providers.inactive');
+      meta.appendChild(roleBadge);meta.appendChild(statusBadge);
+      info.appendChild(h4);info.appendChild(bio);info.appendChild(meta);
+      card.appendChild(avatar);card.appendChild(info);list.appendChild(card);
+    });
+  }
+
+  function buildScheduleEditor(schedules){
+    var editor=document.getElementById('schedule-editor');editor.textContent='';
+    for(var d=1;d<=7;d++){
+      var existing=schedules?schedules.find(function(s){return s.day_of_week==d;}):null;
+      var row=document.createElement('div');row.className='schedule-day';row.dataset.dow=d;
+      var lbl=document.createElement('label');
+      var chk=document.createElement('input');chk.type='checkbox';chk.checked=existing?existing.is_active==1:d<=5;chk.style.marginRight='8px';
+      lbl.appendChild(chk);lbl.appendChild(document.createTextNode(dayNames[d-1]));
+      var startInput=document.createElement('input');startInput.type='time';startInput.value=existing?existing.start_time:'09:00';startInput.className='sched-start';
+      var endInput=document.createElement('input');endInput.type='time';endInput.value=existing?existing.end_time:'18:00';endInput.className='sched-end';
+      var slotInput=document.createElement('input');slotInput.type='number';slotInput.value=existing?existing.slot_duration:30;slotInput.min=5;slotInput.step=5;slotInput.className='sched-slot';
+      var minLabel=document.createElement('span');minLabel.textContent='min';minLabel.style.fontSize='var(--text-xs)';minLabel.style.color='var(--color-text-muted)';
+      row.appendChild(lbl);row.appendChild(startInput);row.appendChild(document.createTextNode(' - '));row.appendChild(endInput);row.appendChild(slotInput);row.appendChild(minLabel);
+      editor.appendChild(row);
+    }
+  }
+
+  function getScheduleData(){
+    var schedules=[];
+    document.querySelectorAll('.schedule-day').forEach(function(row){
+      var chk=row.querySelector('input[type="checkbox"]');
+      schedules.push({
+        day_of_week:parseInt(row.dataset.dow,10),
+        start_time:row.querySelector('.sched-start').value,
+        end_time:row.querySelector('.sched-end').value,
+        slot_duration:parseInt(row.querySelector('.sched-slot').value,10)||30,
+        is_active:chk.checked?1:0,
+      });
+    });
+    return schedules;
+  }
+
+  async function editProvider(p){
+    editingId=p.id;
+    document.getElementById('provider-modal-title').textContent=i18n.t('common.edit');
+    document.getElementById('prov-name').value=p.name||'';
+    document.getElementById('prov-bio').value=p.bio||'';
+    var schedRes=await Api.get('/providers/'+p.id+'/schedule');
+    buildScheduleEditor(schedRes.success?schedRes.data:[]);
+    openModal('modal-provider');
+  }
+
+  document.getElementById('btn-save-provider').addEventListener('click',async function(){
+    var name=document.getElementById('prov-name').value.trim();
+    if(!name){showToast(i18n.t('common.required_field'),'error');return;}
+    var data={name:name,bio:document.getElementById('prov-bio').value.trim()};
+    var res;
+    if(editingId){
+      res=await Api.put('/providers/'+editingId,data);
+      if(res.success)await Api.put('/providers/'+editingId+'/schedule',{schedules:getScheduleData()});
+    }else{
+      res=await Api.post('/providers',data);
+      if(res.success&&res.data)await Api.put('/providers/'+res.data.id+'/schedule',{schedules:getScheduleData()});
+    }
+    if(res.success){showToast(res.message,'success');closeModal('modal-provider');editingId=null;document.getElementById('provider-form').reset();loadProviders();}
+  });
+
+  document.getElementById('btn-add-block').addEventListener('click',async function(){
+    if(!editingId){showToast('Guarda el prestador primero','warning');return;}
+    var startDate=document.getElementById('block-start').value;
+    if(!startDate){showToast(i18n.t('common.required_field'),'error');return;}
+    var res=await Api.post('/providers/'+editingId+'/block',{
+      start_date:startDate,
+      end_date:document.getElementById('block-end').value||startDate,
+      reason:document.getElementById('block-reason').value.trim(),
+    });
+    if(res.success)showToast('Bloqueo agregado','success');
+  });
+
+  buildScheduleEditor(null);
+  loadProviders();
+})();
+</script>

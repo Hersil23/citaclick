@@ -1,0 +1,356 @@
+<div class="page-header">
+  <h2 class="page-title" data-i18n="nav.appointments">Citas</h2>
+  <button class="btn btn-primary" id="btn-new-appt" onclick="openModal('modal-appointment')">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span data-i18n="appointments.new">Nueva cita</span>
+  </button>
+</div>
+
+<div class="filters-bar">
+  <input class="form-input" type="search" id="appt-search" data-i18n-placeholder="common.search" placeholder="Buscar..." style="max-width:240px;">
+  <select class="form-input" id="appt-status-filter" style="max-width:180px;">
+    <option value="" data-i18n="appointments.filters.all_status">Todos los estados</option>
+    <option value="pending" data-i18n="appointments.status.pending">Pendiente</option>
+    <option value="confirmed" data-i18n="appointments.status.confirmed">Confirmada</option>
+    <option value="completed" data-i18n="appointments.status.completed">Completada</option>
+    <option value="cancelled" data-i18n="appointments.status.cancelled">Cancelada</option>
+    <option value="no_show" data-i18n="appointments.status.no_show">No asistio</option>
+  </select>
+  <input class="form-input" type="date" id="appt-date-from" style="max-width:160px;">
+  <input class="form-input" type="date" id="appt-date-to" style="max-width:160px;">
+</div>
+
+<div class="table-responsive desktop-only" id="appt-table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th data-i18n="nav.clients">Cliente</th>
+        <th data-i18n="nav.services">Servicio</th>
+        <th data-i18n="common.date">Fecha</th>
+        <th data-i18n="common.time">Hora</th>
+        <th data-i18n="nav.providers">Prestador</th>
+        <th data-i18n="common.status">Estado</th>
+        <th data-i18n="common.actions">Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="appt-table-body"></tbody>
+  </table>
+</div>
+
+<div class="mobile-only" id="appt-cards"></div>
+
+<div class="empty-state hidden" id="appt-empty">
+  <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  <h3 class="empty-state-title" data-i18n="calendar.no_appointments">No hay citas para este periodo</h3>
+  <button class="btn btn-primary" onclick="openModal('modal-appointment')" data-i18n="appointments.new">Nueva cita</button>
+</div>
+
+<!-- Modal nueva/editar cita -->
+<div class="modal-overlay" id="modal-appointment">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 class="modal-title" id="appt-modal-title" data-i18n="appointments.new">Nueva cita</h3>
+      <button class="modal-close" onclick="closeModal('modal-appointment')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="appt-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" data-i18n="appointments.select_client">Seleccionar cliente</label>
+          <select class="form-input" id="appt-client" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="appointments.select_service">Seleccionar servicio</label>
+          <select class="form-input" id="appt-service" required></select>
+        </div>
+        <div class="form-group" id="appt-provider-group" style="display:none;">
+          <label class="form-label" data-i18n="appointments.select_provider">Seleccionar prestador</label>
+          <select class="form-input" id="appt-provider"></select>
+        </div>
+        <div class="flex gap-4">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" data-i18n="appointments.date">Fecha</label>
+            <input class="form-input" type="date" id="appt-date" required>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" data-i18n="appointments.select_time">Hora</label>
+            <select class="form-input" id="appt-time" required>
+              <option value="" data-i18n="appointments.select_time">Seleccionar hora</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="form-group" style="flex:1;">
+            <label class="form-label" data-i18n="appointments.price">Precio</label>
+            <input class="form-input" type="number" id="appt-price" min="0" step="0.01">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="appointments.notes">Notas</label>
+          <textarea class="form-input" id="appt-notes" rows="2"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-appointment')" data-i18n="common.cancel">Cancelar</button>
+      <button class="btn btn-primary" id="btn-save-appt" data-i18n="common.save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal detalle cita -->
+<div class="modal-overlay" id="modal-appt-detail">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title" data-i18n="appointments.detail">Detalle de cita</h3>
+      <button class="modal-close" onclick="closeModal('modal-appt-detail')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="appt-detail-body"></div>
+    <div class="modal-footer" id="appt-detail-actions"></div>
+  </div>
+</div>
+
+<style>
+  .filters-bar{display:flex;gap:var(--space-3);margin-bottom:var(--space-5);flex-wrap:wrap;align-items:flex-end}
+  .appt-card{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-4);background:var(--color-surface-raised);border:1px solid var(--color-border-light);border-radius:var(--radius-lg);margin-bottom:var(--space-3);transition:box-shadow var(--transition-fast);cursor:pointer}
+  .appt-card:hover{box-shadow:var(--shadow-md)}
+  .appt-card-info{flex:1;min-width:0}
+  .appt-card-info h4{font-family:var(--font-display);font-size:var(--text-base);font-weight:var(--weight-semibold);margin-bottom:var(--space-1)}
+  .appt-card-info p{font-size:var(--text-sm);color:var(--color-text-muted)}
+  .appt-card-time{text-align:right;flex-shrink:0}
+  .appt-card-time .time{font-family:var(--font-display);font-size:var(--text-lg);font-weight:var(--weight-bold);color:var(--color-text)}
+  .appt-card-time .date{font-size:var(--text-xs);color:var(--color-text-muted)}
+  .detail-row{display:flex;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border-light);font-size:var(--text-sm)}
+  .detail-row:last-child{border-bottom:none}
+  .detail-label{color:var(--color-text-muted);font-weight:var(--weight-medium)}
+  .detail-value{font-weight:var(--weight-semibold);text-align:right}
+</style>
+
+<script>
+(function(){
+  var editingId=null;
+  var allAppointments=[];
+
+  var today=new Date();
+  var monthStart=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
+  var monthEnd=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(new Date(today.getFullYear(),today.getMonth()+1,0).getDate()).padStart(2,'0');
+  document.getElementById('appt-date-from').value=monthStart;
+  document.getElementById('appt-date-to').value=monthEnd;
+  document.getElementById('appt-date').value=today.toISOString().substring(0,10);
+
+  async function loadAppointments(){
+    var q='?date_from='+document.getElementById('appt-date-from').value+'&date_to='+document.getElementById('appt-date-to').value;
+    var status=document.getElementById('appt-status-filter').value;
+    if(status)q+='&status='+status;
+    var search=document.getElementById('appt-search').value.trim();
+    if(search)q+='&search='+encodeURIComponent(search);
+
+    var res=await Api.get('/appointments'+q);
+    allAppointments=res.success&&Array.isArray(res.data)?res.data:[];
+    renderList();
+  }
+
+  function renderList(){
+    var list=allAppointments;
+    var tbody=document.getElementById('appt-table-body');
+    var cards=document.getElementById('appt-cards');
+    var empty=document.getElementById('appt-empty');
+    tbody.textContent='';cards.textContent='';
+
+    if(list.length===0){empty.classList.remove('hidden');return;}
+    empty.classList.add('hidden');
+
+    list.forEach(function(a){
+      var tr=document.createElement('tr');
+      tr.style.cursor='pointer';
+      tr.addEventListener('click',function(){showDetail(a);});
+
+      var tdClient=document.createElement('td');
+      var strong=document.createElement('strong');strong.textContent=a.client_name||'';tdClient.appendChild(strong);
+      var tdService=document.createElement('td');tdService.textContent=a.service_name||'';
+      var tdDate=document.createElement('td');tdDate.textContent=a.date||'';
+      var tdTime=document.createElement('td');tdTime.textContent=a.start_time||'';
+      var tdProvider=document.createElement('td');tdProvider.textContent=a.provider_name||'';
+      var tdStatus=document.createElement('td');
+      var badge=document.createElement('span');badge.className='badge badge-'+(a.status||'pending');badge.textContent=i18n.t('appointments.status.'+(a.status||'pending'));tdStatus.appendChild(badge);
+      var tdActions=document.createElement('td');
+      var btnEdit=document.createElement('button');btnEdit.className='btn btn-ghost btn-sm';btnEdit.textContent=i18n.t('common.edit');
+      btnEdit.addEventListener('click',function(e){e.stopPropagation();editAppt(a);});
+      tdActions.appendChild(btnEdit);
+
+      tr.appendChild(tdClient);tr.appendChild(tdService);tr.appendChild(tdDate);tr.appendChild(tdTime);tr.appendChild(tdProvider);tr.appendChild(tdStatus);tr.appendChild(tdActions);
+      tbody.appendChild(tr);
+
+      var card=document.createElement('div');card.className='appt-card';
+      card.addEventListener('click',function(){showDetail(a);});
+      var info=document.createElement('div');info.className='appt-card-info';
+      var h4=document.createElement('h4');h4.textContent=a.client_name||'';
+      var p=document.createElement('p');p.textContent=(a.service_name||'')+' \u2014 '+(a.provider_name||'');
+      info.appendChild(h4);info.appendChild(p);
+      var timeDiv=document.createElement('div');timeDiv.className='appt-card-time';
+      var timeSpan=document.createElement('div');timeSpan.className='time';timeSpan.textContent=a.start_time||'';
+      var dateSpan=document.createElement('div');dateSpan.className='date';dateSpan.textContent=a.date||'';
+      timeDiv.appendChild(timeSpan);timeDiv.appendChild(dateSpan);
+      var badgeMobile=document.createElement('span');badgeMobile.className='badge badge-'+(a.status||'pending');badgeMobile.textContent=i18n.t('appointments.status.'+(a.status||'pending'));
+      timeDiv.appendChild(badgeMobile);
+      card.appendChild(info);card.appendChild(timeDiv);
+      cards.appendChild(card);
+    });
+  }
+
+  function showDetail(a){
+    var body=document.getElementById('appt-detail-body');
+    body.textContent='';
+    var fields=[
+      [i18n.t('nav.clients'),a.client_name],
+      [i18n.t('clients.phone'),a.client_phone||''],
+      [i18n.t('nav.services'),a.service_name],
+      [i18n.t('nav.providers'),a.provider_name],
+      [i18n.t('common.date'),a.date],
+      [i18n.t('common.time'),a.start_time+' - '+(a.end_time||'')],
+      [i18n.t('appointments.duration'),(a.duration||'')+' min'],
+      [i18n.t('appointments.price'),formatCurrency(a.price)],
+      [i18n.t('common.status'),a.status],
+      [i18n.t('appointments.notes'),a.notes||''],
+    ];
+    fields.forEach(function(f){
+      var row=document.createElement('div');row.className='detail-row';
+      var lbl=document.createElement('span');lbl.className='detail-label';lbl.textContent=f[0];
+      var val=document.createElement('span');val.className='detail-value';val.textContent=f[1];
+      row.appendChild(lbl);row.appendChild(val);body.appendChild(row);
+    });
+
+    var actions=document.getElementById('appt-detail-actions');
+    actions.textContent='';
+    if(a.status==='pending'){
+      var btnConfirm=document.createElement('button');btnConfirm.className='btn btn-primary btn-sm';btnConfirm.textContent=i18n.t('appointments.confirm');
+      btnConfirm.addEventListener('click',function(){updateStatus(a.id,'confirmed');});
+      actions.appendChild(btnConfirm);
+    }
+    if(a.status!=='cancelled'&&a.status!=='completed'){
+      var btnCancel=document.createElement('button');btnCancel.className='btn btn-danger btn-sm';btnCancel.textContent=i18n.t('appointments.cancel');
+      btnCancel.addEventListener('click',function(){updateStatus(a.id,'cancelled');});
+      actions.appendChild(btnCancel);
+    }
+    if(a.status==='confirmed'){
+      var btnComplete=document.createElement('button');btnComplete.className='btn btn-secondary btn-sm';btnComplete.textContent=i18n.t('appointments.complete');
+      btnComplete.addEventListener('click',function(){updateStatus(a.id,'completed');});
+      actions.appendChild(btnComplete);
+      var btnNoShow=document.createElement('button');btnNoShow.className='btn btn-ghost btn-sm';btnNoShow.textContent=i18n.t('appointments.no_show');
+      btnNoShow.addEventListener('click',function(){updateStatus(a.id,'no_show');});
+      actions.appendChild(btnNoShow);
+    }
+    openModal('modal-appt-detail');
+  }
+
+  async function updateStatus(id,status){
+    var res=await Api.put('/appointments/'+id,{status:status});
+    if(res.success){showToast(res.message,'success');closeModal('modal-appt-detail');loadAppointments();}
+  }
+
+  async function loadFormData(){
+    var cRes=await Api.get('/clients?limit=200');
+    var sel=document.getElementById('appt-client');sel.textContent='';
+    var opt0=document.createElement('option');opt0.value='';opt0.textContent=i18n.t('appointments.select_client');sel.appendChild(opt0);
+    if(cRes.success&&cRes.data)cRes.data.forEach(function(c){
+      var o=document.createElement('option');o.value=c.id;o.textContent=c.name+(c.phone?' ('+c.phone+')':'');sel.appendChild(o);
+    });
+
+    var sRes=await Api.get('/services');
+    var ssel=document.getElementById('appt-service');ssel.textContent='';
+    var sopt0=document.createElement('option');sopt0.value='';sopt0.textContent=i18n.t('appointments.select_service');ssel.appendChild(sopt0);
+    if(sRes.success&&sRes.data)sRes.data.forEach(function(s){
+      var o=document.createElement('option');o.value=s.id;o.textContent=s.name+' ('+s.duration+'min - $'+s.price+')';o.dataset.price=s.price;o.dataset.duration=s.duration;ssel.appendChild(o);
+    });
+
+    var pRes=await Api.get('/providers');
+    var psel=document.getElementById('appt-provider');psel.textContent='';
+    if(pRes.success&&pRes.data&&pRes.data.length>1){
+      document.getElementById('appt-provider-group').style.display='';
+      pRes.data.forEach(function(p){
+        var o=document.createElement('option');o.value=p.id;o.textContent=p.name;psel.appendChild(o);
+      });
+    }
+  }
+
+  document.getElementById('appt-service').addEventListener('change',function(){
+    var sel=this.options[this.selectedIndex];
+    if(sel&&sel.dataset.price)document.getElementById('appt-price').value=sel.dataset.price;
+  });
+
+  document.getElementById('appt-date').addEventListener('change',loadSlots);
+  document.getElementById('appt-provider').addEventListener('change',loadSlots);
+
+  async function loadSlots(){
+    var date=document.getElementById('appt-date').value;
+    if(!date)return;
+    var providerId=document.getElementById('appt-provider').value;
+    var svcSel=document.getElementById('appt-service');
+    var duration=svcSel.options[svcSel.selectedIndex]?svcSel.options[svcSel.selectedIndex].dataset.duration||30:30;
+    var q='?date='+date+'&duration='+duration;
+    if(providerId)q+='&provider_id='+providerId;
+    var res=await Api.get('/appointments/slots'+q);
+    var tsel=document.getElementById('appt-time');tsel.textContent='';
+    var opt0=document.createElement('option');opt0.value='';opt0.textContent=i18n.t('appointments.select_time');tsel.appendChild(opt0);
+    if(res.success&&res.data)res.data.forEach(function(s){
+      var o=document.createElement('option');o.value=s.start_time;o.textContent=s.start_time+' - '+s.end_time;tsel.appendChild(o);
+    });
+    if(res.data&&res.data.length===0){
+      var noOpt=document.createElement('option');noOpt.value='';noOpt.textContent=i18n.t('appointments.no_slots');tsel.appendChild(noOpt);
+    }
+  }
+
+  function editAppt(a){
+    editingId=a.id;
+    document.getElementById('appt-modal-title').textContent=i18n.t('common.edit');
+    document.getElementById('appt-client').value=a.client_id||'';
+    document.getElementById('appt-service').value=a.service_id||'';
+    document.getElementById('appt-date').value=a.date||'';
+    document.getElementById('appt-price').value=a.price||'';
+    document.getElementById('appt-notes').value=a.notes||'';
+    if(a.provider_id)document.getElementById('appt-provider').value=a.provider_id;
+    openModal('modal-appointment');
+  }
+
+  document.getElementById('btn-save-appt').addEventListener('click',async function(){
+    var data={
+      client_id:document.getElementById('appt-client').value,
+      service_id:document.getElementById('appt-service').value,
+      date:document.getElementById('appt-date').value,
+      start_time:document.getElementById('appt-time').value,
+      price:parseFloat(document.getElementById('appt-price').value)||0,
+      notes:document.getElementById('appt-notes').value.trim(),
+    };
+    var providerId=document.getElementById('appt-provider').value;
+    if(providerId)data.provider_id=providerId;
+
+    if(!data.client_id||!data.service_id||!data.date||!data.start_time){
+      showToast(i18n.t('common.required_field'),'error');return;
+    }
+
+    var res;
+    if(editingId){res=await Api.put('/appointments/'+editingId,data);}
+    else{res=await Api.post('/appointments',data);}
+
+    if(res.success){
+      showToast(res.message,'success');closeModal('modal-appointment');
+      editingId=null;document.getElementById('appt-form').reset();loadAppointments();
+    }
+  });
+
+  document.getElementById('appt-search').addEventListener('input',debounce(loadAppointments,300));
+  document.getElementById('appt-status-filter').addEventListener('change',loadAppointments);
+  document.getElementById('appt-date-from').addEventListener('change',loadAppointments);
+  document.getElementById('appt-date-to').addEventListener('change',loadAppointments);
+
+  loadFormData();
+  loadAppointments();
+
+  var params=new URLSearchParams(window.location.search);
+  if(params.get('action')==='new')openModal('modal-appointment');
+  if(params.get('id'))Api.get('/appointments/'+params.get('id')).then(function(r){if(r.success&&r.data)showDetail(r.data);});
+})();
+</script>
