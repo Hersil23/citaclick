@@ -113,7 +113,7 @@
   </div>
 
   <p class="reg-switch" data-rt="has_account">&#191;Ya tienes cuenta? <a href="/login" data-link data-rt="login_link">Inicia sesi&#243;n</a></p>
-  <footer class="reg-footer">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a></footer>
+  <footer class="site-footer" style="position:static;margin-top:1.5rem;font-size:.7rem;color:#B0B0CC">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer" style="color:#B0B0CC">@herasi.dev</a></footer>
 </div>
 
 <style>
@@ -124,6 +124,10 @@
 .reg-wordmark b{font-weight:700;color:#E8000D}
 .reg-wordmark span{font-weight:500}
 .reg-toggles{display:flex;gap:.5rem}
+.lpill{display:flex;background:rgba(15,15,30,.08);border-radius:999px;padding:2px;gap:2px}
+.lpill-opt{padding:4px 10px;font-size:.65rem;font-weight:700;border-radius:999px;letter-spacing:.04em;color:rgba(26,26,46,.4);transition:all .3s;white-space:nowrap;cursor:pointer}
+.lpill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.lpill-opt:hover:not(.active){color:rgba(26,26,46,.6)}
 
 .reg-progress{display:flex;align-items:center;gap:0;margin-bottom:2rem;max-width:400px;width:100%}
 .rp-step{display:flex;flex-direction:column;align-items:center;gap:.375rem;flex-shrink:0;position:relative}
