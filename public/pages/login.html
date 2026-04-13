@@ -100,7 +100,7 @@
 .gcal-ev{display:block;margin:1px 2px;padding:2px 6px;border-radius:4px;font-size:.6875rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;line-height:1.4}
 
 /* === PANEL FORMULARIO 50% === */
-.login-form-side{width:50%;background:#F8F8FA;display:flex;flex-direction:column;height:100dvh;overflow-y:auto}
+.login-form-side{width:50%;background:#F8F8FA;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
 .login-topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;flex-shrink:0}
 .lm-logo{display:flex;align-items:center;gap:.4rem}
 .lm-wordmark{font-family:system-ui,sans-serif;font-size:1rem;letter-spacing:-.5px;color:#1A1A2E}
@@ -112,11 +112,11 @@
 .lpill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .lpill-opt:hover:not(.active){color:#4A4A68}
 
-.login-form-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1.5rem clamp(1.5rem,4vw,3rem);max-width:400px;width:100%;margin:0 auto;animation:lf-enter .5s ease both}
+.login-form-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:1rem clamp(1.5rem,4vw,3rem);max-width:400px;width:100%;margin:0 auto;animation:lf-enter .5s ease both;overflow-y:auto}
 @keyframes lf-enter{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
 .lf-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:600;color:#1A1A2E;margin-bottom:.25rem;letter-spacing:-.02em}
-.lf-subtitle{font-size:.875rem;color:#8888A0;margin-bottom:1.75rem}
-.lf-group{margin-bottom:1rem}
+.lf-subtitle{font-size:.875rem;color:#8888A0;margin-bottom:1.25rem}
+.lf-group{margin-bottom:.75rem}
 .lf-label{display:block;font-size:.75rem;font-weight:600;color:#4A4A68;margin-bottom:.3rem}
 .lf-input-wrap{display:flex;align-items:center;background:#fff;border:1.5px solid #D8D8E4;border-radius:10px;transition:border-color .2s,box-shadow .2s;overflow:hidden}
 .lf-input-wrap:focus-within{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
@@ -126,7 +126,7 @@
 .lf-eye{display:flex;align-items:center;justify-content:center;width:36px;height:36px;color:#8888A0;transition:color .15s;flex-shrink:0}
 .lf-eye:hover{color:#1A1A2E}
 .lf-eye svg{width:18px;height:18px}
-.lf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;font-size:.8125rem}
+.lf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;font-size:.8125rem}
 .lf-check{display:flex;align-items:center;gap:.4rem;color:#4A4A68;cursor:pointer}
 .lf-check input{accent-color:#E8000D;width:16px;height:16px}
 .lf-forgot{color:#E8000D;font-weight:500;font-size:.8125rem;transition:opacity .15s}
@@ -136,13 +136,13 @@
 .lf-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,0,13,.3)}
 .lf-btn-primary:active{transform:translateY(0)}
 .lf-btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.lf-divider{display:flex;align-items:center;gap:1rem;margin:1.25rem 0;color:#B0B0CC;font-size:.8125rem}
+.lf-divider{display:flex;align-items:center;gap:1rem;margin:1rem 0;color:#B0B0CC;font-size:.8125rem}
 .lf-divider::before,.lf-divider::after{content:'';flex:1;height:1px;background:#E8E8F0}
-.lf-btn-social{width:100%;padding:10px;border-radius:10px;font-size:.875rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.6rem;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-bottom:.5rem;border:none}
+.lf-btn-social{width:100%;padding:9px;border-radius:10px;font-size:.875rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.6rem;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-bottom:.4rem;border:none}
 .lf-btn-social:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .lf-btn-google{background:#fff;border:1.5px solid #D8D8E4;color:#333}
 .lf-btn-wa{background:#25D366;color:#fff}
-.lf-switch{text-align:center;font-size:.8125rem;color:#8888A0;margin-top:1.25rem}
+.lf-switch{text-align:center;font-size:.8125rem;color:#8888A0;margin-top:1rem}
 .lf-switch a{color:#E8000D;font-weight:600}
 
 @media(max-width:767px){
