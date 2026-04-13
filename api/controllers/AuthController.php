@@ -151,13 +151,14 @@ class AuthController
 
         try {
             $stmt = $db->prepare('
-                INSERT INTO businesses (name, slug, theme, email, created_at)
-                VALUES (:name, :slug, :theme, :email, NOW())
+                INSERT INTO businesses (name, slug, theme, business_type, email, created_at)
+                VALUES (:name, :slug, :theme, :btype, :email, NOW())
             ');
             $stmt->execute([
                 ':name'  => $businessName,
                 ':slug'  => $slug,
                 ':theme' => $theme,
+                ':btype' => $businessType,
                 ':email' => $email,
             ]);
             $businessId = (int)$db->lastInsertId();
@@ -229,6 +230,7 @@ class AuthController
             sendJson(500, [
                 'success' => false,
                 'message' => 'Error al crear la cuenta. Intenta nuevamente.',
+                'debug' => $e->getMessage(),
             ]);
         }
     }
