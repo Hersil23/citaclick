@@ -26,9 +26,7 @@ function checkRateLimit(string $identifier, string $action, int $maxAttempts = 1
     if ($attempts >= $maxAttempts) {
         // Hard block after max attempts
         $blocked = true;
-    } elseif ($attempts >= 8) {
-        $delay = 30;   // 30 seconds
-    } elseif ($attempts >= 6) {
+    } elseif ($attempts >= 5) {
         $delay = 10;   // 10 seconds
     } elseif ($attempts >= 4) {
         $delay = 2;    // 2 seconds
