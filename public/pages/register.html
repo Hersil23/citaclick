@@ -348,16 +348,18 @@ document.getElementById('r-name').addEventListener('input',function(){
 });
 
 /* THEME CARDS */
-document.querySelectorAll('.th-card').forEach(function(c){c.addEventListener('click',function(){
+document.querySelector('.theme-grid').addEventListener('click',function(e){
+  var card=e.target.closest('.th-card');if(!card)return;
   document.querySelectorAll('.th-card').forEach(function(x){x.classList.remove('selected');});
-  c.classList.add('selected');document.getElementById('r-theme').value=c.dataset.themeVal;
-});});
+  card.classList.add('selected');document.getElementById('r-theme').value=card.getAttribute('data-theme-val');
+});
 
 /* PLAN CARDS */
-document.querySelectorAll('.pl').forEach(function(c){c.addEventListener('click',function(){
+document.querySelector('.pl-grid').addEventListener('click',function(e){
+  var card=e.target.closest('.pl');if(!card)return;
   document.querySelectorAll('.pl').forEach(function(x){x.classList.remove('selected');});
-  c.classList.add('selected');document.getElementById('r-plan').value=c.dataset.plan;
-});});
+  card.classList.add('selected');document.getElementById('r-plan').value=card.getAttribute('data-plan');
+});
 
 /* PERIOD */
 document.getElementById('rg-period').addEventListener('click',function(e){var b=e.target.closest('.rg-per');if(!b)return;period=b.dataset.p;document.querySelectorAll('.rg-per').forEach(function(p){p.classList.toggle('active',p.dataset.p===period);});updatePrices();});
