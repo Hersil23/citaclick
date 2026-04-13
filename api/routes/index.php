@@ -36,8 +36,18 @@ function getRouteParam(string $path, string $pattern): ?array
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = preg_replace('#^/api#', '', $uri);
+$rawUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+if (isset($_GET['debug'])) {
+    sendJson(200, [
+        'raw_uri' => $rawUri,
+        'request_uri' => $_SERVER['REQUEST_URI'],
+        'script_name' => $_SERVER['SCRIPT_NAME'],
+        'method' => $method,
+    ]);
+}
+
+$uri = preg_replace('#^/api#', '', $rawUri);
 $uri = rtrim($uri, '/') ?: '/';
 
 $routes = [
