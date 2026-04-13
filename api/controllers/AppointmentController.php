@@ -9,6 +9,21 @@ class AppointmentController
         $user = $args['user'];
         $query = $args['query'];
 
+        if (!empty($query['debug_schema'])) {
+            $db = Database::getInstance();
+            $schema = [];
+            $tables = ['services','clients','appointments','service_categories','provider_schedules','provider_blocked_times'];
+            foreach ($tables as $t) {
+                try {
+                    $cols = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
+                    $schema[$t] = array_map(function($c) { return $c['Field']; }, $cols);
+                } catch (\PDOException $e) {
+                    $schema[$t] = 'NOT_EXISTS';
+                }
+            }
+            sendJson(200, ['success' => true, 'schema' => $schema]);
+        }
+
         if (!empty($query['metrics'])) {
             try {
                 $metrics = Appointment::getMetrics($user['business_id']);
