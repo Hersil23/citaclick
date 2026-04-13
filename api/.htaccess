@@ -1,7 +1,7 @@
 RewriteEngine On
 
 # Block direct access to PHP files except routes/index.php
-RewriteCond %{REQUEST_URI} !^/api/routes/index\.php$ [NC]
+RewriteCond %{REQUEST_URI} !^/api/routes/(index|test)\.php$ [NC]
 RewriteCond %{REQUEST_FILENAME} \.php$ [NC]
 RewriteRule ^ - [F,L]
 
