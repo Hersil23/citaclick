@@ -4,10 +4,6 @@ class Database
 {
     private static ?PDO $instance = null;
 
-    private static string $host = 'localhost';
-    private static string $dbname = 'twistpro_citaclick';
-    private static string $username = 'twistpro_citaclickuser';
-    private static string $password = '';
     private static string $charset = 'utf8mb4';
 
     private function __construct() {}
@@ -15,18 +11,19 @@ class Database
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
-            $envPassword = getenv('DB_PASS');
-            if ($envPassword !== false) {
-                self::$password = $envPassword;
+            $host = getenv('DB_HOST') ?: 'localhost';
+            $dbname = getenv('DB_NAME');
+            $username = getenv('DB_USER');
+            $password = getenv('DB_PASS');
+
+            if (!$dbname || !$username) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Server configuration error']);
+                exit;
             }
 
-            $envHost = getenv('DB_HOST');
-            if ($envHost !== false) {
-                self::$host = $envHost;
-            }
-
-            $dsn = 'mysql:host=' . self::$host
-                 . ';dbname=' . self::$dbname
+            $dsn = 'mysql:host=' . $host
+                 . ';dbname=' . $dbname
                  . ';charset=' . self::$charset;
 
             $options = [
@@ -36,7 +33,7 @@ class Database
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
             ];
 
-            self::$instance = new PDO($dsn, self::$username, self::$password, $options);
+            self::$instance = new PDO($dsn, $username, $password, $options);
         }
 
         return self::$instance;
