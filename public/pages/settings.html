@@ -157,19 +157,55 @@
 
 <div class="settings-panel" id="tab-currency">
   <div class="card">
+    <h3 class="card-title mb-4">Moneda y precios</h3>
+    <p class="text-sm text-muted mb-4">Configura la moneda en la que cobras a tus clientes.</p>
     <div class="form-group">
-      <label class="form-label" data-i18n="settings.local_currency">Moneda local</label>
-      <input class="form-input" type="text" id="setting-currency" placeholder="VES, COP, MXN..." style="max-width:200px;">
-    </div>
-    <div class="form-group">
-      <label class="form-label" data-i18n="settings.price_mode">Modo de precios</label>
-      <select class="form-input" id="setting-price-mode" style="max-width:250px;">
-        <option value="usd" data-i18n="settings.price_usd">Solo USD</option>
-        <option value="local" data-i18n="settings.price_local">Solo moneda local</option>
-        <option value="both" data-i18n="settings.price_both">Ambas</option>
+      <label class="form-label">Moneda local</label>
+      <select class="form-input" id="setting-currency" style="max-width:300px;">
+        <option value="">-- Selecciona tu moneda --</option>
+        <optgroup label="Latinoamerica">
+          <option value="VES">VES - Bolivar venezolano</option>
+          <option value="COP">COP - Peso colombiano</option>
+          <option value="MXN">MXN - Peso mexicano</option>
+          <option value="ARS">ARS - Peso argentino</option>
+          <option value="CLP">CLP - Peso chileno</option>
+          <option value="PEN">PEN - Sol peruano</option>
+          <option value="BRL">BRL - Real brasileno</option>
+          <option value="UYU">UYU - Peso uruguayo</option>
+          <option value="PYG">PYG - Guarani paraguayo</option>
+          <option value="BOB">BOB - Boliviano</option>
+          <option value="DOP">DOP - Peso dominicano</option>
+          <option value="CRC">CRC - Colon costarricense</option>
+          <option value="PAB">PAB - Balboa panameno</option>
+          <option value="GTQ">GTQ - Quetzal guatemalteco</option>
+          <option value="HNL">HNL - Lempira hondureno</option>
+          <option value="NIO">NIO - Cordoba nicaraguense</option>
+          <option value="CUP">CUP - Peso cubano</option>
+        </optgroup>
+        <optgroup label="Norteamerica y Europa">
+          <option value="USD">USD - Dolar estadounidense</option>
+          <option value="CAD">CAD - Dolar canadiense</option>
+          <option value="EUR">EUR - Euro</option>
+          <option value="GBP">GBP - Libra esterlina</option>
+        </optgroup>
+        <optgroup label="Otras">
+          <option value="JPY">JPY - Yen japones</option>
+          <option value="CNY">CNY - Yuan chino</option>
+          <option value="AUD">AUD - Dolar australiano</option>
+          <option value="CHF">CHF - Franco suizo</option>
+        </optgroup>
       </select>
     </div>
-    <button class="btn btn-primary mt-4" data-i18n="common.save">Guardar</button>
+    <div class="form-group">
+      <label class="form-label">Modo de precios</label>
+      <p class="text-xs text-muted mb-2">Como quieres mostrar los precios de tus servicios.</p>
+      <select class="form-input" id="setting-price-mode" style="max-width:300px;">
+        <option value="usd">Solo USD ($)</option>
+        <option value="local">Solo moneda local</option>
+        <option value="both">Ambas (USD + moneda local)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary mt-4" id="btn-save-currency">Guardar moneda</button>
   </div>
 </div>
 
@@ -470,19 +506,6 @@
     document.getElementById('setting-darkmode').checked = App.getMode() === 'dark';
     document.getElementById('setting-lang').value = i18n.getLocale();
 
-    async function loadProfile() {
-      const res = await Api.get('/business/profile');
-      if (!res.success || !res.data) return;
-      const b = res.data;
-      document.getElementById('setting-name').value = b.name || '';
-      document.getElementById('setting-description').value = b.description || '';
-      document.getElementById('setting-address').value = b.address || '';
-      document.getElementById('setting-phone').value = b.phone || '';
-      document.getElementById('setting-maps').value = b.google_maps_url || '';
-      document.getElementById('setting-instagram').value = b.instagram || '';
-      document.getElementById('setting-facebook').value = b.facebook || '';
-    }
-
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -745,8 +768,39 @@
       });
     });
 
-    loadProfile();
-    loadSchedule();
-    loadPlanInfo();
+    // --- CURRENCY TAB ---
+    function loadCurrency(b) {
+      if (b.currency_code) document.getElementById('setting-currency').value = b.currency_code;
+      if (b.currency_mode) document.getElementById('setting-price-mode').value = b.currency_mode;
+    }
+
+    document.getElementById('btn-save-currency').addEventListener('click', async function() {
+      var data = {
+        currency_code: document.getElementById('setting-currency').value,
+        currency_mode: document.getElementById('setting-price-mode').value,
+      };
+      var res = await Api.put('/business/profile', data);
+      if (res.success) showToast('Moneda guardada', 'success');
+    });
+
+    // --- LOAD ALL ---
+    async function loadAll() {
+      var res = await Api.get('/business/profile');
+      if (res.success && res.data) {
+        var b = res.data;
+        document.getElementById('setting-name').value = b.name || '';
+        document.getElementById('setting-description').value = b.description || '';
+        document.getElementById('setting-address').value = b.address || '';
+        document.getElementById('setting-phone').value = b.phone || '';
+        document.getElementById('setting-maps').value = b.google_maps_url || '';
+        document.getElementById('setting-instagram').value = b.instagram || '';
+        document.getElementById('setting-facebook').value = b.facebook || '';
+        loadCurrency(b);
+      }
+      loadSchedule();
+      loadPlanInfo();
+    }
+
+    loadAll();
   })();
 </script>
