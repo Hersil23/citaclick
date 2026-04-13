@@ -88,7 +88,7 @@
       var bio=document.createElement('p');bio.textContent=p.bio||'';
       var meta=document.createElement('div');meta.className='flex gap-2';
       var roleBadge=document.createElement('span');roleBadge.className='badge badge-completed';roleBadge.textContent=i18n.t('providers.roles.'+(p.role||'provider'));
-      var statusBadge=document.createElement('span');statusBadge.className='badge badge-'+(p.status==='active'?'confirmed':'cancelled');statusBadge.textContent=p.status==='active'?i18n.t('providers.active'):i18n.t('providers.inactive');
+      var isActive=p.is_active==1||p.status==='active';var statusBadge=document.createElement('span');statusBadge.className='badge badge-'+(isActive?'confirmed':'cancelled');statusBadge.textContent=isActive?'Activo':'Inactivo';
       meta.appendChild(roleBadge);meta.appendChild(statusBadge);
       info.appendChild(h4);info.appendChild(bio);info.appendChild(meta);
       card.appendChild(avatar);card.appendChild(info);list.appendChild(card);
@@ -101,11 +101,11 @@
       var existing=schedules?schedules.find(function(s){return s.day_of_week==d;}):null;
       var row=document.createElement('div');row.className='schedule-day';row.dataset.dow=d;
       var lbl=document.createElement('label');
-      var chk=document.createElement('input');chk.type='checkbox';chk.checked=existing?existing.is_active==1:d<=5;chk.style.marginRight='8px';
+      var chk=document.createElement('input');chk.type='checkbox';chk.checked=existing?(existing.is_available==1||existing.is_active==1):d<=5;chk.style.marginRight='8px';
       lbl.appendChild(chk);lbl.appendChild(document.createTextNode(dayNames[d-1]));
       var startInput=document.createElement('input');startInput.type='time';startInput.value=existing?existing.start_time:'09:00';startInput.className='sched-start';
       var endInput=document.createElement('input');endInput.type='time';endInput.value=existing?existing.end_time:'18:00';endInput.className='sched-end';
-      var slotInput=document.createElement('input');slotInput.type='number';slotInput.value=existing?existing.slot_duration:30;slotInput.min=5;slotInput.step=5;slotInput.className='sched-slot';
+      var slotInput=document.createElement('input');slotInput.type='number';slotInput.value=existing?(existing.slot_minutes||existing.slot_duration||30):30;slotInput.min=5;slotInput.step=5;slotInput.className='sched-slot';
       var minLabel=document.createElement('span');minLabel.textContent='min';minLabel.style.fontSize='var(--text-xs)';minLabel.style.color='var(--color-text-muted)';
       row.appendChild(lbl);row.appendChild(startInput);row.appendChild(document.createTextNode(' - '));row.appendChild(endInput);row.appendChild(slotInput);row.appendChild(minLabel);
       editor.appendChild(row);
@@ -120,8 +120,8 @@
         day_of_week:parseInt(row.dataset.dow,10),
         start_time:row.querySelector('.sched-start').value,
         end_time:row.querySelector('.sched-end').value,
-        slot_duration:parseInt(row.querySelector('.sched-slot').value,10)||30,
-        is_active:chk.checked?1:0,
+        slot_minutes:parseInt(row.querySelector('.sched-slot').value,10)||30,
+        is_available:chk.checked?1:0,
       });
     });
     return schedules;

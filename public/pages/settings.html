@@ -80,7 +80,8 @@
 <div class="settings-panel" id="tab-schedules">
   <div class="card">
     <h3 class="card-title mb-4" data-i18n="settings.working_hours">Horario de atencion</h3>
-    <div id="schedule-form"></div>
+    <p class="text-sm text-muted mb-4">Configura los dias y horas de atencion. Los clientes podran agendar citas dentro de estos horarios.</p>
+    <div id="schedule-form" class="schedule-grid"></div>
     <button class="btn btn-primary mt-4" id="btn-save-schedule" data-i18n="common.save">Guardar</button>
   </div>
 </div>
@@ -172,6 +173,101 @@
 
   .settings-panel { display: none; }
   .settings-panel.active { display: block; }
+
+  .schedule-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .schedule-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+  }
+
+  .schedule-row.disabled {
+    opacity: 0.4;
+  }
+
+  .schedule-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 120px;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+  }
+
+  .schedule-toggle input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-highlight);
+  }
+
+  .schedule-times {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 1;
+  }
+
+  .schedule-times input[type="time"] {
+    padding: var(--space-2);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    min-width: 0;
+    flex: 1;
+    max-width: 120px;
+  }
+
+  .schedule-times .sep {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .schedule-slot {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .schedule-slot input {
+    width: 50px;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-input-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-input-bg);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    text-align: center;
+  }
+
+  @media (max-width: 375px) {
+    .schedule-row {
+      padding: var(--space-2);
+      gap: var(--space-2);
+    }
+
+    .schedule-toggle {
+      min-width: 100px;
+      font-size: var(--text-xs);
+    }
+
+    .schedule-times input[type="time"] {
+      max-width: 90px;
+    }
+  }
 </style>
 
 <script>
@@ -216,6 +312,110 @@
       if (res.success) showToast(i18n.t('common.success'), 'success');
     });
 
+    // --- SCHEDULE TAB ---
+    var dayNames = i18n.getLocale() === 'es'
+      ? ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo']
+      : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+    var currentProviderId = null;
+
+    async function loadSchedule() {
+      // Get current user's provider
+      var pRes = await Api.get('/providers');
+      if (!pRes.success || !pRes.data || pRes.data.length === 0) return;
+      var user = Auth.getUser();
+      var provider = pRes.data.find(function(p) { return p.user_id == user.id; }) || pRes.data[0];
+      currentProviderId = provider.id;
+
+      var sRes = await Api.get('/providers/' + provider.id + '/schedule');
+      var schedules = sRes.success ? sRes.data : [];
+      buildScheduleForm(schedules);
+    }
+
+    function buildScheduleForm(schedules) {
+      var container = document.getElementById('schedule-form');
+      container.textContent = '';
+
+      for (var d = 1; d <= 7; d++) {
+        var existing = schedules.find(function(s) { return s.day_of_week == d; });
+        var isActive = existing ? (existing.is_available == 1) : (d <= 6);
+        var startTime = existing ? existing.start_time : '08:00';
+        var endTime = existing ? existing.end_time : '18:00';
+        var slotMin = existing ? (existing.slot_minutes || 30) : 30;
+
+        var row = document.createElement('div');
+        row.className = 'schedule-row' + (isActive ? '' : ' disabled');
+        row.dataset.dow = d;
+
+        // Toggle + day name
+        var toggle = document.createElement('label');
+        toggle.className = 'schedule-toggle';
+        var chk = document.createElement('input');
+        chk.type = 'checkbox';
+        chk.checked = isActive;
+        chk.addEventListener('change', (function(r) {
+          return function() { r.classList.toggle('disabled', !this.checked); };
+        })(row));
+        toggle.appendChild(chk);
+        toggle.appendChild(document.createTextNode(dayNames[d - 1]));
+
+        // Time inputs
+        var times = document.createElement('div');
+        times.className = 'schedule-times';
+        var startInput = document.createElement('input');
+        startInput.type = 'time';
+        startInput.value = startTime.substring(0, 5);
+        startInput.className = 'sched-start';
+        var sep = document.createElement('span');
+        sep.className = 'sep';
+        sep.textContent = 'a';
+        var endInput = document.createElement('input');
+        endInput.type = 'time';
+        endInput.value = endTime.substring(0, 5);
+        endInput.className = 'sched-end';
+        times.appendChild(startInput);
+        times.appendChild(sep);
+        times.appendChild(endInput);
+
+        // Slot duration
+        var slot = document.createElement('div');
+        slot.className = 'schedule-slot';
+        var slotInput = document.createElement('input');
+        slotInput.type = 'number';
+        slotInput.value = slotMin;
+        slotInput.min = 5;
+        slotInput.step = 5;
+        slotInput.className = 'sched-slot';
+        slot.appendChild(slotInput);
+        slot.appendChild(document.createTextNode('min'));
+
+        row.appendChild(toggle);
+        row.appendChild(times);
+        row.appendChild(slot);
+        container.appendChild(row);
+      }
+    }
+
+    document.getElementById('btn-save-schedule').addEventListener('click', async function() {
+      if (!currentProviderId) { showToast('No se encontro prestador', 'error'); return; }
+
+      var schedules = [];
+      document.querySelectorAll('#schedule-form .schedule-row').forEach(function(row) {
+        var chk = row.querySelector('input[type="checkbox"]');
+        schedules.push({
+          day_of_week: parseInt(row.dataset.dow, 10),
+          start_time: row.querySelector('.sched-start').value,
+          end_time: row.querySelector('.sched-end').value,
+          slot_minutes: parseInt(row.querySelector('.sched-slot').value, 10) || 30,
+          is_available: chk.checked ? 1 : 0,
+        });
+      });
+
+      var res = await Api.put('/providers/' + currentProviderId + '/schedule', { schedules: schedules });
+      if (res.success) showToast('Horario guardado', 'success');
+    });
+
     loadProfile();
+    loadSchedule();
   })();
 </script>
