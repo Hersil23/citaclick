@@ -227,10 +227,19 @@ class AuthController
             ]);
         } catch (\Exception $e) {
             $db->rollBack();
+            $cols = [];
+            try {
+                $tables = ['subscriptions', 'businesses', 'users', 'providers'];
+                foreach ($tables as $t) {
+                    $c = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
+                    $cols[$t] = array_map(function($r){ return $r['Field']; }, $c);
+                }
+            } catch (\Exception $ignored) {}
             sendJson(500, [
                 'success' => false,
                 'message' => 'Error al crear la cuenta. Intenta nuevamente.',
                 'debug' => $e->getMessage(),
+                'schema' => $cols,
             ]);
         }
     }
