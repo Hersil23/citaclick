@@ -79,7 +79,7 @@ class ClientController
             sendJson(404, ['success' => false, 'message' => 'Cliente no encontrado']);
         }
 
-        Client::delete($id);
+        Client::delete($id, $user['business_id']);
         sendJson(200, ['success' => true, 'message' => 'Cliente eliminado']);
     }
 }

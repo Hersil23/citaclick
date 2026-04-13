@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/jwt.php';
+require_once __DIR__ . '/../middleware/rate_limit.php';
 
 class AuthController
 {
@@ -18,6 +19,16 @@ class AuthController
             ]);
         }
 
+        // Rate limit by email + IP (hybrid banking-style)
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $limiter = checkRateLimit($email . '|' . $ip, 'login');
+        if ($limiter['blocked']) {
+            sendJson(429, [
+                'success' => false,
+                'message' => 'Demasiados intentos. Intenta en 30 minutos.',
+            ]);
+        }
+
         $db = Database::getInstance();
         $stmt = $db->prepare('
             SELECT u.*, b.id AS business_id, b.name AS business_name,
@@ -31,11 +42,15 @@ class AuthController
         $user = $stmt->fetch();
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
+            recordAttempt($email . '|' . $ip, 'login');
             sendJson(401, [
                 'success' => false,
                 'message' => 'Credenciales incorrectas',
             ]);
         }
+
+        // Login successful — clear rate limit history
+        clearAttempts($email . '|' . $ip, 'login');
 
         if ($user['status'] === 'suspended') {
             sendJson(403, [
@@ -115,7 +130,7 @@ class AuthController
         if ($stmt->fetch()) {
             sendJson(409, [
                 'success' => false,
-                'message' => 'Este email ya esta registrado',
+                'message' => 'No se pudo completar el registro. Verifica tus datos.',
             ]);
         }
 
@@ -242,6 +257,17 @@ class AuthController
             sendJson(400, ['success' => false, 'message' => 'Numero de telefono requerido']);
         }
 
+        // Rate limit OTP requests per phone
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $limiter = checkRateLimit($phone . '|' . $ip, 'otp_request', 5, 15);
+        if ($limiter['blocked']) {
+            sendJson(429, [
+                'success' => false,
+                'message' => 'Demasiados intentos. Intenta en 15 minutos.',
+            ]);
+        }
+        recordAttempt($phone . '|' . $ip, 'otp_request', 15);
+
         $otp = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         $db = Database::getInstance();
@@ -272,6 +298,16 @@ class AuthController
             sendJson(400, ['success' => false, 'message' => 'Telefono y codigo son requeridos']);
         }
 
+        // Rate limit OTP verification (prevent brute force on 6-digit code)
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $limiter = checkRateLimit($phone . '|' . $ip, 'otp_verify', 5, 10);
+        if ($limiter['blocked']) {
+            sendJson(429, [
+                'success' => false,
+                'message' => 'Demasiados intentos. Intenta en 10 minutos.',
+            ]);
+        }
+
         $db = Database::getInstance();
         $stmt = $db->prepare('
             SELECT * FROM otp_codes
@@ -282,8 +318,12 @@ class AuthController
         $otp = $stmt->fetch();
 
         if (!$otp) {
+            recordAttempt($phone . '|' . $ip, 'otp_verify', 10);
             sendJson(401, ['success' => false, 'message' => 'Codigo invalido o expirado']);
         }
+
+        // OTP verified — clear rate limit
+        clearAttempts($phone . '|' . $ip, 'otp_verify');
 
         $stmt = $db->prepare('DELETE FROM otp_codes WHERE phone = :phone');
         $stmt->execute([':phone' => $phone]);
@@ -350,6 +390,24 @@ class AuthController
 
     public function logout(array $args): void
     {
+        // Blacklist the current token until it expires
+        $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+        if (!empty($header) && str_starts_with($header, 'Bearer ')) {
+            $token = substr($header, 7);
+            $payload = JWT::decode($token);
+            if ($payload && isset($payload['exp'])) {
+                $db = Database::getInstance();
+                $stmt = $db->prepare('
+                    INSERT INTO token_blacklist (token_hash, expires_at, created_at)
+                    VALUES (:hash, :exp, NOW())
+                ');
+                $stmt->execute([
+                    ':hash' => hash('sha256', $token),
+                    ':exp'  => date('Y-m-d H:i:s', $payload['exp']),
+                ]);
+            }
+        }
+
         sendJson(200, [
             'success' => true,
             'message' => 'Sesion cerrada',

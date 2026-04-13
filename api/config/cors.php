@@ -5,11 +5,17 @@ function handleCors(): void
     $allowedOrigins = [
         'https://citaclick.net',
         'https://www.citaclick.net',
-        'http://localhost',
-        'http://localhost:3000',
-        'http://localhost:8080',
-        'http://127.0.0.1',
     ];
+
+    // Allow localhost only in development
+    if (getenv('APP_ENV') === 'development') {
+        $allowedOrigins = array_merge($allowedOrigins, [
+            'http://localhost',
+            'http://localhost:3000',
+            'http://localhost:8080',
+            'http://127.0.0.1',
+        ]);
+    }
 
     $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 

@@ -9,7 +9,9 @@ class JWT
     {
         $secret = getenv('JWT_SECRET');
         if ($secret === false || $secret === '') {
-            $secret = 'citaclick_jwt_secret_change_in_production_2024';
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Server configuration error']);
+            exit;
         }
         return $secret;
     }

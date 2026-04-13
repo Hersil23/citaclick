@@ -9,6 +9,11 @@ require_once __DIR__ . '/../middleware/plan.php';
 handleCors();
 
 header('Content-Type: application/json; charset=utf-8');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
 
 function sendJson(int $code, array $data): void
 {
@@ -40,17 +45,7 @@ $rawUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = preg_replace('#^/api#', '', $rawUri);
 $uri = rtrim($uri, '/') ?: '/';
 
-if ($uri === '/debug' || $rawUri === '/api/routes/index.php') {
-    sendJson(200, [
-        'raw_uri' => $rawUri,
-        'parsed_uri' => $uri,
-        'request_uri' => $_SERVER['REQUEST_URI'],
-        'script_name' => $_SERVER['SCRIPT_NAME'],
-        'doc_root' => $_SERVER['DOCUMENT_ROOT'],
-        'method' => $method,
-        'php' => PHP_VERSION,
-    ]);
-}
+// Debug endpoint removed for security — never expose server info in production
 
 $routes = [
     'POST /auth/login'          => ['AuthController', 'login'],

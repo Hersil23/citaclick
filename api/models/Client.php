@@ -81,11 +81,11 @@ class Client
         return $stmt->execute($params);
     }
 
-    public static function delete(int $id): bool
+    public static function delete(int $id, int $businessId): bool
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('DELETE FROM clients WHERE id = :id');
-        return $stmt->execute([':id' => $id]);
+        $stmt = $db->prepare('DELETE FROM clients WHERE id = :id AND business_id = :bid');
+        return $stmt->execute([':id' => $id, ':bid' => $businessId]);
     }
 
     public static function findOrCreateByPhone(int $businessId, string $name, string $phone, ?string $email = null): int
