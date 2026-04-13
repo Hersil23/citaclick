@@ -158,8 +158,10 @@
 @media(max-width:767px){.rs-c{width:28px;height:28px;font-size:.65rem}.rs span{display:none}.rs-line{width:20px;margin-bottom:0}}
 
 /* MAIN */
-.rg-main{flex:1;max-width:600px;width:100%;margin:0 auto;padding:1.5rem 1rem 1rem}
-@media(min-width:768px){.rg-main{padding:2rem 2rem 1rem}}
+.rg-main{flex:1;width:100%;margin:0 auto;padding:1.5rem 1rem 1rem;max-width:600px;transition:max-width .3s}
+.rg-main.wide{max-width:920px}
+.rg-main.medium{max-width:720px}
+@media(min-width:768px){.rg-main{padding:2rem 2.5rem 1rem}}
 .rg-back{display:flex;align-items:center;gap:.35rem;font-size:.8125rem;font-weight:500;color:#5A5A7A;cursor:pointer;margin-bottom:1.25rem;transition:color .15s}
 .rg-back:hover{color:#1A1A2E}
 
@@ -180,6 +182,7 @@
 .rg-group-label:first-of-type{margin-top:0}
 .bz-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.625rem}
 @media(min-width:540px){.bz-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.bz-grid{grid-template-columns:repeat(5,1fr);gap:.75rem}}
 .bz{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1.125rem 1rem;border:1.5px solid #E2E2EA;border-radius:12px;background:#fff;cursor:pointer;transition:all .2s;position:relative;text-align:center}
 .bz svg{color:#9A9AB0;transition:color .2s}
 .bz span{font-size:.8125rem;font-weight:500;color:#5A5A7A;transition:color .2s}
@@ -226,7 +229,7 @@
 .th-card.selected{box-shadow:0 0 0 3px #E8000D;border-color:#E8000D;transform:scale(1.02)}
 .th-card[data-theme-val="damas"].selected{box-shadow:0 0 0 3px #B784A7;border-color:#B784A7}
 .th-preview{border-radius:10px;overflow:hidden;display:flex;height:140px;margin-bottom:.75rem;border:1px solid #E2E2EA}
-@media(min-width:768px){.th-preview{height:180px}}
+@media(min-width:768px){.th-preview{height:220px}}
 .th-onyx{background:#0D0D1A}
 .th-blush{background:#FDF6F9;border-color:#EBDCE6}
 .th-side{width:40px;background:#16213E;flex-shrink:0}
@@ -246,7 +249,7 @@
 
 /* PLAN CARDS */
 .pl-grid{display:flex;flex-direction:column;gap:.75rem}
-@media(min-width:640px){.pl-grid{flex-direction:row}.pl-grid>*{flex:1}}
+@media(min-width:640px){.pl-grid{flex-direction:row;gap:1rem}.pl-grid>*{flex:1}}
 .pl{text-align:left;padding:1.25rem;border:1.5px solid #E2E2EA;border-radius:14px;background:#fff;cursor:pointer;transition:all .2s;position:relative}
 .pl:hover{border-color:#999;transform:translateY(-2px)}
 .pl.selected{border:2px solid #E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.2)}
@@ -318,6 +321,10 @@ function goStep(n){
   document.getElementById('rg-back-text').textContent=n===1?t('back_home'):t('back');
   if(n===4){document.getElementById('rg-btn-next').textContent=t('create_btn');}else{document.getElementById('rg-btn-next').textContent=t('continue');}
   document.getElementById('rg-error').textContent='';
+  var main=document.querySelector('.rg-main');
+  main.classList.remove('wide','medium');
+  if(n===1||n===4)main.classList.add('wide');
+  else if(n===3)main.classList.add('medium');
   sessionStorage.setItem('reg-step',n);
 }
 
