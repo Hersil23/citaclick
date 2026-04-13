@@ -131,6 +131,16 @@
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
+
+  @media (max-width: 375px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-title {
+      font-size: var(--text-xl);
+    }
+  }
 </style>
 
 <script>

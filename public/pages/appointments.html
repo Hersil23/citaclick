@@ -127,6 +127,10 @@
   .detail-row:last-child{border-bottom:none}
   .detail-label{color:var(--color-text-muted);font-weight:var(--weight-medium)}
   .detail-value{font-weight:var(--weight-semibold);text-align:right}
+  @media (max-width: 375px) {
+    .filters-bar .form-input{max-width:100%!important;min-width:0}
+    .page-title{font-size:var(--text-xl)}
+  }
 </style>
 
 <script>

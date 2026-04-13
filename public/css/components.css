@@ -1366,3 +1366,39 @@
     right: var(--space-3);
   }
 }
+
+/* --- SMALL PHONE FIXES (320-375px) --- */
+
+@media (max-width: 375px) {
+  .dropdown-menu {
+    min-width: 160px;
+    right: -8px;
+  }
+
+  .modal {
+    margin: var(--space-2);
+    max-height: 90dvh;
+  }
+
+  .modal-overlay {
+    padding: var(--space-2);
+  }
+
+  .modal-header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .modal-body {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .modal-footer {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .avatar-sm {
+    width: 30px;
+    height: 30px;
+    font-size: var(--text-xs);
+  }
+}
