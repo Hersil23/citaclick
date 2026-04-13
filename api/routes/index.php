@@ -46,7 +46,24 @@ $rawUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = preg_replace('#^/api#', '', $rawUri);
 $uri = rtrim($uri, '/') ?: '/';
 
-// Debug endpoint removed for security — never expose server info in production
+// TEMPORARY: Schema diagnostic — DELETE after fixing registration
+if ($method === 'GET' && $uri === '/debug/schema') {
+    require_once __DIR__ . '/../config/env.php';
+    require_once __DIR__ . '/../config/database.php';
+    try {
+        $db = Database::getInstance();
+        $tables = ['plans', 'businesses', 'users', 'subscriptions', 'providers'];
+        $schema = [];
+        foreach ($tables as $t) {
+            $cols = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll();
+            $schema[$t] = array_map(function($c) { return $c['Field'] . ' (' . $c['Type'] . ')'; }, $cols);
+        }
+        $plans = $db->query("SELECT id, name FROM plans")->fetchAll();
+        sendJson(200, ['success' => true, 'schema' => $schema, 'plans' => $plans]);
+    } catch (\Exception $e) {
+        sendJson(500, ['success' => false, 'error' => $e->getMessage()]);
+    }
+}
 
 $routes = [
     'POST /auth/login'          => ['AuthController', 'login'],
