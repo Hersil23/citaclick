@@ -12,7 +12,8 @@ class ServiceController
         try {
             $data = Service::findByBusiness($user['business_id'], $categoryId);
         } catch (\PDOException $e) {
-            $data = [];
+            sendJson(200, ['success' => true, 'data' => [], 'debug' => $e->getMessage()]);
+            return;
         }
         sendJson(200, ['success' => true, 'data' => $data]);
     }

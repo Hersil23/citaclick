@@ -22,17 +22,30 @@ class Client
         $limit = min(100, max(1, (int)($filters['limit'] ?? 50)));
         $offset = ($page - 1) * $limit;
 
-        $stmt = $db->prepare("
-            SELECT c.*,
-                   (SELECT COUNT(*) FROM appointments WHERE client_id = c.id) AS total_visits,
-                   (SELECT MAX(date) FROM appointments WHERE client_id = c.id AND status = 'completed') AS last_visit
-            FROM clients c
-            WHERE {$whereStr}
-            ORDER BY c.name ASC
-            LIMIT {$limit} OFFSET {$offset}
-        ");
-        $stmt->execute($params);
-        return $stmt->fetchAll();
+        try {
+            $stmt = $db->prepare("
+                SELECT c.*,
+                       (SELECT COUNT(*) FROM appointments WHERE client_id = c.id) AS total_visits,
+                       (SELECT MAX(date) FROM appointments WHERE client_id = c.id AND status = 'completed') AS last_visit
+                FROM clients c
+                WHERE {$whereStr}
+                ORDER BY c.name ASC
+                LIMIT {$limit} OFFSET {$offset}
+            ");
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (\PDOException $e) {
+            // Fallback: appointments table may not exist yet
+            $stmt = $db->prepare("
+                SELECT c.*, 0 AS total_visits, NULL AS last_visit
+                FROM clients c
+                WHERE {$whereStr}
+                ORDER BY c.name ASC
+                LIMIT {$limit} OFFSET {$offset}
+            ");
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        }
     }
 
     public static function findById(int $id, int $businessId): ?array

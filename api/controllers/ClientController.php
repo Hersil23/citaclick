@@ -15,12 +15,7 @@ class ClientController
             'limit'  => $query['limit'] ?? 50,
         ];
 
-        try {
-            $data = Client::findByBusiness($user['business_id'], $filters);
-        } catch (\PDOException $e) {
-            sendJson(200, ['success' => true, 'data' => [], 'debug' => $e->getMessage()]);
-            return;
-        }
+        $data = Client::findByBusiness($user['business_id'], $filters);
         sendJson(200, ['success' => true, 'data' => $data]);
     }
 

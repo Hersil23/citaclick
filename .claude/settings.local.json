@@ -3,7 +3,8 @@
     "allow": [
       "Bash(rm \"C:/Users/Herasi/Documents/GitHub/citaclick/api/routes/setup.php\")",
       "Bash(rm \"C:/Users/Herasi/Documents/GitHub/citaclick/api/routes/test.php\")",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(curl:*o)"
     ]
   }
 }
