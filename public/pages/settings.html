@@ -1,4 +1,8 @@
 <div class="page-header">
+  <a href="/dashboard" data-link class="btn btn-ghost btn-sm" style="gap:var(--space-1)">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Dashboard
+  </a>
   <h2 class="page-title" data-i18n="nav.settings">Configuracion</h2>
 </div>
 
@@ -53,23 +57,25 @@
 
 <div class="settings-panel" id="tab-appearance">
   <div class="card">
+    <h3 class="card-title mb-2">Apariencia</h3>
+    <p class="text-sm text-muted mb-4">Los cambios se aplican de inmediato.</p>
     <div class="form-group">
       <label class="form-label" data-i18n="settings.theme">Tema</label>
       <div class="flex gap-4 mt-2">
-        <button class="btn btn-secondary" id="btn-theme-cab" onclick="App.setTheme('caballeros')" data-i18n="auth.theme_caballeros">Caballeros</button>
-        <button class="btn btn-secondary" id="btn-theme-dam" onclick="App.setTheme('damas')" data-i18n="auth.theme_damas">Damas</button>
+        <button class="btn btn-secondary" id="btn-theme-cab" data-i18n="auth.theme_caballeros">Caballeros</button>
+        <button class="btn btn-secondary" id="btn-theme-dam" data-i18n="auth.theme_damas">Damas</button>
       </div>
     </div>
     <div class="form-group mt-4">
       <label class="form-label" data-i18n="settings.dark_mode">Modo oscuro</label>
       <div class="form-check mt-2">
-        <input type="checkbox" id="setting-darkmode" onchange="App.setMode(this.checked ? 'dark' : 'light')">
+        <input type="checkbox" id="setting-darkmode">
         <label for="setting-darkmode" data-i18n="settings.dark_mode">Modo oscuro</label>
       </div>
     </div>
     <div class="form-group mt-4">
       <label class="form-label" data-i18n="settings.language">Idioma</label>
-      <select class="form-input" id="setting-lang" onchange="i18n.setLocale(this.value)" style="max-width:200px;">
+      <select class="form-input" id="setting-lang" style="max-width:200px;">
         <option value="es">Espanol</option>
         <option value="en">English</option>
       </select>
@@ -505,6 +511,24 @@
 
     document.getElementById('setting-darkmode').checked = App.getMode() === 'dark';
     document.getElementById('setting-lang').value = i18n.getLocale();
+
+    // Appearance handlers with feedback
+    document.getElementById('btn-theme-cab').addEventListener('click', function() {
+      App.setTheme('caballeros');
+      showToast('Tema Caballeros aplicado', 'success');
+    });
+    document.getElementById('btn-theme-dam').addEventListener('click', function() {
+      App.setTheme('damas');
+      showToast('Tema Damas aplicado', 'success');
+    });
+    document.getElementById('setting-darkmode').addEventListener('change', function() {
+      App.setMode(this.checked ? 'dark' : 'light');
+      showToast(this.checked ? 'Modo oscuro activado' : 'Modo claro activado', 'success');
+    });
+    document.getElementById('setting-lang').addEventListener('change', function() {
+      i18n.setLocale(this.value);
+      showToast('Idioma cambiado', 'success');
+    });
 
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
