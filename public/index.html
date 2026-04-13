@@ -99,18 +99,19 @@ ul{list-style:none}
   .hero:has(.hero-women:hover) .hero-men{width:38%}
 }
 
-/* mini cal */
-.mini-cal{border-radius:var(--radius);overflow:hidden;font-size:.7rem;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.mini-cal-men{background:var(--men-surface);color:var(--men-text);border:1px solid rgba(255,255,255,.06)}
-.mini-cal-women{background:#fff;color:var(--women-text);border:1px solid rgba(183,132,167,.15)}
-.mini-cal-header{padding:8px 10px;font-weight:700;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;opacity:.5}
-.mini-cal table{width:100%;border-collapse:collapse}
-.mini-cal th{padding:4px;font-weight:600;opacity:.4;font-size:.6rem}
-.mini-cal td{padding:5px 4px;text-align:center;font-size:.65rem;opacity:.5}
-.mini-cal td.today{opacity:1;font-weight:700}
-.mini-cal-event{display:block;margin:2px auto 0;padding:1px 4px;border-radius:3px;font-size:.55rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
-.mini-cal-men .mini-cal-event{background:rgba(232,0,13,.2);color:#E8000D}
-.mini-cal-women .mini-cal-event{background:rgba(183,132,167,.15);color:var(--women-accent)}
+/* Google Calendar style mini-cal */
+.gcal-hero{background:#fff;border-radius:10px;overflow:hidden;width:100%;max-width:320px;box-shadow:0 2px 12px rgba(0,0,0,.15);color:#333}
+.hero-men .gcal-hero{max-width:300px}
+.hero-women .gcal-hero{max-width:300px}
+.gcal-hero .gh-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #E8E8F0}
+.gcal-hero .gh-title{font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:#333}
+.gcal-hero .gh-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.gcal-hero .gh-dh{padding:6px 0;text-align:center;font-size:.6rem;font-weight:500;color:#999;text-transform:uppercase;letter-spacing:.04em}
+.gcal-hero .gh-day{padding:3px 2px 5px;text-align:center;min-height:44px;border-top:1px solid #F0F0F0;vertical-align:top}
+.gcal-hero .gh-dn{font-size:.75rem;font-weight:400;color:#666;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;margin-bottom:2px}
+.gcal-hero .gh-day.today .gh-dn{background:#E8000D;color:#fff;font-weight:700}
+.gcal-hero .gh-day.other .gh-dn{color:#CCC}
+.gcal-hero .gh-ev{display:block;margin:1px 2px;padding:2px 5px;border-radius:4px;font-size:.625rem;font-weight:500;white-space:nowrap;text-align:left;line-height:1.4}
 
 /* hero center */
 .hero-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);z-index:10;background:rgba(26,26,46,.92);border:1px solid rgba(232,0,13,.3);border-radius:20px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:2rem;text-align:center;width:clamp(280px,30vw,360px);color:var(--men-text);box-shadow:0 24px 64px rgba(0,0,0,.4);opacity:1;transition:opacity .25s ease,transform .25s ease}
@@ -363,7 +364,7 @@ ul{list-style:none}
         <li data-t="hero_l2_men">Psic&#243;logos y terapeutas</li>
         <li data-t="hero_l3_men">Abogados y consultores</li>
       </ul>
-      <div class="mini-cal mini-cal-men" id="mini-cal-men"></div>
+      <div class="gcal-hero" id="mini-cal-men"></div>
     </div>
   </div>
   <div class="hero-half hero-women" id="hero-women">
@@ -375,7 +376,7 @@ ul{list-style:none}
         <li data-t="hero_l2_women">Manicuristas y esteticistas</li>
         <li data-t="hero_l3_women">Nutricionistas y coaches</li>
       </ul>
-      <div class="mini-cal mini-cal-women" id="mini-cal-women"></div>
+      <div class="gcal-hero" id="mini-cal-women"></div>
     </div>
   </div>
   <div class="hero-center" id="hero-center">
@@ -587,29 +588,37 @@ document.getElementById('hero-close').addEventListener('click',function(){
 function buildMiniCals(){
   var now=new Date(),y=now.getFullYear(),m=now.getMonth(),td=now.getDate();
   var days=new Date(y,m+1,0).getDate(),first=(new Date(y,m,1).getDay()||7);
+  var prevDays=new Date(y,m,0).getDate();
   var loc=lang==='es'?'es-ES':'en-US';
-  var mn=now.toLocaleDateString(loc,{month:'long'});mn=mn.charAt(0).toUpperCase()+mn.slice(1);
-  var dh=lang==='es'?['L','M','X','J','V','S','D']:['M','T','W','T','F','S','S'];
+  var mn=now.toLocaleDateString(loc,{month:'long',year:'numeric'});mn=mn.charAt(0).toUpperCase()+mn.slice(1);
+  var dh=lang==='es'?['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom']:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   var menEv={},womEv={};
-  menEv[td]='9:00 Corte';menEv[Math.min(td+2,days)]='11:00 Barba';menEv[Math.max(td-2,1)]='3:00 Consulta';
-  womEv[td]='10:00 Color';womEv[Math.min(td+1,days)]='2:00 Manicure';womEv[Math.max(td-1,1)]='4:00 Facial';
-  buildOneMiniCal('mini-cal-men',mn,y,days,first,td,dh,menEv);
-  buildOneMiniCal('mini-cal-women',mn,y,days,first,td,dh,womEv);
+  menEv[Math.max(td-2,1)]={t:lang==='es'?'10:00 Consulta':'10:00 Consult',bg:'#EBF5FF',c:'#1A73E8'};
+  menEv[td]={t:lang==='es'?'9:00 Corte':'9:00 Haircut',bg:'#FCE8E6',c:'#D93025'};
+  menEv[Math.min(td+2,days)]={t:lang==='es'?'14:00 Barba':'14:00 Beard',bg:'#E6F4EA',c:'#1E8E3E'};
+  womEv[Math.max(td-1,1)]={t:lang==='es'?'11:00 Color':'11:00 Color',bg:'#FEF7E0',c:'#E37400'};
+  womEv[td]={t:lang==='es'?'10:00 Manicure':'10:00 Manicure',bg:'#F3E8FD',c:'#9334E6'};
+  womEv[Math.min(td+1,days)]={t:lang==='es'?'15:00 Facial':'15:00 Facial',bg:'#E6F4EA',c:'#1E8E3E'};
+  buildOneGCal('mini-cal-men',mn,days,first,prevDays,td,dh,menEv);
+  buildOneGCal('mini-cal-women',mn,days,first,prevDays,td,dh,womEv);
 }
-function buildOneMiniCal(id,mn,y,days,first,td,dh,events){
-  var el=document.getElementById(id);el.textContent='';
-  var hdr=document.createElement('div');hdr.className='mini-cal-header';hdr.textContent=mn+' '+y;el.appendChild(hdr);
-  var tbl=document.createElement('table'),tr=document.createElement('tr');
-  dh.forEach(function(d){var th=document.createElement('th');th.textContent=d;tr.appendChild(th);});
-  tbl.appendChild(tr);tr=document.createElement('tr');
-  for(var i=1;i<first;i++){tr.appendChild(document.createElement('td'));}
+function buildOneGCal(id,mn,days,first,prevDays,td,dh,events){
+  var el=document.getElementById(id);if(!el)return;el.textContent='';
+  var hdr=document.createElement('div');hdr.className='gh-hdr';
+  var title=document.createElement('span');title.className='gh-title';title.textContent=mn;
+  hdr.appendChild(title);el.appendChild(hdr);
+  var grid=document.createElement('div');grid.className='gh-grid';
+  dh.forEach(function(d){var dhead=document.createElement('div');dhead.className='gh-dh';dhead.textContent=d;grid.appendChild(dhead);});
+  for(var i=1;i<first;i++){var pd=document.createElement('div');pd.className='gh-day other';var pdn=document.createElement('div');pdn.className='gh-dn';pdn.textContent=prevDays-first+1+i;pd.appendChild(pdn);grid.appendChild(pd);}
   for(var d=1;d<=days;d++){
-    var cell=document.createElement('td');if(d===td)cell.className='today';
-    var dn=document.createElement('div');dn.className='dn';dn.textContent=d;cell.appendChild(dn);
-    if(events[d]){var ev=document.createElement('div');ev.className='mini-cal-event';ev.textContent=events[d];cell.appendChild(ev);}
-    tr.appendChild(cell);if((first-1+d)%7===0&&d<days){tbl.appendChild(tr);tr=document.createElement('tr');}
+    var day=document.createElement('div');day.className='gh-day';if(d===td)day.classList.add('today');
+    var dn=document.createElement('div');dn.className='gh-dn';dn.textContent=d;day.appendChild(dn);
+    if(events[d]){var ev=document.createElement('div');ev.className='gh-ev';ev.textContent=events[d].t;ev.style.background=events[d].bg;ev.style.color=events[d].c;day.appendChild(ev);}
+    grid.appendChild(day);
   }
-  tbl.appendChild(tr);el.appendChild(tbl);
+  var total=first-1+days;var rem=total%7===0?0:7-total%7;
+  for(var i=1;i<=rem;i++){var nd=document.createElement('div');nd.className='gh-day other';var ndn=document.createElement('div');ndn.className='gh-dn';ndn.textContent=i;nd.appendChild(ndn);grid.appendChild(nd);}
+  el.appendChild(grid);
 }
 
 /* DEMO CALENDAR */
