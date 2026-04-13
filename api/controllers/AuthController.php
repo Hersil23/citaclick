@@ -30,7 +30,7 @@ class AuthController
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        if (!$user || !password_verify($password, $user['password_hash'])) {
             sendJson(401, [
                 'success' => false,
                 'message' => 'Credenciales incorrectas',
@@ -136,28 +136,28 @@ class AuthController
 
         try {
             $stmt = $db->prepare('
-                INSERT INTO businesses (name, slug, theme, business_type, status, created_at, updated_at)
-                VALUES (:name, :slug, :theme, :type, "active", NOW(), NOW())
+                INSERT INTO businesses (name, slug, theme, email, created_at)
+                VALUES (:name, :slug, :theme, :email, NOW())
             ');
             $stmt->execute([
                 ':name'  => $businessName,
                 ':slug'  => $slug,
                 ':theme' => $theme,
-                ':type'  => $businessType,
+                ':email' => $email,
             ]);
             $businessId = (int)$db->lastInsertId();
 
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
             $stmt = $db->prepare('
-                INSERT INTO users (business_id, name, email, password, role, status, created_at, updated_at)
-                VALUES (:bid, :name, :email, :password, "owner", "active", NOW(), NOW())
+                INSERT INTO users (business_id, name, email, password_hash, role, created_at)
+                VALUES (:bid, :name, :email, :password_hash, "owner", NOW())
             ');
             $stmt->execute([
                 ':bid'      => $businessId,
                 ':name'     => $businessName,
                 ':email'    => $email,
-                ':password' => $hashedPassword,
+                ':password_hash' => $hashedPassword,
             ]);
             $userId = (int)$db->lastInsertId();
 

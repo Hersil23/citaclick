@@ -34,14 +34,14 @@ class User
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO users (business_id, name, email, password, phone, role, status, created_at, updated_at)
-            VALUES (:bid, :name, :email, :password, :phone, :role, "active", NOW(), NOW())
+            INSERT INTO users (business_id, name, email, password_hash, phone, role, created_at)
+            VALUES (:bid, :name, :email, :password_hash, :phone, :role, NOW())
         ');
         $stmt->execute([
             ':bid'      => $data['business_id'],
             ':name'     => $data['name'],
             ':email'    => $data['email'],
-            ':password' => password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]),
+            ':password_hash' => password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]),
             ':phone'    => $data['phone'] ?? null,
             ':role'     => $data['role'] ?? 'provider',
         ]);
@@ -63,8 +63,8 @@ class User
         }
 
         if (!empty($data['password'])) {
-            $fields[] = 'password = :password';
-            $params[':password'] = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+            $fields[] = 'password_hash = :password_hash';
+            $params[':password_hash'] = password_hash($data['password'], PASSWORD_BCRYPT, ['cost' => 12]);
         }
 
         if (empty($fields)) return false;
