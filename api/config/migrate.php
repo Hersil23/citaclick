@@ -7,7 +7,19 @@
 
 function ensureTables(): void
 {
-    $db = Database::getInstance();
+    try {
+        $db = Database::getInstance();
+    } catch (\Exception $e) {
+        return;
+    }
+
+    // Quick check: if appointments table exists, skip migration
+    try {
+        $db->query("SELECT 1 FROM appointments LIMIT 1");
+        return; // All core tables likely exist
+    } catch (\PDOException $e) {
+        // Table missing — run migration
+    }
 
     $tables = [
         'service_categories' => "

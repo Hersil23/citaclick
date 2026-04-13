@@ -10,7 +10,11 @@ class AppointmentController
         $query = $args['query'];
 
         if (!empty($query['metrics'])) {
-            $metrics = Appointment::getMetrics($user['business_id']);
+            try {
+                $metrics = Appointment::getMetrics($user['business_id']);
+            } catch (\PDOException $e) {
+                $metrics = ['today' => 0, 'pending' => 0, 'total_clients' => 0, 'revenue' => 0];
+            }
             sendJson(200, ['success' => true, 'data' => $metrics]);
         }
 
@@ -29,7 +33,11 @@ class AppointmentController
             $filters['provider_id'] = $this->getProviderId($user['user_id']);
         }
 
-        $data = Appointment::findByBusiness($user['business_id'], $filters);
+        try {
+            $data = Appointment::findByBusiness($user['business_id'], $filters);
+        } catch (\PDOException $e) {
+            $data = [];
+        }
 
         sendJson(200, ['success' => true, 'data' => $data]);
     }

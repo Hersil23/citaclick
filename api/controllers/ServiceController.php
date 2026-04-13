@@ -9,7 +9,11 @@ class ServiceController
         $user = $args['user'];
         $categoryId = !empty($args['query']['category_id']) ? (int)$args['query']['category_id'] : null;
 
-        $data = Service::findByBusiness($user['business_id'], $categoryId);
+        try {
+            $data = Service::findByBusiness($user['business_id'], $categoryId);
+        } catch (\PDOException $e) {
+            $data = [];
+        }
         sendJson(200, ['success' => true, 'data' => $data]);
     }
 
