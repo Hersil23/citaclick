@@ -1,159 +1,222 @@
-<div class="auth-page">
-  <div class="auth-container">
-    <div class="auth-logo">
-      <div class="auth-logo-icon" id="login-logo-icon"></div>
-      <span class="auth-logo-text text-display">cita<span class="auth-logo-accent">click</span></span>
+<div class="login-page" id="login-page">
+  <div class="login-visual desktop-only">
+    <div class="login-visual-inner">
+      <div class="login-visual-logo">
+        <svg viewBox="0 0 38 38" width="48" height="48" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="#1A1A2E" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="login-visual-wordmark"><span>cita</span><b>click</b></span>
+      </div>
+      <h2 class="login-visual-title" data-lt="visual_title">Tu agenda te espera</h2>
+      <div class="login-mini-cal" id="login-mini-cal"></div>
     </div>
-
-    <form class="auth-form" id="login-form" novalidate>
-      <div class="form-group">
-        <label class="form-label" for="login-email" data-i18n="auth.email">Correo electronico</label>
-        <input class="form-input" type="email" id="login-email" data-i18n-placeholder="auth.email" placeholder="Correo electronico" required autocomplete="email">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="login-password" data-i18n="auth.password">Contrasena</label>
-        <input class="form-input" type="password" id="login-password" data-i18n-placeholder="auth.password" placeholder="Contrasena" required autocomplete="current-password">
-      </div>
-
-      <div class="form-group" style="align-items:flex-end;">
-        <a href="#" class="text-sm" style="color:var(--color-highlight);" data-i18n="auth.forgot_password">Olvidaste tu contrasena?</a>
-      </div>
-
-      <div id="login-error" class="form-error" style="display:none;text-align:center;margin-bottom:var(--space-3);"></div>
-
-      <button type="submit" class="btn btn-primary btn-full btn-lg" data-i18n="auth.login">Iniciar sesion</button>
-
-      <div class="form-divider" data-i18n="auth.or_continue_with">o continua con</div>
-
-      <button type="button" class="btn btn-secondary btn-full" id="btn-google" style="gap:var(--space-3);">
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        <span data-i18n="auth.continue_google">Continuar con Google</span>
-      </button>
-
-      <button type="button" class="btn btn-secondary btn-full mt-2" id="btn-phone" style="gap:var(--space-3);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-          <line x1="12" y1="18" x2="12" y2="18"/>
-        </svg>
-        <span data-i18n="auth.continue_phone">Continuar con telefono</span>
-      </button>
-    </form>
-
-    <p class="auth-switch text-sm text-center mt-6">
-      <span data-i18n="auth.no_account">No tienes cuenta?</span>
-      <a href="/register" data-link style="color:var(--color-highlight);font-weight:var(--weight-semibold);" data-i18n="auth.register">Crear cuenta</a>
-    </p>
+    <footer class="login-visual-footer">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a></footer>
   </div>
 
-  <footer class="site-footer">
-    Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a>
-  </footer>
+  <div class="login-form-side">
+    <div class="login-form-topbar">
+      <div class="login-mobile-logo mobile-only">
+        <svg viewBox="0 0 38 38" width="28" height="28" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="#F8F8FA" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="login-mobile-wordmark"><span>cita</span><b>click</b></span>
+      </div>
+      <div class="login-toggles">
+        <div class="lpill" id="login-lang-pill"><button class="lpill-opt active" data-val="es">ES</button><button class="lpill-opt" data-val="en">EN</button></div>
+      </div>
+    </div>
+
+    <div class="login-form-wrap">
+      <h1 class="login-title" data-lt="title">Bienvenido</h1>
+      <p class="login-subtitle" data-lt="subtitle">Inicia sesi&#243;n en tu cuenta</p>
+
+      <form id="login-form" novalidate autocomplete="on">
+        <div class="lf-group">
+          <label class="lf-label" data-lt="email_label">Correo electr&#243;nico</label>
+          <div class="lf-input-wrap">
+            <svg class="lf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" id="l-email" class="lf-input" required autocomplete="email">
+          </div>
+        </div>
+        <div class="lf-group">
+          <label class="lf-label" data-lt="pass_label">Contrase&#241;a</label>
+          <div class="lf-input-wrap">
+            <svg class="lf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="l-pass" class="lf-input" required autocomplete="current-password">
+            <button type="button" class="lf-eye" id="l-eye" aria-label="Ver contrase&#241;a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <div class="lf-row">
+          <label class="lf-check"><input type="checkbox" id="l-remember"><span data-lt="remember">Recordarme</span></label>
+          <a href="#" class="lf-forgot" data-lt="forgot">&#191;Olvidaste tu contrase&#241;a?</a>
+        </div>
+        <div class="lf-error" id="l-error"></div>
+        <button type="submit" class="lf-btn-primary" id="l-submit" data-lt="login_btn">Iniciar sesi&#243;n</button>
+      </form>
+
+      <div class="lf-divider"><span data-lt="or_with">o contin&#250;a con</span></div>
+
+      <button type="button" class="lf-btn-social lf-btn-google" id="l-google">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span data-lt="google_btn">Continuar con Google</span>
+      </button>
+      <button type="button" class="lf-btn-social lf-btn-whatsapp" id="l-phone">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+        <span data-lt="phone_btn">Continuar con tel&#233;fono</span>
+      </button>
+
+      <p class="lf-switch" data-lt="no_account">&#191;No tienes cuenta? <a href="/register" data-link data-lt="register_link">Reg&#237;strate gratis</a></p>
+    </div>
+
+    <footer class="login-form-footer mobile-only">Desarrollado por <a href="https://www.herasi.dev" target="_blank" rel="noopener noreferrer">@herasi.dev</a></footer>
+  </div>
 </div>
 
 <style>
-  .auth-page {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-4);
-    background-color: var(--color-surface);
-  }
+.login-page{display:flex;min-height:100dvh}
+.login-visual{width:60%;background:#1A1A2E;color:#F0F0F8;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.login-visual::before{content:'';position:absolute;inset:0;opacity:.06;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.login-visual-inner{position:relative;z-index:1;text-align:center;padding:2rem}
+.login-visual-logo{display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:2.5rem}
+.login-visual-wordmark{font-family:system-ui,sans-serif;font-size:1.75rem;letter-spacing:-.5px;color:#F0F0F8}
+.login-visual-wordmark b{font-weight:700;color:#E8000D}
+.login-visual-wordmark span{font-weight:500}
+.login-visual-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.25rem);font-weight:500;font-style:italic;margin-bottom:2.5rem;opacity:.85;letter-spacing:-.02em}
+.login-visual-footer{position:absolute;bottom:1.5rem;font-size:.7rem;color:rgba(240,240,248,.3);z-index:1}
+.login-visual-footer a{color:rgba(240,240,248,.3);transition:color .2s}
+.login-visual-footer a:hover{color:#E8000D}
+.login-mini-cal{background:#16213E;border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden;max-width:280px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,.3);font-size:.7rem;color:#F0F0F8}
+.login-mini-cal .mc-hdr{padding:8px 10px;font-weight:700;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;opacity:.5}
+.login-mini-cal table{width:100%;border-collapse:collapse}
+.login-mini-cal th{padding:4px;font-weight:600;opacity:.35;font-size:.6rem}
+.login-mini-cal td{padding:5px 4px;text-align:center;font-size:.65rem;opacity:.45}
+.login-mini-cal td.today{opacity:1;font-weight:700}
+.login-mini-cal .mc-ev{display:block;margin:2px auto 0;padding:1px 4px;border-radius:3px;font-size:.55rem;font-weight:600;background:rgba(232,0,13,.2);color:#E8000D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
 
-  .auth-container {
-    width: 100%;
-    max-width: 400px;
-  }
+.login-form-side{width:40%;background:#F8F8FA;display:flex;flex-direction:column;min-height:100dvh}
+.login-form-topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;flex-shrink:0}
+.login-mobile-wordmark{font-family:system-ui,sans-serif;font-size:1.1rem;letter-spacing:-.5px;color:#1A1A2E}
+.login-mobile-wordmark b{font-weight:700;color:#E8000D}
+.login-mobile-wordmark span{font-weight:500}
+.login-mobile-logo{display:flex;align-items:center;gap:.5rem}
+.login-toggles{display:flex;gap:.5rem}
+.lpill{display:flex;background:rgba(15,15,30,.08);border-radius:999px;padding:2px;gap:2px}
+.lpill-opt{padding:4px 10px;font-size:.65rem;font-weight:700;border-radius:999px;letter-spacing:.04em;color:rgba(26,26,46,.4);transition:all .3s;white-space:nowrap}
+.lpill-opt.active{background:#fff;color:#1A1A2E;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.lpill-opt:hover:not(.active){color:rgba(26,26,46,.6)}
 
-  .auth-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    margin-bottom: var(--space-8);
-  }
+.login-form-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem clamp(1.5rem,4vw,3rem);max-width:400px;width:100%;margin:0 auto;animation:lf-enter .5s ease both}
+@keyframes lf-enter{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.login-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:600;color:#1A1A2E;margin-bottom:.25rem;letter-spacing:-.02em}
+.login-subtitle{font-size:.875rem;color:#8888A0;margin-bottom:2rem}
+.lf-group{margin-bottom:1.25rem}
+.lf-label{display:block;font-size:.75rem;font-weight:600;color:#4A4A68;margin-bottom:.375rem}
+.lf-input-wrap{display:flex;align-items:center;background:#fff;border:1.5px solid #D8D8E4;border-radius:10px;transition:border-color .2s,box-shadow .2s;overflow:hidden}
+.lf-input-wrap:focus-within{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
+.lf-icon{width:18px;height:18px;margin-left:12px;color:#8888A0;flex-shrink:0}
+.lf-input{flex:1;border:none;background:none;padding:11px 12px;font-size:.875rem;color:#1A1A2E;outline:none}
+.lf-input::placeholder{color:#B0B0CC}
+.lf-eye{display:flex;align-items:center;justify-content:center;width:36px;height:36px;color:#8888A0;transition:color .15s;flex-shrink:0}
+.lf-eye:hover{color:#1A1A2E}
+.lf-eye svg{width:18px;height:18px}
+.lf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;font-size:.8125rem}
+.lf-check{display:flex;align-items:center;gap:.4rem;color:#4A4A68;cursor:pointer}
+.lf-check input{accent-color:#E8000D;width:16px;height:16px}
+.lf-forgot{color:#E8000D;font-weight:500;transition:opacity .15s}
+.lf-forgot:hover{opacity:.7}
+.lf-error{font-size:.75rem;color:#EF4444;margin-bottom:.75rem;min-height:1rem}
+.lf-btn-primary{width:100%;padding:12px;background:#E8000D;color:#fff;font-weight:600;font-size:.9375rem;border-radius:10px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.lf-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,0,13,.3)}
+.lf-btn-primary:active{transform:translateY(0)}
+.lf-btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.lf-divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:#B0B0CC;font-size:.8125rem}
+.lf-divider::before,.lf-divider::after{content:'';flex:1;height:1px;background:#E8E8F0}
+.lf-btn-social{width:100%;padding:11px;border-radius:10px;font-size:.875rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.6rem;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-bottom:.625rem;border:none}
+.lf-btn-social:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.lf-btn-google{background:#fff;border:1.5px solid #D8D8E4;color:#333}
+.lf-btn-whatsapp{background:#25D366;color:#fff}
+.lf-switch{text-align:center;font-size:.8125rem;color:#8888A0;margin-top:1.75rem}
+.lf-switch a{color:#E8000D;font-weight:600}
+.login-form-footer{text-align:center;padding:1rem;font-size:.7rem;color:#B0B0CC}
+.login-form-footer a{color:#B0B0CC;transition:color .15s}
+.login-form-footer a:hover{color:#E8000D}
 
-  .auth-logo-text {
-    font-size: var(--text-3xl);
-    color: var(--color-text);
-    letter-spacing: -0.5px;
-  }
-
-  .auth-logo-accent {
-    color: var(--color-highlight);
-    font-weight: var(--weight-bold);
-  }
-
-  .auth-form {
-    background-color: var(--color-surface-raised);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-xl);
-    padding: var(--space-6);
-    box-shadow: var(--shadow-md);
-  }
-
-  .auth-switch {
-    margin-top: var(--space-6);
-    color: var(--color-text-secondary);
-  }
-
-  .auth-switch a {
-    margin-left: var(--space-1);
-  }
-
-  .auth-page .site-footer {
-    margin-top: auto;
-    padding-top: var(--space-8);
-  }
+@media(max-width:767px){
+  .login-page{flex-direction:column}
+  .login-visual{display:none}
+  .login-form-side{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.login-form-wrap{animation:none}}
 </style>
 
 <script>
-  (function() {
-    const form = document.getElementById('login-form');
-    const errorEl = document.getElementById('login-error');
+(function(){
+var LT={
+es:{visual_title:'Tu agenda te espera',title:'Bienvenido',subtitle:'Inicia sesi\u00f3n en tu cuenta',email_label:'Correo electr\u00f3nico',pass_label:'Contrase\u00f1a',remember:'Recordarme',forgot:'\u00bfOlvidaste tu contrase\u00f1a?',login_btn:'Iniciar sesi\u00f3n',or_with:'o contin\u00faa con',google_btn:'Continuar con Google',phone_btn:'Continuar con tel\u00e9fono',no_account:'\u00bfNo tienes cuenta? ',register_link:'Reg\u00edstrate gratis',error_required:'Email y contrase\u00f1a son requeridos',error_invalid:'Credenciales incorrectas'},
+en:{visual_title:'Your schedule awaits',title:'Welcome back',subtitle:'Sign in to your account',email_label:'Email address',pass_label:'Password',remember:'Remember me',forgot:'Forgot password?',login_btn:'Sign in',or_with:'or continue with',google_btn:'Continue with Google',phone_btn:'Continue with phone',no_account:"Don't have an account? ",register_link:'Sign up free',error_required:'Email and password are required',error_invalid:'Invalid credentials'}
+};
+var lang=localStorage.getItem('citaclick-lang')||(navigator.language||'es').slice(0,2);
+if(lang!=='en')lang='es';
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorEl.style.display = 'none';
+function applyLT(){
+  document.querySelectorAll('[data-lt]').forEach(function(el){
+    var k=el.getAttribute('data-lt');
+    if(LT[lang]&&LT[lang][k]){
+      if(el.tagName==='INPUT')el.placeholder=LT[lang][k];
+      else if(el.querySelector('a[data-lt]')){
+        var a=el.querySelector('a[data-lt]');
+        el.firstChild.textContent=LT[lang][k];
+        a.textContent=LT[lang][a.getAttribute('data-lt')];
+      } else el.textContent=LT[lang][k];
+    }
+  });
+  document.querySelectorAll('#login-lang-pill .lpill-opt').forEach(function(b){b.classList.toggle('active',b.dataset.val===lang);});
+  buildMiniCal();
+}
 
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
+document.getElementById('login-lang-pill').addEventListener('click',function(e){
+  var b=e.target.closest('.lpill-opt');if(!b)return;
+  lang=b.dataset.val;localStorage.setItem('citaclick-lang',lang);applyLT();
+});
 
-      if (!email || !password) {
-        errorEl.textContent = i18n.t('common.required_field');
-        errorEl.style.display = 'block';
-        return;
-      }
+function buildMiniCal(){
+  var el=document.getElementById('login-mini-cal');if(!el)return;el.textContent='';
+  var now=new Date(),y=now.getFullYear(),m=now.getMonth(),td=now.getDate();
+  var days=new Date(y,m+1,0).getDate(),first=(new Date(y,m,1).getDay()||7);
+  var loc=lang==='es'?'es-ES':'en-US';
+  var mn=now.toLocaleDateString(loc,{month:'long'});mn=mn.charAt(0).toUpperCase()+mn.slice(1);
+  var dh=lang==='es'?['L','M','X','J','V','S','D']:['M','T','W','T','F','S','S'];
+  var events={};events[td]='9:00 Corte';events[Math.min(td+2,days)]='2:00 Consulta';events[Math.max(td-1,1)]='11:00 Color';
+  var hdr=document.createElement('div');hdr.className='mc-hdr';hdr.textContent=mn+' '+y;el.appendChild(hdr);
+  var tbl=document.createElement('table'),tr=document.createElement('tr');
+  dh.forEach(function(d){var th=document.createElement('th');th.textContent=d;tr.appendChild(th);});
+  tbl.appendChild(tr);tr=document.createElement('tr');
+  for(var i=1;i<first;i++)tr.appendChild(document.createElement('td'));
+  for(var d=1;d<=days;d++){
+    var cell=document.createElement('td');if(d===td)cell.className='today';
+    var dn=document.createElement('div');dn.textContent=d;cell.appendChild(dn);
+    if(events[d]){var ev=document.createElement('div');ev.className='mc-ev';ev.textContent=events[d];cell.appendChild(ev);}
+    tr.appendChild(cell);if((first-1+d)%7===0&&d<days){tbl.appendChild(tr);tr=document.createElement('tr');}
+  }
+  tbl.appendChild(tr);el.appendChild(tbl);
+}
 
-      const btn = form.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      btn.textContent = i18n.t('common.loading');
+document.getElementById('l-eye').addEventListener('click',function(){
+  var inp=document.getElementById('l-pass');
+  inp.type=inp.type==='password'?'text':'password';
+});
 
-      const result = await Auth.login(email, password);
+document.getElementById('login-form').addEventListener('submit',async function(e){
+  e.preventDefault();
+  var errEl=document.getElementById('l-error');errEl.textContent='';
+  var email=document.getElementById('l-email').value.trim();
+  var pass=document.getElementById('l-pass').value;
+  if(!email||!pass){errEl.textContent=LT[lang].error_required;return;}
+  var btn=document.getElementById('l-submit');btn.disabled=true;btn.textContent='...';
+  var res=await Auth.login(email,pass);
+  if(res.success){Router.navigate('/dashboard');}
+  else{errEl.textContent=res.message||LT[lang].error_invalid;btn.disabled=false;btn.textContent=LT[lang].login_btn;}
+});
 
-      if (result.success) {
-        Router.navigate('/dashboard');
-      } else {
-        errorEl.textContent = result.message || i18n.t('errors.server');
-        errorEl.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = i18n.t('auth.login');
-      }
-    });
+document.getElementById('l-google').addEventListener('click',function(){Auth.loginWithGoogle();});
+document.getElementById('l-phone').addEventListener('click',function(){Router.navigate('/login?method=phone');});
 
-    document.getElementById('btn-google').addEventListener('click', () => {
-      Auth.loginWithGoogle();
-    });
-
-    document.getElementById('btn-phone').addEventListener('click', () => {
-      Router.navigate('/login?method=phone');
-    });
-  })();
+applyLT();
+})();
 </script>
