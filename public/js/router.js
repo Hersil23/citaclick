@@ -86,7 +86,7 @@ const Router = (() => {
     if (!view) return;
 
     try {
-      const response = await fetch(route.page);
+      const response = await fetch('/' + route.page);
       if (!response.ok) throw new Error('Page not found');
       const html = await response.text();
       view.innerHTML = html; // trusted source: own server pages
@@ -112,7 +112,7 @@ const Router = (() => {
     if (!view) return;
 
     try {
-      const response = await fetch('pages/catalog.html');
+      const response = await fetch('/pages/catalog.html');
       if (!response.ok) throw new Error('Catalog page not found');
       const html = await response.text();
       view.innerHTML = html; // trusted source: own server pages
