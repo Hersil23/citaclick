@@ -252,27 +252,31 @@ class Appointment
         return $slots;
     }
 
-    public static function getMetrics(int $businessId): array
+    public static function getMetrics(int $businessId, ?int $providerId = null): array
     {
         $db = Database::getInstance();
         $today = date('Y-m-d');
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
 
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND appointment_date = :today AND status != "cancelled"');
-        $stmt->execute([':bid' => $businessId, ':today' => $today]);
+        $provFilter = $providerId ? ' AND provider_id = :pid' : '';
+        $params = [':bid' => $businessId];
+        if ($providerId) $params[':pid'] = $providerId;
+
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND appointment_date = :today AND status != "cancelled"' . $provFilter);
+        $stmt->execute(array_merge($params, [':today' => $today]));
         $todayCount = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND status = "pending"');
-        $stmt->execute([':bid' => $businessId]);
+        $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM appointments WHERE business_id = :bid AND status = "pending"' . $provFilter);
+        $stmt->execute($params);
         $pendingCount = (int)$stmt->fetch()['cnt'];
 
         $stmt = $db->prepare('SELECT COUNT(*) as cnt FROM clients WHERE business_id = :bid');
         $stmt->execute([':bid' => $businessId]);
         $clientCount = (int)$stmt->fetch()['cnt'];
 
-        $stmt = $db->prepare('SELECT COALESCE(SUM(price_charged), 0) as total FROM appointments WHERE business_id = :bid AND appointment_date BETWEEN :start AND :end AND status = "completed"');
-        $stmt->execute([':bid' => $businessId, ':start' => $monthStart, ':end' => $monthEnd]);
+        $stmt = $db->prepare('SELECT COALESCE(SUM(price_charged), 0) as total FROM appointments WHERE business_id = :bid AND appointment_date BETWEEN :start AND :end AND status = "completed"' . $provFilter);
+        $stmt->execute(array_merge($params, [':start' => $monthStart, ':end' => $monthEnd]));
         $revenue = (float)$stmt->fetch()['total'];
 
         return [

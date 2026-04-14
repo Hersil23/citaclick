@@ -11,8 +11,12 @@ class AppointmentController
         $query = $args['query'];
 
         if (!empty($query['metrics'])) {
+            $providerId = null;
+            if ($user['role'] === 'provider') {
+                $providerId = $this->getProviderId($user['user_id']);
+            }
             try {
-                $metrics = Appointment::getMetrics($user['business_id']);
+                $metrics = Appointment::getMetrics($user['business_id'], $providerId);
             } catch (\PDOException $e) {
                 $metrics = ['today' => 0, 'pending' => 0, 'total_clients' => 0, 'revenue' => 0];
             }

@@ -774,6 +774,16 @@
         var reportLink = document.querySelector('.sidebar-link-reports');
         if (reportLink) reportLink.style.display = '';
       }
+
+      // Provider role: hide sidebar items they don't need
+      if (user.role === 'provider') {
+        ['services', 'providers', 'settings', 'reports'].forEach(function(page) {
+          var link = document.querySelector('.sidebar-link[href="/' + page + '"]');
+          if (link) link.style.display = 'none';
+        });
+        var sectionLabel = document.querySelector('.sidebar-section-label');
+        if (sectionLabel) sectionLabel.style.display = 'none';
+      }
     }
 
     // Share booking link
@@ -787,7 +797,11 @@
     var currentBookingUrl = '';
     function buildBookingUrl() {
       var ref = generateRef();
-      currentBookingUrl = window.location.origin + '/agendar/' + (user.slug || '') + '?ref=' + ref;
+      var url = window.location.origin + '/agendar/' + (user.slug || '') + '?ref=' + ref;
+      if (user.role === 'provider' && user.provider_id) {
+        url += '&prestador=' + user.provider_id;
+      }
+      currentBookingUrl = url;
       return currentBookingUrl;
     }
     if (user) buildBookingUrl();

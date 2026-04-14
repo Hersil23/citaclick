@@ -35,7 +35,8 @@ class AuthController
                    b.slug, b.theme,
                    (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
                     WHERE s.business_id = b.id AND s.status = "active"
-                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name
+                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name,
+                   (SELECT pr.id FROM providers pr WHERE pr.user_id = u.id LIMIT 1) AS provider_id
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.email = :email
@@ -85,6 +86,7 @@ class AuthController
                     'slug'          => $user['slug'],
                     'theme'         => $user['theme'],
                     'plan'          => $user['plan_name'] ?? 'Standard',
+                    'provider_id'   => $user['provider_id'] ? (int)$user['provider_id'] : null,
                 ],
             ],
         ]);

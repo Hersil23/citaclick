@@ -222,9 +222,12 @@ var BookingPage = (function() {
   var clientData = null;
   var isNewClient = false;
   var currentStep = 1;
+  var fixedProviderId = null;
 
   function init(s) {
     slug = s;
+    var params = new URLSearchParams(window.location.search);
+    fixedProviderId = params.get('prestador') || null;
     loadBusiness();
     setupEvents();
     var todayStr = new Date().toISOString().substring(0, 10);
@@ -358,7 +361,9 @@ var BookingPage = (function() {
     if (!date || !selectedService) return;
 
     var duration = selectedService.duration_minutes || 30;
-    var res = await fetch('/api/booking/' + slug + '/slots?date=' + date + '&duration=' + duration);
+    var slotsUrl = '/api/booking/' + slug + '/slots?date=' + date + '&duration=' + duration;
+    if (fixedProviderId) slotsUrl += '&provider_id=' + fixedProviderId;
+    var res = await fetch(slotsUrl);
     var json = await res.json();
 
     var container = document.getElementById('bk-slots');
@@ -408,7 +413,9 @@ var BookingPage = (function() {
       client_email: isNewClient ? document.getElementById('bk-email').value.trim() : (clientData.email || ''),
     };
 
-    if (businessData.providers.length > 0) {
+    if (fixedProviderId) {
+      data.provider_id = fixedProviderId;
+    } else if (businessData.providers.length > 0) {
       data.provider_id = businessData.providers[0].id;
     }
 

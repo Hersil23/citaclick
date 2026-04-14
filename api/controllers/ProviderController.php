@@ -35,8 +35,30 @@ class ProviderController
         }
 
         $userId = null;
-        if (!empty($body['email'])) {
-            $db = Database::getInstance();
+        $db = Database::getInstance();
+
+        if (!empty($body['email']) && !empty($body['password'])) {
+            // Create user account for this provider
+            $email = trim($body['email']);
+            $stmt = $db->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+            $stmt->execute([':email' => $email]);
+            if ($stmt->fetch()) {
+                sendJson(409, ['success' => false, 'message' => 'Ya existe una cuenta con ese email']);
+            }
+
+            $hash = password_hash($body['password'], PASSWORD_BCRYPT);
+            $stmt = $db->prepare('
+                INSERT INTO users (business_id, name, email, password_hash, role, created_at)
+                VALUES (:bid, :name, :email, :pass, "provider", NOW())
+            ');
+            $stmt->execute([
+                ':bid'  => $user['business_id'],
+                ':name' => trim($body['name']),
+                ':email' => $email,
+                ':pass' => $hash,
+            ]);
+            $userId = (int)$db->lastInsertId();
+        } elseif (!empty($body['email'])) {
             $stmt = $db->prepare('SELECT id FROM users WHERE email = :email AND business_id = :bid LIMIT 1');
             $stmt->execute([':email' => $body['email'], ':bid' => $user['business_id']]);
             $row = $stmt->fetch();
