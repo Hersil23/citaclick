@@ -566,6 +566,7 @@
   document.getElementById('appt-service').addEventListener('change',function(){
     var sel=this.options[this.selectedIndex];
     if(sel&&sel.dataset.price)document.getElementById('appt-price').value=sel.dataset.price;
+    loadSlots();
   });
 
   document.getElementById('appt-date').addEventListener('change',loadSlots);
@@ -633,14 +634,17 @@
   document.getElementById('appt-date-from').addEventListener('change',loadAppointments);
   document.getElementById('appt-date-to').addEventListener('change',loadAppointments);
 
-  loadFormData();
+  loadFormData().then(function(){
+    var params=new URLSearchParams(window.location.search);
+    if(params.get('action')==='new'){
+      if(params.get('date'))document.getElementById('appt-date').value=params.get('date');
+      openModal('modal-appointment');
+      loadSlots();
+    }
+  });
   loadAppointments();
 
   var params=new URLSearchParams(window.location.search);
-  if(params.get('action')==='new'){
-    if(params.get('date'))document.getElementById('appt-date').value=params.get('date');
-    openModal('modal-appointment');
-  }
   if(params.get('id'))Api.get('/appointments/'+params.get('id')).then(function(r){if(r.success&&r.data)showDetail(r.data);});
 })();
 </script>

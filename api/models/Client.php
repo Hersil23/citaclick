@@ -11,10 +11,11 @@ class Client
         $params = [':bid' => $businessId];
 
         if (!empty($filters['search'])) {
-            $where[] = '(c.name LIKE :s OR c.phone LIKE :s2 OR c.email LIKE :s3)';
+            $where[] = '(c.name LIKE :s OR c.phone LIKE :s2 OR c.email LIKE :s3 OR c.id_number LIKE :s4)';
             $params[':s'] = '%' . $filters['search'] . '%';
             $params[':s2'] = '%' . $filters['search'] . '%';
             $params[':s3'] = '%' . $filters['search'] . '%';
+            $params[':s4'] = '%' . $filters['search'] . '%';
         }
 
         $whereStr = implode(' AND ', $where);
