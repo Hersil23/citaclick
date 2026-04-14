@@ -159,18 +159,14 @@
             <option value="paralelo">Paralelo</option>
             <option value="manual">Manual</option>
           </select>
+          <button class="btn btn-primary btn-sm" id="btn-save-rate">Aplicar</button>
           <span class="dash-rate-result" id="dash-rate-result">Cargando...</span>
         </div>
         <div class="dash-rate-row2">
-          <div class="dash-rate-converter">
-            <input type="number" class="dash-rate-input" id="dash-rate-usd" step="0.01" min="0" placeholder="USD" value="1">
-            <span class="dash-rate-arrow">=</span>
-            <span class="dash-rate-local" id="dash-rate-local">0.00</span>
-            <span class="dash-rate-currency" id="dash-rate-currency">Bs.</span>
-          </div>
-          <button class="btn btn-ghost btn-sm" id="btn-save-rate" title="Guardar tasa">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </button>
+          <input type="number" class="dash-rate-input" id="dash-rate-usd" step="0.01" min="0" placeholder="$" value="1">
+          <span class="dash-rate-arrow">=</span>
+          <span class="dash-rate-local" id="dash-rate-local">0.00</span>
+          <span class="dash-rate-currency" id="dash-rate-currency">Bs.</span>
         </div>
       </div>
 
@@ -409,15 +405,7 @@
   .dash-rate-row2 {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  .dash-rate-converter {
-    display: flex;
-    align-items: center;
     gap: var(--space-1);
-    flex: 1;
   }
 
   .dash-rate-input {
@@ -975,15 +963,15 @@
         } catch(e) {}
       }
 
-      // Load saved rate or use API
-      var savedRate = parseFloat(b.exchange_rate) || 0;
+      // API has priority — always show live rate
       var source = document.getElementById('dash-rate-source');
 
       if (apiRates.bcv > 0) {
         currentRate = apiRates.bcv;
         source.value = 'bcv';
-      } else if (savedRate > 1) {
-        currentRate = savedRate;
+      } else {
+        var savedRate = parseFloat(b.exchange_rate) || 0;
+        if (savedRate > 1) currentRate = savedRate;
         source.value = 'manual';
       }
 
