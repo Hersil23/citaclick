@@ -93,7 +93,7 @@ class BusinessController
 
         $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency_code', 'currency_mode', 'city', 'country'];
+                     'currency_code', 'currency_mode', 'exchange_rate', 'city', 'country'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $body)) {
