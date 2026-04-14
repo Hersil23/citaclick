@@ -141,22 +141,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
-    margin-bottom: var(--space-5);
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
     animation: ap-fadeIn 0.35s ease both;
   }
   .ap-header-left {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
   .ap-back-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-lg);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
     color: var(--color-text);
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-light);
@@ -169,7 +169,7 @@
   }
   .ap-page-title {
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     font-weight: var(--weight-bold);
     color: var(--color-text);
     letter-spacing: -0.01em;
@@ -178,29 +178,30 @@
   .ap-btn-new {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-2);
     font-weight: var(--weight-semibold);
     white-space: nowrap;
+    padding: var(--space-2);
+    border-radius: var(--radius-md);
   }
+  .ap-btn-new span { display: none; }
 
   /* ---- Filters bar ---- */
   .filters-bar.ap-filters-card {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    align-items: center;
-    padding: var(--space-4);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    padding: var(--space-3);
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-xl);
-    margin-bottom: var(--space-5);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-3);
     animation: ap-fadeIn 0.4s ease 0.05s both;
   }
   .ap-search-wrap {
     position: relative;
-    flex: 1;
-    min-width: 180px;
-    max-width: 280px;
+    grid-column: 1 / -1;
   }
   .ap-search-icon {
     position: absolute;
@@ -213,14 +214,16 @@
   .ap-search-input {
     padding-left: calc(var(--space-3) + 20px) !important;
     width: 100%;
+    font-size: var(--text-sm);
   }
   .ap-filter-select {
-    min-width: 140px;
-    max-width: 200px;
+    width: 100%;
+    grid-column: 1 / -1;
+    font-size: var(--text-sm);
   }
   .ap-filter-date {
-    min-width: 130px;
-    max-width: 170px;
+    width: 100%;
+    font-size: 16px;
   }
 
   /* ---- Desktop table card ---- */
@@ -271,20 +274,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-3);
-    padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) - 3px);
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-3) var(--space-3) calc(var(--space-3) - 3px);
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-light);
     border-left: 3px solid var(--color-highlight);
     border-radius: var(--radius-lg);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
     cursor: pointer;
-    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    transition: box-shadow var(--transition-fast);
     animation: ap-fadeIn 0.4s ease both;
   }
-  .appt-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+  .appt-card:active {
+    background: var(--color-surface-sunken);
   }
   .appt-card-info {
     flex: 1;
@@ -292,18 +294,21 @@
   }
   .appt-card-info h4 {
     font-family: var(--font-display);
-    font-size: var(--text-base);
+    font-size: var(--text-sm);
     font-weight: var(--weight-semibold);
     color: var(--color-text);
-    margin-bottom: var(--space-1);
+    margin-bottom: 1px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .appt-card-info p {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--color-text-muted);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .appt-card-time {
     text-align: right;
@@ -311,16 +316,16 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--space-1);
+    gap: 1px;
   }
   .appt-card-time .time {
     font-family: var(--font-display);
-    font-size: var(--text-lg);
+    font-size: var(--text-base);
     font-weight: var(--weight-bold);
     color: var(--color-text);
   }
   .appt-card-time .date {
-    font-size: var(--text-xs);
+    font-size: 0.6875rem;
     color: var(--color-text-muted);
   }
 
@@ -385,33 +390,43 @@
     line-height: var(--leading-relaxed);
   }
 
-  /* ---- Mobile-first (375px base) ---- */
+  /* ---- Small phone ---- */
   @media (max-width: 375px) {
-    .ap-page-title {
-      font-size: var(--text-xl);
-    }
-    .filters-bar.ap-filters-card {
-      padding: var(--space-3);
-      gap: var(--space-2);
-    }
-    .ap-search-wrap,
-    .ap-filter-select,
-    .ap-filter-date {
-      max-width: 100% !important;
-      min-width: 0;
-      width: 100%;
-      flex: 1 1 100%;
-    }
-    .ap-btn-new span {
-      display: none;
-    }
+    .ap-page-title { font-size: var(--text-base); }
+    .filters-bar.ap-filters-card { padding: var(--space-2); }
+    .appt-card { padding: var(--space-2) var(--space-2) var(--space-2) calc(var(--space-2) - 3px); }
   }
 
-  /* ---- 768px breakpoint: table/card switch ---- */
-  @media (min-width: 769px) {
-    .ap-search-wrap {
-      max-width: 280px;
+  /* ---- Tablet+ (640px) ---- */
+  @media (min-width: 640px) {
+    .ap-header { margin-bottom: var(--space-5); }
+    .ap-page-title { font-size: var(--text-2xl); }
+    .ap-btn-new {
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
     }
+    .ap-btn-new span { display: inline; }
+
+    .filters-bar.ap-filters-card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      border-radius: var(--radius-xl);
+      margin-bottom: var(--space-5);
+    }
+    .ap-search-wrap { flex: 1; min-width: 180px; max-width: 280px; }
+    .ap-filter-select { width: auto; min-width: 140px; max-width: 200px; }
+    .ap-filter-date { width: auto; min-width: 130px; max-width: 170px; }
+
+    .appt-card {
+      padding: var(--space-4);
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+    .appt-card-info h4 { font-size: var(--text-base); }
+    .appt-card-info p { font-size: var(--text-sm); }
+    .appt-card-time .time { font-size: var(--text-lg); }
   }
 </style>
 
@@ -419,6 +434,24 @@
 (function(){
   var editingId=null;
   var allAppointments=[];
+
+  function fmtTime(t){
+    if(!t)return '';
+    var parts=t.split(':');
+    var h=parseInt(parts[0],10);
+    var m=parts[1]||'00';
+    var suffix=h>=12?'PM':'AM';
+    h=h%12||12;
+    return h+':'+m+' '+suffix;
+  }
+  function fmtDate(d){
+    if(!d)return '';
+    var months=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    var parts=d.split('-');
+    var day=parseInt(parts[2],10);
+    var mon=months[parseInt(parts[1],10)-1]||'';
+    return day+' '+mon;
+  }
 
   var today=new Date();
   var monthStart=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-01';
@@ -459,8 +492,8 @@
       var tdClient=document.createElement('td');
       var strong=document.createElement('strong');strong.textContent=a.client_name||'';tdClient.appendChild(strong);
       var tdService=document.createElement('td');tdService.textContent=a.service_name||'';
-      var tdDate=document.createElement('td');tdDate.textContent=a.appointment_date||a.date||'';
-      var tdTime=document.createElement('td');tdTime.textContent=a.start_time||'';
+      var tdDate=document.createElement('td');tdDate.textContent=fmtDate(a.appointment_date||a.date||'');
+      var tdTime=document.createElement('td');tdTime.textContent=fmtTime(a.start_time);
       var tdProvider=document.createElement('td');tdProvider.textContent=a.provider_name||'';
       var tdStatus=document.createElement('td');
       var badge=document.createElement('span');badge.className='badge badge-'+(a.status||'pending');badge.textContent=i18n.t('appointments.status.'+(a.status||'pending'));tdStatus.appendChild(badge);
@@ -479,8 +512,8 @@
       var p=document.createElement('p');p.textContent=(a.service_name||'')+' \u2014 '+(a.provider_name||'');
       info.appendChild(h4);info.appendChild(p);
       var timeDiv=document.createElement('div');timeDiv.className='appt-card-time';
-      var timeSpan=document.createElement('div');timeSpan.className='time';timeSpan.textContent=a.start_time||'';
-      var dateSpan=document.createElement('div');dateSpan.className='date';dateSpan.textContent=a.appointment_date||a.date||'';
+      var timeSpan=document.createElement('div');timeSpan.className='time';timeSpan.textContent=fmtTime(a.start_time);
+      var dateSpan=document.createElement('div');dateSpan.className='date';dateSpan.textContent=fmtDate(a.appointment_date||a.date||'');
       timeDiv.appendChild(timeSpan);timeDiv.appendChild(dateSpan);
       var badgeMobile=document.createElement('span');badgeMobile.className='badge badge-'+(a.status||'pending');badgeMobile.textContent=i18n.t('appointments.status.'+(a.status||'pending'));
       timeDiv.appendChild(badgeMobile);
