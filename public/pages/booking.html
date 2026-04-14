@@ -2,6 +2,10 @@
   <div class="bk-container">
     <!-- Header -->
     <div class="bk-header" id="bk-header">
+      <a class="bk-back-link" id="bk-back-link" href="#" style="display:none">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Ver catalogo</span>
+      </a>
       <div class="bk-logo">
         <svg viewBox="0 0 38 38" width="28" height="28" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="bk-logo-text"><span>cita</span><strong>click</strong></span>
@@ -86,7 +90,7 @@
       <h2 class="bk-step-title">Fecha y hora</h2>
       <div class="form-group">
         <label class="form-label">Fecha</label>
-        <input class="form-input" type="date" id="bk-date" min="">
+        <input class="form-input bk-date-input" type="date" id="bk-date" min="">
       </div>
       <div class="form-group">
         <label class="form-label">Horarios disponibles</label>
@@ -130,6 +134,8 @@
   .bk-page { min-height: 100dvh; background: var(--color-surface); display: flex; justify-content: center; padding: var(--space-4); }
   .bk-container { width: 100%; max-width: 520px; }
 
+  .bk-back-link { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none; margin-bottom: var(--space-3); transition: color var(--transition-fast); }
+  .bk-back-link:hover { color: var(--color-highlight); }
   .bk-header { text-align: center; padding: var(--space-6) 0 var(--space-4); animation: bkFade 0.4s ease; }
   .bk-logo { display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-4); }
   .bk-logo-text { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-semibold); letter-spacing: -0.02em; }
@@ -196,6 +202,8 @@
   @keyframes bkFade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes bkSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
+  .bk-date-input { width: 100%; min-height: 44px; font-size: 16px; -webkit-appearance: none; appearance: none; }
+
   @media (max-width: 375px) {
     .bk-container { padding: 0; }
     .bk-step { padding: var(--space-4); border-radius: var(--radius-lg); }
@@ -235,6 +243,11 @@ var BookingPage = (function() {
     document.getElementById('bk-biz-name').textContent = biz.name;
     document.getElementById('bk-biz-desc').textContent = biz.description || 'Agenda tu cita en linea';
     if (biz.theme) document.documentElement.setAttribute('data-theme', biz.theme);
+    var backLink = document.getElementById('bk-back-link');
+    if (backLink && slug) {
+      backLink.href = '/negocio/' + slug;
+      backLink.style.display = '';
+    }
     renderServices();
   }
 
