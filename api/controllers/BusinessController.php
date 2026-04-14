@@ -24,20 +24,20 @@ class BusinessController
 
         // Plan info (separate query to avoid JOIN failures)
         $business['plan_name'] = null;
-        $business['end_date'] = null;
+        $business['ends_at'] = null;
         try {
             $stmt = $db->prepare('
-                SELECT p.name AS plan_name, s.end_date, s.start_date
+                SELECT p.name AS plan_name, s.ends_at, s.start_date, s.status AS sub_status
                 FROM subscriptions s
                 JOIN plans p ON p.id = s.plan_id
-                WHERE s.business_id = :bid AND s.status = "active"
+                WHERE s.business_id = :bid AND s.status IN ("active", "trial")
                 ORDER BY s.created_at DESC LIMIT 1
             ');
             $stmt->execute([':bid' => $user['business_id']]);
             $sub = $stmt->fetch();
             if ($sub) {
                 $business['plan_name'] = $sub['plan_name'];
-                $business['end_date'] = $sub['end_date'];
+                $business['ends_at'] = $sub['ends_at'];
             }
         } catch (\PDOException $e) {
             // subscriptions or plans table may have different schema
@@ -73,13 +73,13 @@ class BusinessController
         // Create new subscription with 21 day trial
         $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
         $stmt = $db->prepare('
-            INSERT INTO subscriptions (business_id, plan_id, status, start_date, end_date, created_at)
-            VALUES (:bid, :pid, "active", CURDATE(), :end_date, NOW())
+            INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, created_at)
+            VALUES (:bid, :pid, "active", CURDATE(), NOW(), :ends_at, NOW())
         ');
         $stmt->execute([
             ':bid'      => $user['business_id'],
             ':pid'      => $plan['id'],
-            ':end_date' => date('Y-m-d', strtotime('+21 days')),
+            ':ends_at'  => date('Y-m-d H:i:s', strtotime('+21 days')),
         ]);
 
         // Log the change

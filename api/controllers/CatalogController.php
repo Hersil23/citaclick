@@ -15,7 +15,7 @@ class CatalogController
         $stmt = $db->prepare('
             SELECT b.*, p.name AS plan_name, p.has_catalog
             FROM businesses b
-            LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
+            LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status IN ("active", "trial")
             LEFT JOIN plans p ON p.id = s.plan_id
             WHERE b.slug = :slug AND b.is_active = 1
             LIMIT 1

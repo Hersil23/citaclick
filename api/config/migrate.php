@@ -27,6 +27,7 @@ function ensureTables(): void
     // Column additions (always run, safe if column already exists)
     $alterations = [
         "ALTER TABLE clients ADD COLUMN id_number VARCHAR(50) NULL AFTER name",
+        "ALTER TABLE businesses ADD COLUMN exchange_rate DECIMAL(12,4) NULL DEFAULT 1.0000 AFTER currency_mode",
     ];
     foreach ($alterations as $alt) {
         try {

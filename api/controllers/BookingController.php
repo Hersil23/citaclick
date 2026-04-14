@@ -191,8 +191,8 @@ class BookingController
         } else {
             // Create new client
             $stmt = $db->prepare('
-                INSERT INTO clients (business_id, name, id_number, phone, email, created_at)
-                VALUES (:bid, :name, :idn, :phone, :email, NOW())
+                INSERT INTO clients (business_id, name, id_number, phone, email, registered_via, created_at)
+                VALUES (:bid, :name, :idn, :phone, :email, "link", NOW())
             ');
             $stmt->execute([
                 ':bid'   => $bid,

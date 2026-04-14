@@ -34,7 +34,7 @@ class AuthController
             SELECT u.*, b.id AS business_id, b.name AS business_name,
                    b.slug, b.theme,
                    (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
-                    WHERE s.business_id = b.id AND s.status = "active"
+                    WHERE s.business_id = b.id AND s.status IN ("active", "trial")
                     ORDER BY s.created_at DESC LIMIT 1) AS plan_name,
                    (SELECT pr.id FROM providers pr WHERE pr.user_id = u.id LIMIT 1) AS provider_id
             FROM users u
@@ -185,13 +185,14 @@ class AuthController
 
             $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
             $stmt = $db->prepare('
-                INSERT INTO subscriptions (business_id, plan_id, status, start_date, end_date, created_at)
-                VALUES (:bid, :pid, "active", CURDATE(), :end_date, NOW())
+                INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, trial_ends_at, created_at)
+                VALUES (:bid, :pid, "trial", CURDATE(), NOW(), :ends_at, :ends_at, NOW())
             ');
+            $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
             $stmt->execute([
                 ':bid'      => $businessId,
                 ':pid'      => $plan['id'],
-                ':end_date' => date('Y-m-d', strtotime('+21 days')),
+                ':ends_at'  => $trialEnd,
             ]);
 
             $stmt = $db->prepare('
@@ -357,7 +358,7 @@ class AuthController
         $stmt = $db->prepare('
             SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme,
                    (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
-                    WHERE s.business_id = b.id AND s.status = "active"
+                    WHERE s.business_id = b.id AND s.status IN ("active", "trial")
                     ORDER BY s.created_at DESC LIMIT 1) AS plan_name
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id

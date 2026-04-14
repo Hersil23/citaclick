@@ -29,8 +29,8 @@ function checkPlanFeature(int $businessId, string $feature): bool
         FROM subscriptions s
         JOIN plans p ON p.id = s.plan_id
         WHERE s.business_id = :bid
-          AND s.status = "active"
-          AND (s.end_date IS NULL OR s.end_date >= CURDATE())
+          AND s.status IN ("active", "trial")
+          AND (s.ends_at IS NULL OR s.ends_at >= NOW())
         ORDER BY s.created_at DESC
         LIMIT 1
     ');
@@ -77,8 +77,8 @@ function getBusinessPlan(int $businessId): ?string
         FROM subscriptions s
         JOIN plans p ON p.id = s.plan_id
         WHERE s.business_id = :bid
-          AND s.status = "active"
-          AND (s.end_date IS NULL OR s.end_date >= CURDATE())
+          AND s.status IN ("active", "trial")
+          AND (s.ends_at IS NULL OR s.ends_at >= NOW())
         ORDER BY s.created_at DESC
         LIMIT 1
     ');

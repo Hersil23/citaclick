@@ -866,11 +866,11 @@
       strong.style.cssText = 'font-size:var(--text-lg);color:var(--color-highlight)';
       strong.textContent = planName;
       info.appendChild(strong);
-      if (b.end_date) {
+      if (b.ends_at) {
         var br = document.createElement('br');
         var span = document.createElement('span');
         span.className = 'text-sm text-muted';
-        span.textContent = 'Vigente hasta: ' + new Date(b.end_date + 'T00:00:00').toLocaleDateString();
+        span.textContent = 'Vigente hasta: ' + new Date(b.ends_at).toLocaleDateString();
         info.appendChild(br);
         info.appendChild(span);
       }
