@@ -95,7 +95,7 @@
         <div class="dash-greeting-time" id="dash-greeting-time"></div>
       </div>
 
-      <!-- Metrics: horizontal scroll on mobile, 4-col grid on desktop -->
+      <!-- Metrics: 2x2 grid on mobile, 4-col on desktop -->
       <div class="dash-metrics-track">
         <div class="dashboard-metrics" id="dashboard-metrics">
           <div class="metric-card">
@@ -189,9 +189,22 @@
      DASHBOARD — MOBILE FIRST
      ============================================ */
 
+  .app-layout,
+  .app-main,
+  .dash-content {
+    min-width: 0;
+    max-width: 100%;
+  }
+
   .dash-content {
     overflow-x: hidden;
-    min-width: 0;
+  }
+
+  .site-footer {
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* --- GREETING (compact by default) --- */
@@ -230,26 +243,16 @@
     line-height: 1;
   }
 
-  /* --- METRICS (horizontal scroll on mobile) --- */
+  /* --- METRICS (2x2 grid on mobile) --- */
 
   .dash-metrics-track {
-    margin: 0 calc(var(--space-3) * -1) var(--space-3);
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0 var(--space-3);
-  }
-
-  .dash-metrics-track::-webkit-scrollbar {
-    display: none;
+    margin-bottom: var(--space-3);
   }
 
   .dashboard-metrics {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-2);
-    min-width: max-content;
-    padding-bottom: var(--space-1);
   }
 
   .metric-card {
@@ -261,13 +264,12 @@
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border-light);
     box-shadow: var(--shadow-xs);
-    min-width: 140px;
-    flex-shrink: 0;
+    min-width: 0;
   }
 
   .metric-icon {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -276,8 +278,8 @@
   }
 
   .metric-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .metric-icon-today  { background-color: var(--status-completed-bg); color: var(--color-info); }
@@ -495,11 +497,11 @@
 
   .cal-event:hover { filter: brightness(1.1); }
 
-  .cal-event-pending    { background: var(--status-pending-bg); color: var(--status-pending); }
-  .cal-event-confirmed  { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
-  .cal-event-cancelled  { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
-  .cal-event-completed  { background: var(--status-completed-bg); color: var(--status-completed); }
-  .cal-event-no_show    { background: var(--status-no-show-bg); color: var(--status-no-show); }
+  .cal-event-pending    { background: var(--status-pending); }
+  .cal-event-confirmed  { background: var(--status-confirmed); }
+  .cal-event-cancelled  { background: var(--status-cancelled); }
+  .cal-event-completed  { background: var(--status-completed); }
+  .cal-event-no_show    { background: var(--status-no-show); }
 
   /* --- WEEK/DAY VIEWS --- */
 
@@ -597,21 +599,15 @@
     .dash-greeting-time { font-size: var(--text-2xl); }
 
     .dash-metrics-track {
-      margin: 0 0 var(--space-4);
-      overflow: visible;
-      padding: 0;
+      margin-bottom: var(--space-4);
     }
 
     .dashboard-metrics {
-      display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: var(--space-3);
-      min-width: 0;
     }
 
     .metric-card {
-      min-width: 0;
-      flex-shrink: 1;
       gap: var(--space-3);
       padding: var(--space-3) var(--space-4);
     }
@@ -663,6 +659,12 @@
       line-height: 1.4;
       border-radius: 3px;
     }
+
+    .cal-event-pending    { background: var(--status-pending-bg); color: var(--status-pending); }
+    .cal-event-confirmed  { background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+    .cal-event-cancelled  { background: var(--status-cancelled-bg); color: var(--status-cancelled); }
+    .cal-event-completed  { background: var(--status-completed-bg); color: var(--status-completed); }
+    .cal-event-no_show    { background: var(--status-no-show-bg); color: var(--status-no-show); }
 
     .cal-week-grid {
       grid-template-columns: 56px repeat(7, 1fr);
