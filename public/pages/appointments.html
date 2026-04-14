@@ -353,7 +353,10 @@
   loadAppointments();
 
   var params=new URLSearchParams(window.location.search);
-  if(params.get('action')==='new')openModal('modal-appointment');
+  if(params.get('action')==='new'){
+    if(params.get('date'))document.getElementById('appt-date').value=params.get('date');
+    openModal('modal-appointment');
+  }
   if(params.get('id'))Api.get('/appointments/'+params.get('id')).then(function(r){if(r.success&&r.data)showDetail(r.data);});
 })();
 </script>

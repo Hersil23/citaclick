@@ -156,7 +156,7 @@ const Calendar = (() => {
       numSpan.textContent = date.getDate();
       cell.appendChild(numSpan);
 
-      const dayAppts = appointments.filter(a => (a.date || '').substring(0, 10) === dateStr);
+      const dayAppts = appointments.filter(a => (a.appointment_date || a.date || '').substring(0, 10) === dateStr);
       dayAppts.slice(0, 3).forEach(a => {
         const evt = el('div', 'cal-event cal-event-' + (a.status || 'pending'));
         evt.dataset.id = a.id;
@@ -229,7 +229,7 @@ const Calendar = (() => {
         grid.appendChild(cell);
 
         const dayAppts = appointments.filter(a =>
-          (a.date || '').substring(0, 10) === dateStr &&
+          (a.appointment_date || a.date || '').substring(0, 10) === dateStr &&
           parseInt((a.start_time || '00').split(':')[0], 10) === h
         );
 
@@ -256,7 +256,7 @@ const Calendar = (() => {
 
   function renderDay() {
     const dateStr = fmtISO(currentDate);
-    const dayAppts = appointments.filter(a => (a.date || '').substring(0, 10) === dateStr);
+    const dayAppts = appointments.filter(a => (a.appointment_date || a.date || '').substring(0, 10) === dateStr);
 
     container.textContent = '';
 

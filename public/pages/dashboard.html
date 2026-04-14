@@ -592,7 +592,7 @@
     if (typeof Calendar !== 'undefined') {
       Calendar.init('calendar-body', {
         onEventClick: (id) => Router.navigate('/appointments?id=' + id),
-        onSlotClick: (date, time) => openModal('modal-new-appointment'),
+        onSlotClick: (date) => Router.navigate('/appointments?action=new&date=' + date),
       });
     }
 
