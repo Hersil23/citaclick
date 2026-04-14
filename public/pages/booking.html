@@ -109,7 +109,10 @@
         <h2 class="bk-success-title">Cita agendada</h2>
         <p class="bk-success-desc" id="bk-success-msg">Tu cita ha sido registrada exitosamente.</p>
         <div class="bk-summary" id="bk-summary"></div>
-        <button class="btn btn-primary" id="bk-new-booking">Agendar otra cita</button>
+        <div class="bk-success-actions">
+          <button class="btn btn-primary" id="bk-new-booking">Agendar otra cita</button>
+          <button class="btn btn-secondary" id="bk-go-home">Volver al inicio</button>
+        </div>
       </div>
     </div>
 
@@ -182,6 +185,7 @@
   .bk-summary-row:last-child { border-bottom: none; }
   .bk-summary-label { color: var(--color-text-muted); }
   .bk-summary-value { font-weight: var(--weight-semibold); text-align: right; }
+  .bk-success-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
 
   .bk-footer { text-align: center; padding: var(--space-6) 0 var(--space-4); }
   .bk-powered { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-muted); text-decoration: none; transition: color var(--transition-fast); }
@@ -284,6 +288,9 @@ var BookingPage = (function() {
     document.getElementById('bk-prev-3').addEventListener('click', function() { goStep(2); });
     document.getElementById('bk-next-3').addEventListener('click', submitBooking);
     document.getElementById('bk-new-booking').addEventListener('click', resetBooking);
+    document.getElementById('bk-go-home').addEventListener('click', function() {
+      window.location.href = '/negocio/' + slug;
+    });
 
     // Date change
     document.getElementById('bk-date').addEventListener('change', loadSlots);
