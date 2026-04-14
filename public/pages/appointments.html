@@ -1,17 +1,24 @@
-<div class="page-header">
-  <div class="flex items-center gap-3">
-    <a href="/dashboard" data-link class="btn btn-ghost btn-sm" style="padding:var(--space-2)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
-    <h2 class="page-title" data-i18n="nav.appointments">Citas</h2>
+<!-- Header -->
+<div class="ap-header">
+  <div class="ap-header-left">
+    <a href="/dashboard" data-link class="ap-back-btn">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <h2 class="ap-page-title" data-i18n="nav.appointments">Citas</h2>
   </div>
-  <button class="btn btn-primary" id="btn-new-appt" onclick="openModal('modal-appointment')">
+  <button class="btn btn-primary ap-btn-new" id="btn-new-appt" onclick="openModal('modal-appointment')">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     <span data-i18n="appointments.new">Nueva cita</span>
   </button>
 </div>
 
-<div class="filters-bar">
-  <input class="form-input" type="search" id="appt-search" data-i18n-placeholder="common.search" placeholder="Buscar..." style="max-width:240px;">
-  <select class="form-input" id="appt-status-filter" style="max-width:180px;">
+<!-- Filters -->
+<div class="filters-bar ap-filters-card">
+  <div class="ap-search-wrap">
+    <svg class="ap-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="form-input ap-search-input" type="search" id="appt-search" data-i18n-placeholder="common.search" placeholder="Buscar...">
+  </div>
+  <select class="form-input ap-filter-select" id="appt-status-filter">
     <option value="" data-i18n="appointments.filters.all_status">Todos los estados</option>
     <option value="pending" data-i18n="appointments.status.pending">Pendiente</option>
     <option value="confirmed" data-i18n="appointments.status.confirmed">Confirmada</option>
@@ -19,12 +26,13 @@
     <option value="cancelled" data-i18n="appointments.status.cancelled">Cancelada</option>
     <option value="no_show" data-i18n="appointments.status.no_show">No asistio</option>
   </select>
-  <input class="form-input" type="date" id="appt-date-from" style="max-width:160px;">
-  <input class="form-input" type="date" id="appt-date-to" style="max-width:160px;">
+  <input class="form-input ap-filter-date" type="date" id="appt-date-from">
+  <input class="form-input ap-filter-date" type="date" id="appt-date-to">
 </div>
 
-<div class="table-responsive desktop-only" id="appt-table-wrap">
-  <table class="table">
+<!-- Desktop table -->
+<div class="ap-table-card table-responsive desktop-only" id="appt-table-wrap">
+  <table class="table ap-table">
     <thead>
       <tr>
         <th data-i18n="nav.clients">Cliente</th>
@@ -40,12 +48,17 @@
   </table>
 </div>
 
+<!-- Mobile cards -->
 <div class="mobile-only" id="appt-cards"></div>
 
-<div class="empty-state hidden" id="appt-empty">
-  <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-  <h3 class="empty-state-title" data-i18n="calendar.no_appointments">No hay citas para este periodo</h3>
-  <button class="btn btn-primary" onclick="openModal('modal-appointment')" data-i18n="appointments.new">Nueva cita</button>
+<!-- Empty state -->
+<div class="ap-empty hidden" id="appt-empty">
+  <div class="ap-empty-icon">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  </div>
+  <h3 class="ap-empty-title" data-i18n="calendar.no_appointments">No hay citas para este periodo</h3>
+  <p class="ap-empty-desc">Crea una nueva cita para comenzar a gestionar tu agenda.</p>
+  <button class="btn btn-primary ap-btn-new" onclick="openModal('modal-appointment')" data-i18n="appointments.new">Nueva cita</button>
 </div>
 
 <!-- Modal nueva/editar cita -->
@@ -117,22 +130,288 @@
 </div>
 
 <style>
-  .filters-bar{display:flex;gap:var(--space-3);margin-bottom:var(--space-5);flex-wrap:wrap;align-items:flex-end}
-  .appt-card{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-4);background:var(--color-surface-raised);border:1px solid var(--color-border-light);border-radius:var(--radius-lg);margin-bottom:var(--space-3);transition:box-shadow var(--transition-fast);cursor:pointer}
-  .appt-card:hover{box-shadow:var(--shadow-md)}
-  .appt-card-info{flex:1;min-width:0}
-  .appt-card-info h4{font-family:var(--font-display);font-size:var(--text-base);font-weight:var(--weight-semibold);margin-bottom:var(--space-1)}
-  .appt-card-info p{font-size:var(--text-sm);color:var(--color-text-muted)}
-  .appt-card-time{text-align:right;flex-shrink:0}
-  .appt-card-time .time{font-family:var(--font-display);font-size:var(--text-lg);font-weight:var(--weight-bold);color:var(--color-text)}
-  .appt-card-time .date{font-size:var(--text-xs);color:var(--color-text-muted)}
-  .detail-row{display:flex;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border-light);font-size:var(--text-sm)}
-  .detail-row:last-child{border-bottom:none}
-  .detail-label{color:var(--color-text-muted);font-weight:var(--weight-medium)}
-  .detail-value{font-weight:var(--weight-semibold);text-align:right}
+  /* ---- Fade-in animation ---- */
+  @keyframes ap-fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- Header ---- */
+  .ap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    animation: ap-fadeIn 0.35s ease both;
+  }
+  .ap-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .ap-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-lg);
+    color: var(--color-text);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    transition: background var(--transition-fast), box-shadow var(--transition-fast);
+    flex-shrink: 0;
+  }
+  .ap-back-btn:hover {
+    background: var(--color-surface-sunken);
+    box-shadow: var(--shadow-sm);
+  }
+  .ap-page-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .ap-btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--weight-semibold);
+    white-space: nowrap;
+  }
+
+  /* ---- Filters bar ---- */
+  .filters-bar.ap-filters-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-4);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--space-5);
+    animation: ap-fadeIn 0.4s ease 0.05s both;
+  }
+  .ap-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    max-width: 280px;
+  }
+  .ap-search-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .ap-search-input {
+    padding-left: calc(var(--space-3) + 20px) !important;
+    width: 100%;
+  }
+  .ap-filter-select {
+    min-width: 140px;
+    max-width: 200px;
+  }
+  .ap-filter-date {
+    min-width: 130px;
+    max-width: 170px;
+  }
+
+  /* ---- Desktop table card ---- */
+  .ap-table-card {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    animation: ap-fadeIn 0.45s ease 0.1s both;
+  }
+  .ap-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ap-table thead {
+    background: linear-gradient(135deg, var(--color-surface-sunken) 0%, var(--color-surface) 100%);
+  }
+  .ap-table thead th {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-light);
+    white-space: nowrap;
+  }
+  .ap-table tbody tr {
+    transition: background var(--transition-fast);
+  }
+  .ap-table tbody tr:hover {
+    background: color-mix(in srgb, var(--color-highlight) 5%, transparent);
+  }
+  .ap-table tbody td {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+  }
+  .ap-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* ---- Mobile cards ---- */
+  .appt-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-4) var(--space-4) calc(var(--space-4) - 3px);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-highlight);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-3);
+    cursor: pointer;
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    animation: ap-fadeIn 0.4s ease both;
+  }
+  .appt-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .appt-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .appt-card-info h4 {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    margin-bottom: var(--space-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .appt-card-info p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .appt-card-time {
+    text-align: right;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+  }
+  .appt-card-time .time {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+  .appt-card-time .date {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ---- Detail rows (from JS) ---- */
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-border-light);
+    font-size: var(--text-sm);
+    gap: var(--space-4);
+  }
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+  .detail-label {
+    color: var(--color-text-muted);
+    font-weight: var(--weight-medium);
+    flex-shrink: 0;
+  }
+  .detail-value {
+    font-weight: var(--weight-semibold);
+    text-align: right;
+    color: var(--color-text);
+    word-break: break-word;
+  }
+
+  /* ---- Empty state ---- */
+  .ap-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+    animation: ap-fadeIn 0.5s ease 0.1s both;
+  }
+  .ap-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-highlight) 12%, transparent), color-mix(in srgb, var(--color-highlight) 4%, transparent));
+    color: var(--color-highlight);
+    margin-bottom: var(--space-5);
+  }
+  .ap-empty-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .ap-empty-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-6) 0;
+    max-width: 320px;
+    line-height: var(--leading-relaxed);
+  }
+
+  /* ---- Mobile-first (375px base) ---- */
   @media (max-width: 375px) {
-    .filters-bar .form-input{max-width:100%!important;min-width:0}
-    .page-title{font-size:var(--text-xl)}
+    .ap-page-title {
+      font-size: var(--text-xl);
+    }
+    .filters-bar.ap-filters-card {
+      padding: var(--space-3);
+      gap: var(--space-2);
+    }
+    .ap-search-wrap,
+    .ap-filter-select,
+    .ap-filter-date {
+      max-width: 100% !important;
+      min-width: 0;
+      width: 100%;
+      flex: 1 1 100%;
+    }
+    .ap-btn-new span {
+      display: none;
+    }
+  }
+
+  /* ---- 768px breakpoint: table/card switch ---- */
+  @media (min-width: 769px) {
+    .ap-search-wrap {
+      max-width: 280px;
+    }
   }
 </style>
 
