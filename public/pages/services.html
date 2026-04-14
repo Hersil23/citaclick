@@ -266,8 +266,28 @@
     const listEl = document.getElementById('services-list');
     const emptyEl = document.getElementById('services-empty');
     let editingId = null;
+    var bizRate = 0, bizCurrency = '', bizMode = 'usd';
+    var currSymbols = {VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',BOB:'Bs.',DOP:'RD$',EUR:'€',GBP:'£'};
+
+    function fmtSvcPrice(usd) {
+      var p = parseFloat(usd || 0);
+      var sym = currSymbols[bizCurrency] || bizCurrency || '$';
+      if (bizMode === 'local' && bizRate > 0) return sym + ' ' + (p * bizRate).toFixed(2);
+      if (bizMode === 'both' && bizRate > 0) return '$' + p.toFixed(2) + ' / ' + sym + ' ' + (p * bizRate).toFixed(2);
+      return '$' + p.toFixed(2);
+    }
 
     async function loadServices() {
+      // Load business config for currency
+      try {
+        var bRes = await Api.get('/business/profile');
+        if (bRes.success && bRes.data) {
+          bizCurrency = bRes.data.currency_code || '';
+          bizMode = bRes.data.currency_mode || 'usd';
+          bizRate = parseFloat(bRes.data.exchange_rate) || 0;
+        }
+      } catch(e) {}
+
       const res = await Api.get('/services');
       if (!res.success) return;
 
@@ -294,7 +314,7 @@
         h4.textContent = s.name;
         const price = document.createElement('span');
         price.className = 'service-price';
-        price.textContent = formatCurrency(s.price_usd || s.price || 0);
+        price.textContent = fmtSvcPrice(s.price_usd || s.price || 0);
         header.appendChild(h4);
         header.appendChild(price);
 
