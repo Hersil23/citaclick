@@ -189,14 +189,13 @@
      DASHBOARD — MOBILE FIRST
      ============================================ */
 
-  .app-layout,
-  .app-main,
-  .dash-content {
+  .app-main {
     min-width: 0;
-    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .dash-content {
+    min-width: 0;
     overflow-x: hidden;
   }
 
@@ -204,7 +203,6 @@
     text-align: center;
     justify-content: center;
     width: 100%;
-    box-sizing: border-box;
   }
 
   /* --- GREETING (compact by default) --- */
@@ -306,6 +304,8 @@
     font-size: 0.6875rem;
     color: var(--color-text-muted);
     margin-top: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -355,7 +355,8 @@
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    max-width: 100%;
+    min-width: 0;
+    width: 100%;
   }
 
   .calendar-toolbar {
@@ -507,7 +508,7 @@
 
   .cal-week-grid {
     display: grid;
-    grid-template-columns: 36px repeat(7, 1fr);
+    grid-template-columns: 36px repeat(7, minmax(0, 1fr));
     min-height: 400px;
   }
 
