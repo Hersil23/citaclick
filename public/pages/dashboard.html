@@ -153,17 +153,24 @@
 
       <!-- Exchange rate widget -->
       <div class="dash-rate-bar" id="dash-rate-bar" style="display:none">
-        <div class="dash-rate-left">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <span class="dash-rate-label">Tasa:</span>
-          <input type="number" class="dash-rate-input" id="dash-rate-value" step="0.01" min="0" placeholder="0.00">
-          <span class="dash-rate-currency" id="dash-rate-currency">Bs/$</span>
+        <div class="dash-rate-row1">
+          <select class="dash-rate-source" id="dash-rate-source">
+            <option value="bcv">BCV</option>
+            <option value="paralelo">Paralelo</option>
+            <option value="manual">Manual</option>
+          </select>
+          <span class="dash-rate-result" id="dash-rate-result">Cargando...</span>
+        </div>
+        <div class="dash-rate-row2">
+          <div class="dash-rate-converter">
+            <input type="number" class="dash-rate-input" id="dash-rate-usd" step="0.01" min="0" placeholder="USD" value="1">
+            <span class="dash-rate-arrow">=</span>
+            <span class="dash-rate-local" id="dash-rate-local">0.00</span>
+            <span class="dash-rate-currency" id="dash-rate-currency">Bs.</span>
+          </div>
           <button class="btn btn-ghost btn-sm" id="btn-save-rate" title="Guardar tasa">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </button>
-        </div>
-        <div class="dash-rate-right">
-          <span class="dash-rate-preview" id="dash-rate-preview">$1 = Bs. 0</span>
         </div>
       </div>
 
@@ -367,35 +374,54 @@
 
   .dash-rate-bar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-3);
     margin-bottom: var(--space-3);
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
   }
 
-  .dash-rate-left {
+  .dash-rate-row1 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--space-2);
-    flex: 1;
-    min-width: 0;
   }
 
-  .dash-rate-left svg { color: var(--color-highlight); flex-shrink: 0; }
-
-  .dash-rate-label {
+  .dash-rate-source {
+    padding: 4px 8px;
     font-size: var(--text-xs);
-    font-weight: var(--weight-semibold);
-    color: var(--color-text-secondary);
-    white-space: nowrap;
+    font-weight: var(--weight-bold);
+    background: var(--color-surface-sunken);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+  }
+
+  .dash-rate-result {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-highlight);
+  }
+
+  .dash-rate-row2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .dash-rate-converter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: 1;
   }
 
   .dash-rate-input {
-    width: 80px;
+    width: 60px;
     padding: 4px 6px;
     font-size: var(--text-sm);
     font-weight: var(--weight-bold);
@@ -410,23 +436,21 @@
   .dash-rate-input::-webkit-inner-spin-button,
   .dash-rate-input::-webkit-outer-spin-button { -webkit-appearance: none; }
 
+  .dash-rate-arrow {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .dash-rate-local {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+  }
+
   .dash-rate-currency {
     font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
-    color: var(--color-highlight);
-  }
-
-  .dash-rate-right {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .dash-rate-preview {
-    font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
-    color: var(--color-highlight);
-    white-space: nowrap;
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-muted);
   }
 
   /* --- CALENDAR (compact on mobile) --- */
@@ -925,6 +949,8 @@
     // Exchange rate widget
     var currSymbols = {VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',UYU:'$',BOB:'Bs.',DOP:'RD$',EUR:'€',GBP:'£'};
     var bizCurrency = '';
+    var currentRate = 0;
+    var apiRates = {bcv: 0, paralelo: 0};
 
     async function loadExchangeRate() {
       var res = await Api.get('/business/profile');
@@ -934,32 +960,60 @@
       if (!bizCurrency || bizCurrency === 'USD') return;
 
       var sym = currSymbols[bizCurrency] || bizCurrency;
-      var bar = document.getElementById('dash-rate-bar');
-      bar.style.display = '';
-      document.getElementById('dash-rate-currency').textContent = sym + '/$';
-      var rate = parseFloat(b.exchange_rate || 0);
-      document.getElementById('dash-rate-value').value = rate > 1 ? rate.toFixed(2) : '';
-      updateRatePreview();
-    }
+      document.getElementById('dash-rate-bar').style.display = '';
+      document.getElementById('dash-rate-currency').textContent = sym;
 
-    function updateRatePreview() {
-      var rate = parseFloat(document.getElementById('dash-rate-value').value) || 0;
-      var sym = currSymbols[bizCurrency] || bizCurrency;
-      var preview = document.getElementById('dash-rate-preview');
-      if (rate > 0) {
-        preview.textContent = '$1 = ' + sym + ' ' + rate.toFixed(2);
-      } else {
-        preview.textContent = 'Sin tasa';
+      // Fetch live rates from dolarapi
+      if (bizCurrency === 'VES') {
+        try {
+          var apiRes = await fetch('https://ve.dolarapi.com/v1/dolares');
+          var data = await apiRes.json();
+          data.forEach(function(d) {
+            if (d.fuente === 'oficial') apiRates.bcv = d.promedio || 0;
+            if (d.fuente === 'paralelo') apiRates.paralelo = d.promedio || 0;
+          });
+        } catch(e) {}
       }
+
+      // Load saved rate or use API
+      var savedRate = parseFloat(b.exchange_rate) || 0;
+      var source = document.getElementById('dash-rate-source');
+
+      if (apiRates.bcv > 0) {
+        currentRate = apiRates.bcv;
+        source.value = 'bcv';
+      } else if (savedRate > 1) {
+        currentRate = savedRate;
+        source.value = 'manual';
+      }
+
+      updateRateDisplay();
     }
 
-    document.getElementById('dash-rate-value').addEventListener('input', updateRatePreview);
+    function updateRateDisplay() {
+      var sym = currSymbols[bizCurrency] || bizCurrency;
+      document.getElementById('dash-rate-result').textContent = '1 USD = ' + sym + ' ' + currentRate.toFixed(2);
+      var usd = parseFloat(document.getElementById('dash-rate-usd').value) || 0;
+      document.getElementById('dash-rate-local').textContent = (usd * currentRate).toFixed(2);
+    }
+
+    document.getElementById('dash-rate-source').addEventListener('change', function() {
+      var v = this.value;
+      if (v === 'bcv') currentRate = apiRates.bcv || currentRate;
+      else if (v === 'paralelo') currentRate = apiRates.paralelo || currentRate;
+      // manual: keep current
+      updateRateDisplay();
+    });
+
+    document.getElementById('dash-rate-usd').addEventListener('input', updateRateDisplay);
 
     document.getElementById('btn-save-rate').addEventListener('click', async function() {
-      var rate = parseFloat(document.getElementById('dash-rate-value').value);
-      if (!rate || rate <= 0) { showToast('Ingresa una tasa valida', 'error'); return; }
-      var res = await Api.put('/business/profile', { exchange_rate: rate });
-      if (res.success) showToast('Tasa actualizada: $1 = ' + (currSymbols[bizCurrency]||bizCurrency) + ' ' + rate.toFixed(2), 'success');
+      if (currentRate <= 0) { showToast('No hay tasa disponible', 'error'); return; }
+      var res = await Api.put('/business/profile', { exchange_rate: currentRate });
+      if (res.success) {
+        var sym = currSymbols[bizCurrency] || bizCurrency;
+        showToast('Tasa guardada: 1 USD = ' + sym + ' ' + currentRate.toFixed(2), 'success');
+      }
     });
 
     loadExchangeRate();
