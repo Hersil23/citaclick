@@ -21,7 +21,7 @@ class AuthController
 
         // Rate limit by email + IP (hybrid banking-style)
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $limiter = checkRateLimit($email . '|' . $ip, 'login', 6);
+        $limiter = checkRateLimit($email . '|' . $ip, 'login', 20);
         if ($limiter['blocked']) {
             sendJson(429, [
                 'success' => false,
