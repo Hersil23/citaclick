@@ -61,15 +61,16 @@ class Client
     {
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            INSERT INTO clients (business_id, name, phone, email, notes, created_at)
-            VALUES (:bid, :name, :phone, :email, :notes, NOW())
+            INSERT INTO clients (business_id, name, id_number, phone, email, notes, created_at)
+            VALUES (:bid, :name, :id_number, :phone, :email, :notes, NOW())
         ');
         $stmt->execute([
-            ':bid'   => $data['business_id'],
-            ':name'  => $data['name'],
-            ':phone' => $data['phone'] ?? null,
-            ':email' => $data['email'] ?? null,
-            ':notes' => $data['notes'] ?? null,
+            ':bid'       => $data['business_id'],
+            ':name'      => $data['name'],
+            ':id_number' => $data['id_number'] ?? null,
+            ':phone'     => $data['phone'] ?? null,
+            ':email'     => $data['email'] ?? null,
+            ':notes'     => $data['notes'] ?? null,
         ]);
         return (int)$db->lastInsertId();
     }
@@ -79,7 +80,7 @@ class Client
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'phone', 'email', 'notes', 'photo_url'];
+        $allowed = ['name', 'id_number', 'phone', 'email', 'notes', 'photo_url'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {

@@ -10,7 +10,26 @@
   <input class="form-input" type="search" id="client-search" data-i18n-placeholder="clients.search" placeholder="Buscar cliente...">
 </div>
 
-<div id="clients-list" class="cards-grid"></div>
+<div class="table-responsive" id="clients-table-wrap">
+  <table class="table" id="clients-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Cedula / ID</th>
+        <th>Telefono</th>
+        <th>Email</th>
+        <th class="text-center">Visitas</th>
+        <th>Ultima visita</th>
+      </tr>
+    </thead>
+    <tbody id="clients-tbody"></tbody>
+  </table>
+</div>
+
+<!-- Mobile cards -->
+<div id="clients-cards" class="mobile-only"></div>
+
+<div class="pagination" id="clients-pagination"></div>
 
 <div class="empty-state hidden" id="clients-empty">
   <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
@@ -32,6 +51,10 @@
         <div class="form-group">
           <label class="form-label" data-i18n="clients.name">Nombre completo</label>
           <input class="form-input" type="text" id="client-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cedula / Numero de identidad</label>
+          <input class="form-input" type="text" id="client-id-number" placeholder="V-12345678, DNI, CC...">
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="clients.phone">Telefono</label>
@@ -73,7 +96,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="clients.notes">Notas</label>
-          <textarea class="form-input" id="client-notes" rows="3"></textarea>
+          <textarea class="form-input" id="client-notes" rows="2"></textarea>
         </div>
       </form>
     </div>
@@ -101,167 +124,217 @@
     letter-spacing: -0.02em;
   }
 
-  .search-bar {
-    max-width: 400px;
-  }
+  .search-bar { max-width: 400px; }
 
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-4);
-  }
+  .phone-input-group { display: flex; gap: var(--space-2); }
+  .phone-code-select { width: 110px; flex-shrink: 0; }
+  .phone-number-input { flex: 1; min-width: 0; }
 
-  .client-card {
+  .pagination {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    flex-wrap: wrap;
+  }
+
+  .pagination button {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     background: var(--color-surface-raised);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-lg);
+    color: var(--color-text-secondary);
     cursor: pointer;
     transition: all var(--transition-fast);
   }
 
-  .client-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-  }
+  .pagination button:hover { border-color: var(--color-highlight); color: var(--color-highlight); }
+  .pagination button.active { background: var(--color-highlight); color: var(--color-text-inverse); border-color: var(--color-highlight); }
+  .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .client-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .client-info h4 {
-    font-family: var(--font-display);
-    font-size: var(--text-base);
-    font-weight: var(--weight-semibold);
-    margin-bottom: var(--space-1);
-  }
-
-  .client-info p {
+  .pagination .page-info {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
+    padding: 0 var(--space-2);
   }
 
-  .client-stats {
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .client-stats .stat-value {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    color: var(--color-highlight);
-  }
-
-  .client-stats .stat-label {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
-  .phone-input-group {
+  /* Mobile cards */
+  .client-mobile-card {
     display: flex;
-    gap: var(--space-2);
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    cursor: pointer;
+    transition: box-shadow var(--transition-fast);
   }
 
-  .phone-code-select {
-    width: 110px;
-    flex-shrink: 0;
+  .client-mobile-card:hover { box-shadow: var(--shadow-md); }
+
+  .client-mobile-info { flex: 1; min-width: 0; }
+  .client-mobile-info h4 { font-size: var(--text-sm); font-weight: var(--weight-semibold); margin-bottom: 2px; }
+  .client-mobile-info p { font-size: var(--text-xs); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .client-mobile-visits { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); color: var(--color-highlight); flex-shrink: 0; }
+
+  .table-responsive { display: block; }
+
+  @media (max-width: 768px) {
+    .table-responsive { display: none; }
   }
 
-  .phone-number-input {
-    flex: 1;
-    min-width: 0;
+  @media (min-width: 769px) {
+    .mobile-only { display: none !important; }
   }
 
   @media (max-width: 375px) {
-    .cards-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .page-title {
-      font-size: var(--text-xl);
-    }
-
-    .phone-code-select {
-      width: 90px;
-    }
+    .page-title { font-size: var(--text-xl); }
+    .phone-code-select { width: 90px; }
   }
 </style>
 
 <script>
   (function () {
-    const listEl = document.getElementById('clients-list');
-    const emptyEl = document.getElementById('clients-empty');
-    const searchInput = document.getElementById('client-search');
-    let editingId = null;
+    var tbody = document.getElementById('clients-tbody');
+    var cardsEl = document.getElementById('clients-cards');
+    var emptyEl = document.getElementById('clients-empty');
+    var tableWrap = document.getElementById('clients-table-wrap');
+    var paginationEl = document.getElementById('clients-pagination');
+    var searchInput = document.getElementById('client-search');
+    var editingId = null;
+    var currentPage = 1;
+    var pageSize = 20;
 
-    async function loadClients(search) {
-      const url = '/clients' + (search ? '?search=' + encodeURIComponent(search) : '');
-      const res = await Api.get(url);
+    async function loadClients(search, page) {
+      page = page || 1;
+      currentPage = page;
+      var url = '/clients?limit=' + pageSize + '&page=' + page;
+      if (search) url += '&search=' + encodeURIComponent(search);
+      var res = await Api.get(url);
       if (!res.success) return;
 
-      const clients = res.data || [];
-      listEl.textContent = '';
+      var clients = res.data || [];
+      tbody.textContent = '';
+      cardsEl.textContent = '';
 
-      if (clients.length === 0) {
+      if (clients.length === 0 && page === 1) {
         emptyEl.classList.remove('hidden');
-        listEl.classList.add('hidden');
+        tableWrap.classList.add('hidden');
+        cardsEl.classList.add('hidden');
+        paginationEl.textContent = '';
         return;
       }
 
       emptyEl.classList.add('hidden');
-      listEl.classList.remove('hidden');
+      tableWrap.classList.remove('hidden');
+      cardsEl.classList.remove('hidden');
 
-      clients.forEach(c => {
-        const card = document.createElement('div');
-        card.className = 'client-card';
-        card.onclick = () => editClient(c);
+      clients.forEach(function(c) {
+        // Table row (desktop)
+        var tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', function() { editClient(c); });
 
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar avatar-lg';
+        var tdName = document.createElement('td');
+        var nameStrong = document.createElement('strong');
+        nameStrong.textContent = c.name;
+        tdName.appendChild(nameStrong);
+
+        var tdId = document.createElement('td');
+        tdId.textContent = c.id_number || '-';
+
+        var tdPhone = document.createElement('td');
+        tdPhone.textContent = c.phone || '-';
+
+        var tdEmail = document.createElement('td');
+        tdEmail.textContent = c.email || '-';
+
+        var tdVisits = document.createElement('td');
+        tdVisits.className = 'text-center';
+        var badge = document.createElement('span');
+        badge.className = 'badge badge-completed';
+        badge.textContent = c.total_visits || 0;
+        tdVisits.appendChild(badge);
+
+        var tdLast = document.createElement('td');
+        tdLast.textContent = c.last_visit ? new Date(c.last_visit).toLocaleDateString() : '-';
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdId);
+        tr.appendChild(tdPhone);
+        tr.appendChild(tdEmail);
+        tr.appendChild(tdVisits);
+        tr.appendChild(tdLast);
+        tbody.appendChild(tr);
+
+        // Mobile card
+        var card = document.createElement('div');
+        card.className = 'client-mobile-card';
+        card.addEventListener('click', function() { editClient(c); });
+
+        var avatar = document.createElement('div');
+        avatar.className = 'avatar avatar-md';
         avatar.textContent = getInitials(c.name);
 
-        const info = document.createElement('div');
-        info.className = 'client-info';
-        const h4 = document.createElement('h4');
+        var info = document.createElement('div');
+        info.className = 'client-mobile-info';
+        var h4 = document.createElement('h4');
         h4.textContent = c.name;
-        const p = document.createElement('p');
-        p.textContent = c.phone || c.email || '';
+        var p = document.createElement('p');
+        p.textContent = c.phone || c.email || (c.id_number || '');
         info.appendChild(h4);
         info.appendChild(p);
 
-        const stats = document.createElement('div');
-        stats.className = 'client-stats';
-        const val = document.createElement('div');
-        val.className = 'stat-value';
-        val.textContent = c.total_visits || 0;
-        const lbl = document.createElement('div');
-        lbl.className = 'stat-label';
-        lbl.textContent = i18n.t('clients.total_visits');
-        stats.appendChild(val);
-        stats.appendChild(lbl);
+        var visits = document.createElement('div');
+        visits.className = 'client-mobile-visits';
+        visits.textContent = c.total_visits || 0;
 
         card.appendChild(avatar);
         card.appendChild(info);
-        card.appendChild(stats);
-        listEl.appendChild(card);
+        card.appendChild(visits);
+        cardsEl.appendChild(card);
       });
+
+      // Pagination
+      renderPagination(clients.length);
+    }
+
+    function renderPagination(count) {
+      paginationEl.textContent = '';
+
+      var prev = document.createElement('button');
+      prev.textContent = '\u2190 Anterior';
+      prev.disabled = currentPage <= 1;
+      prev.addEventListener('click', function() { loadClients(searchInput.value.trim(), currentPage - 1); });
+
+      var info = document.createElement('span');
+      info.className = 'page-info';
+      info.textContent = 'Pagina ' + currentPage;
+
+      var next = document.createElement('button');
+      next.textContent = 'Siguiente \u2192';
+      next.disabled = count < pageSize;
+      next.addEventListener('click', function() { loadClients(searchInput.value.trim(), currentPage + 1); });
+
+      paginationEl.appendChild(prev);
+      paginationEl.appendChild(info);
+      paginationEl.appendChild(next);
     }
 
     function editClient(c) {
       editingId = c.id;
       document.getElementById('client-name').value = c.name || '';
-      // Parse phone: if starts with +, split code and number
-      const phone = c.phone || '';
-      const pcodeEl = document.getElementById('client-pcode');
-      const phoneEl = document.getElementById('client-phone');
-      let matched = false;
+      document.getElementById('client-id-number').value = c.id_number || '';
+      var phone = c.phone || '';
+      var pcodeEl = document.getElementById('client-pcode');
+      var phoneEl = document.getElementById('client-phone');
+      var matched = false;
       if (phone) {
-        for (let i = 0; i < pcodeEl.options.length; i++) {
+        for (var i = 0; i < pcodeEl.options.length; i++) {
           if (phone.startsWith(pcodeEl.options[i].value)) {
             pcodeEl.value = pcodeEl.options[i].value;
             phoneEl.value = phone.slice(pcodeEl.options[i].value.length);
@@ -275,24 +348,25 @@
       }
       document.getElementById('client-email').value = c.email || '';
       document.getElementById('client-notes').value = c.notes || '';
-      document.querySelector('#modal-client .modal-title').textContent = i18n.t('common.edit');
+      document.querySelector('#modal-client .modal-title').textContent = 'Editar cliente';
       openModal('modal-client');
     }
 
-    document.getElementById('btn-save-client').addEventListener('click', async () => {
-      const pcode = document.getElementById('client-pcode').value;
-      const pnum = document.getElementById('client-phone').value.trim();
-      const fullPhone = pnum ? pcode + pnum : '';
-      const data = {
+    document.getElementById('btn-save-client').addEventListener('click', async function() {
+      var pcode = document.getElementById('client-pcode').value;
+      var pnum = document.getElementById('client-phone').value.trim();
+      var fullPhone = pnum ? pcode + pnum : '';
+      var data = {
         name: document.getElementById('client-name').value.trim(),
+        id_number: document.getElementById('client-id-number').value.trim(),
         phone: fullPhone,
         email: document.getElementById('client-email').value.trim(),
         notes: document.getElementById('client-notes').value.trim(),
       };
 
-      if (!data.name) { showToast(i18n.t('common.required_field'), 'error'); return; }
+      if (!data.name) { showToast('El nombre es requerido', 'error'); return; }
 
-      let res;
+      var res;
       if (editingId) {
         res = await Api.put('/clients/' + editingId, data);
       } else {
@@ -304,14 +378,14 @@
         closeModal('modal-client');
         editingId = null;
         document.getElementById('client-form').reset();
-        loadClients();
+        loadClients(searchInput.value.trim(), currentPage);
       }
     });
 
     function openNewClient() {
       editingId = null;
       document.getElementById('client-form').reset();
-      document.querySelector('#modal-client .modal-title').textContent = i18n.t('clients.new') || 'Nuevo cliente';
+      document.querySelector('#modal-client .modal-title').textContent = 'Nuevo cliente';
       openModal('modal-client');
     }
 
@@ -319,8 +393,8 @@
     var btnEmpty = document.getElementById('btn-new-client-empty');
     if (btnEmpty) btnEmpty.addEventListener('click', openNewClient);
 
-    searchInput.addEventListener('input', debounce(() => {
-      loadClients(searchInput.value.trim());
+    searchInput.addEventListener('input', debounce(function() {
+      loadClients(searchInput.value.trim(), 1);
     }, 300));
 
     loadClients();

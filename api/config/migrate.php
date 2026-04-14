@@ -190,4 +190,16 @@ function ensureTables(): void
             error_log("migrate: {$name} - " . $e->getMessage());
         }
     }
+
+    // Column additions (safe to run multiple times)
+    $alterations = [
+        "ALTER TABLE clients ADD COLUMN id_number VARCHAR(50) NULL AFTER name",
+    ];
+    foreach ($alterations as $alt) {
+        try {
+            $db->exec($alt);
+        } catch (\PDOException $e) {
+            // Column likely already exists
+        }
+    }
 }
