@@ -1,30 +1,39 @@
-<div class="page-header">
-  <div class="flex items-center gap-3">
-    <a href="/dashboard" data-link class="btn btn-ghost btn-sm" style="padding:var(--space-2)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
-    <h2 class="page-title" data-i18n="nav.clients">Clientes</h2>
+<!-- Page Header -->
+<div class="cl-header">
+  <div class="cl-header-left">
+    <a href="/dashboard" data-link class="cl-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <div>
+      <h2 class="cl-title" data-i18n="nav.clients">Clientes</h2>
+      <p class="cl-subtitle" id="cl-count"></p>
+    </div>
   </div>
   <button class="btn btn-primary" id="btn-new-client">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     <span data-i18n="clients.new">Nuevo cliente</span>
   </button>
 </div>
 
-<div class="search-bar mb-4">
-  <input class="form-input" type="search" id="client-search" data-i18n-placeholder="clients.search" placeholder="Buscar cliente...">
+<!-- Search -->
+<div class="cl-search-wrap">
+  <svg class="cl-search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <input class="cl-search-input" type="search" id="client-search" data-i18n-placeholder="clients.search" placeholder="Buscar por nombre, cedula, telefono...">
 </div>
 
-<div class="table-responsive" id="clients-table-wrap">
-  <table class="table" id="clients-table">
+<!-- Desktop Table -->
+<div class="cl-table-card" id="clients-table-wrap">
+  <table class="cl-table" id="clients-table">
     <thead>
       <tr>
-        <th>#</th>
+        <th class="cl-th-num">#</th>
         <th>Nombre</th>
         <th>Cedula / ID</th>
         <th>Telefono</th>
         <th>Email</th>
-        <th class="text-center">Visitas</th>
+        <th class="cl-th-center">Visitas</th>
         <th>Ultima visita</th>
-        <th class="text-center">Acciones</th>
+        <th class="cl-th-center">Acciones</th>
       </tr>
     </thead>
     <tbody id="clients-tbody"></tbody>
@@ -34,15 +43,20 @@
 <!-- Mobile cards -->
 <div id="clients-cards" class="mobile-only"></div>
 
-<div class="pagination" id="clients-pagination"></div>
+<!-- Pagination -->
+<div class="cl-pagination" id="clients-pagination"></div>
 
-<div class="empty-state hidden" id="clients-empty">
-  <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-  <h3 class="empty-state-title" data-i18n="clients.no_clients">Aun no tienes clientes registrados</h3>
-  <p class="empty-state-desc">Los clientes se agregan automaticamente al agendar citas o puedes crearlos manualmente.</p>
+<!-- Empty State -->
+<div class="cl-empty hidden" id="clients-empty">
+  <div class="cl-empty-icon">
+    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </div>
+  <h3 class="cl-empty-title" data-i18n="clients.no_clients">Aun no tienes clientes</h3>
+  <p class="cl-empty-desc">Los clientes se agregan automaticamente al agendar citas, o puedes crearlos manualmente.</p>
   <button class="btn btn-primary" id="btn-new-client-empty" data-i18n="clients.new">Nuevo cliente</button>
 </div>
 
+<!-- Modal -->
 <div class="modal-overlay" id="modal-client">
   <div class="modal">
     <div class="modal-header">
@@ -113,95 +127,357 @@
 </div>
 
 <style>
-  .page-header {
+  /* ========================================
+     CLIENTS PAGE — Refined Editorial SaaS
+     ======================================== */
+
+  /* --- HEADER --- */
+  .cl-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--space-5);
+    gap: var(--space-3);
     flex-wrap: wrap;
+    animation: clFadeDown 0.4s ease;
+  }
+
+  .cl-header-left {
+    display: flex;
+    align-items: center;
     gap: var(--space-3);
   }
 
-  .page-title {
-    font-family: var(--font-display);
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-semibold);
-    letter-spacing: -0.02em;
+  .cl-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    transition: all var(--transition-fast);
   }
 
-  .search-bar { max-width: 400px; }
+  .cl-back:hover {
+    background: var(--color-surface-sunken);
+    color: var(--color-text);
+    transform: translateX(-2px);
+  }
 
-  .phone-input-group { display: flex; gap: var(--space-2); }
-  .phone-code-select { width: 110px; flex-shrink: 0; }
-  .phone-number-input { flex: 1; min-width: 0; }
+  .cl-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-text);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
 
-  .pagination {
+  .cl-subtitle {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  /* --- SEARCH --- */
+  .cl-search-wrap {
+    position: relative;
+    max-width: 420px;
+    margin-bottom: var(--space-5);
+    animation: clFadeDown 0.4s ease 0.05s both;
+  }
+
+  .cl-search-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+    transition: color var(--transition-fast);
+  }
+
+  .cl-search-input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-3) + 26px);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .cl-search-input::placeholder { color: var(--color-text-muted); }
+
+  .cl-search-input:focus {
+    border-color: var(--color-input-focus);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-highlight) 12%, transparent);
+    outline: none;
+  }
+
+  .cl-search-input:focus ~ .cl-search-icon,
+  .cl-search-wrap:focus-within .cl-search-icon {
+    color: var(--color-highlight);
+  }
+
+  /* --- TABLE CARD --- */
+  .cl-table-card {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: clFadeUp 0.5s ease 0.1s both;
+  }
+
+  .cl-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .cl-table thead {
+    background: linear-gradient(180deg, var(--color-surface-sunken), var(--color-surface));
+  }
+
+  .cl-table th {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.6875rem;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .cl-th-num { width: 44px; text-align: center; }
+  .cl-th-center { text-align: center; }
+
+  .cl-table td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: middle;
+    color: var(--color-text-secondary);
+    transition: background-color var(--transition-fast);
+  }
+
+  .cl-table tbody tr {
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .cl-table tbody tr:hover td {
+    background-color: color-mix(in srgb, var(--color-highlight) 4%, var(--color-surface-raised));
+  }
+
+  .cl-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* --- ACTION BUTTONS --- */
+  .action-btns {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+  }
+
+  .action-btn:hover {
+    background: var(--color-surface-sunken);
+    color: var(--color-highlight);
+    border-color: var(--color-border-light);
+    transform: scale(1.1);
+  }
+
+  .action-btn.danger:hover {
+    background: color-mix(in srgb, var(--color-error) 10%, transparent);
+    color: var(--color-error);
+    border-color: color-mix(in srgb, var(--color-error) 25%, transparent);
+  }
+
+  /* --- VISIT BADGE --- */
+  .cl-visit-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    background: color-mix(in srgb, var(--color-highlight) 10%, transparent);
+    color: var(--color-highlight);
+  }
+
+  .cl-visit-badge.zero {
+    background: var(--color-surface-sunken);
+    color: var(--color-text-muted);
+    font-weight: var(--weight-regular);
+  }
+
+  /* --- MOBILE CARDS --- */
+  .client-mobile-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-highlight);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    animation: clFadeUp 0.3s ease both;
+  }
+
+  .client-mobile-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .client-mobile-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .client-mobile-info h4 {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+    margin-bottom: 2px;
+  }
+
+  .client-mobile-info p {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .client-mobile-actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  /* --- PAGINATION --- */
+  .cl-pagination {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
     margin-top: var(--space-5);
     flex-wrap: wrap;
+    animation: clFadeUp 0.4s ease 0.15s both;
   }
 
-  .pagination button {
-    padding: var(--space-2) var(--space-3);
+  .cl-pagination button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-4);
     font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
     background: var(--color-surface-raised);
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: all var(--transition-fast);
+    box-shadow: var(--shadow-xs);
   }
 
-  .pagination button:hover { border-color: var(--color-highlight); color: var(--color-highlight); }
-  .pagination button.active { background: var(--color-highlight); color: var(--color-text-inverse); border-color: var(--color-highlight); }
-  .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cl-pagination button:hover:not(:disabled) {
+    border-color: var(--color-highlight);
+    color: var(--color-highlight);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
 
-  .pagination .page-info {
+  .cl-pagination button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .cl-pagination .page-info {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
-    padding: 0 var(--space-2);
+    padding: 0 var(--space-3);
+    font-weight: var(--weight-medium);
   }
 
-  /* Mobile cards */
-  .client-mobile-card {
+  /* --- EMPTY STATE --- */
+  .cl-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+    animation: clFadeUp 0.5s ease;
+  }
+
+  .cl-empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--color-highlight) 8%, transparent), color-mix(in srgb, var(--color-highlight) 16%, transparent));
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
-    background: var(--color-surface-raised);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-md);
+    justify-content: center;
+    margin-bottom: var(--space-5);
+    color: var(--color-highlight);
+  }
+
+  .cl-empty-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
     margin-bottom: var(--space-2);
-    cursor: pointer;
-    transition: box-shadow var(--transition-fast);
   }
 
-  .client-mobile-card:hover { box-shadow: var(--shadow-md); }
-
-  .client-mobile-info { flex: 1; min-width: 0; }
-  .client-mobile-info h4 { font-size: var(--text-sm); font-weight: var(--weight-semibold); margin-bottom: 2px; }
-  .client-mobile-info p { font-size: var(--text-xs); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .client-mobile-visits { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); color: var(--color-highlight); flex-shrink: 0; }
-
-  .action-btns { display: flex; gap: var(--space-1); justify-content: center; }
-  .action-btn {
-    display: flex; align-items: center; justify-content: center;
-    width: 32px; height: 32px; border-radius: var(--radius-sm);
-    color: var(--color-text-muted); transition: all var(--transition-fast); cursor: pointer;
+  .cl-empty-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    max-width: 360px;
+    margin-bottom: var(--space-6);
+    line-height: var(--leading-relaxed);
   }
-  .action-btn:hover { background: var(--color-surface-sunken); color: var(--color-text); }
-  .action-btn.danger:hover { background: var(--color-error); color: var(--color-text-inverse); }
-  .action-btn svg { width: 16px; height: 16px; }
 
-  .client-mobile-actions { display: flex; gap: var(--space-1); flex-shrink: 0; }
+  /* --- PHONE INPUT --- */
+  .phone-input-group { display: flex; gap: var(--space-2); }
+  .phone-code-select { width: 110px; flex-shrink: 0; }
+  .phone-number-input { flex: 1; min-width: 0; }
 
-  .table-responsive { display: block; }
+  /* --- RESPONSIVE --- */
+  .cl-table-card { display: block; }
 
   @media (max-width: 768px) {
-    .table-responsive { display: none; }
+    .cl-table-card { display: none; }
   }
 
   @media (min-width: 769px) {
@@ -209,8 +485,21 @@
   }
 
   @media (max-width: 375px) {
-    .page-title { font-size: var(--text-xl); }
+    .cl-title { font-size: var(--text-xl); }
+    .cl-search-input { font-size: var(--text-xs); }
     .phone-code-select { width: 90px; }
+    .client-mobile-card { padding: var(--space-2) var(--space-3); gap: var(--space-2); }
+  }
+
+  /* --- ANIMATIONS --- */
+  @keyframes clFadeDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes clFadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
@@ -249,6 +538,8 @@
       emptyEl.classList.add('hidden');
       tableWrap.classList.remove('hidden');
       cardsEl.classList.remove('hidden');
+      var countEl = document.getElementById('cl-count');
+      if (countEl) countEl.textContent = clients.length + (clients.length >= pageSize ? '+' : '') + ' clientes';
 
       clients.forEach(function(c, idx) {
         // Table row (desktop)
@@ -275,10 +566,11 @@
         tdEmail.textContent = c.email || '-';
 
         var tdVisits = document.createElement('td');
-        tdVisits.className = 'text-center';
+        tdVisits.className = 'cl-th-center';
         var badge = document.createElement('span');
-        badge.className = 'badge badge-completed';
-        badge.textContent = c.total_visits || 0;
+        var visits = c.total_visits || 0;
+        badge.className = 'cl-visit-badge' + (visits === 0 ? ' zero' : '');
+        badge.textContent = visits;
         tdVisits.appendChild(badge);
 
         var tdLast = document.createElement('td');
