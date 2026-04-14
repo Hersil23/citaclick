@@ -191,6 +191,7 @@
 
   .dash-content {
     overflow-x: hidden;
+    min-width: 0;
   }
 
   /* --- GREETING (compact by default) --- */
@@ -352,6 +353,7 @@
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    max-width: 100%;
   }
 
   .calendar-toolbar {
@@ -481,15 +483,11 @@
 
   .cal-event {
     display: block;
-    font-size: 0.5rem;
-    padding: 0 1px;
-    margin-top: 1px;
-    border-radius: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2;
-    font-weight: var(--weight-medium);
+    font-size: 0;
+    padding: 0;
+    margin-top: 2px;
+    border-radius: 1px;
+    height: 3px;
     cursor: pointer;
     transition: filter var(--transition-fast);
     max-width: 100%;
@@ -655,7 +653,16 @@
 
     .cal-day-number { font-size: var(--text-sm); width: 26px; height: 26px; }
 
-    .cal-event { font-size: 0.6875rem; padding: 1px var(--space-1); }
+    .cal-event {
+      font-size: 0.6875rem;
+      padding: 1px var(--space-1);
+      height: auto;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+      border-radius: 3px;
+    }
 
     .cal-week-grid {
       grid-template-columns: 56px repeat(7, 1fr);
