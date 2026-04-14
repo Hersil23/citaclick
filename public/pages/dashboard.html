@@ -956,22 +956,25 @@
         try {
           var apiRes = await fetch('https://ve.dolarapi.com/v1/dolares');
           var data = await apiRes.json();
+          console.log('dolarapi response:', data);
           data.forEach(function(d) {
             if (d.fuente === 'oficial') apiRates.bcv = d.promedio || 0;
             if (d.fuente === 'paralelo') apiRates.paralelo = d.promedio || 0;
           });
-        } catch(e) {}
+          console.log('Rates loaded - BCV:', apiRates.bcv, 'Paralelo:', apiRates.paralelo);
+        } catch(e) {
+          console.error('dolarapi error:', e);
+        }
       }
 
-      // API has priority — always show live rate
+      // Always start fresh from API
       var source = document.getElementById('dash-rate-source');
+      currentRate = 0;
 
       if (apiRates.bcv > 0) {
         currentRate = apiRates.bcv;
         source.value = 'bcv';
       } else {
-        var savedRate = parseFloat(b.exchange_rate) || 0;
-        if (savedRate > 1) currentRate = savedRate;
         source.value = 'manual';
       }
 
