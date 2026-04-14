@@ -129,7 +129,7 @@ var CatalogPage=(function(){
       if(_cm==='both'&&_cr>0)return '$'+p.toFixed(2)+' / '+sym+' '+(p*_cr).toFixed(2);
       return '$'+p.toFixed(2);
     };
-    renderHeader(biz);renderServices(businessData.categories);renderQR(biz.slug);renderFooter();
+    renderHeader(biz);renderServices(businessData.categories);if(businessData.has_qr)renderQR(biz.slug);renderFooter();
     if(window._canBook)setupBooking(businessData.providers);
   }
 
