@@ -753,15 +753,17 @@
       document.getElementById('dash-greeting-sub').textContent = dayNames[now.getDay()] + ', ' + now.getDate() + ' de ' + monthNames[now.getMonth()] + ' ' + now.getFullYear();
 
       function updateClock() {
+        var el = document.getElementById('dash-greeting-time');
+        if (!el) { clearInterval(clockTimer); return; }
         var t = new Date();
         var h = t.getHours();
         var m = String(t.getMinutes()).padStart(2, '0');
         var ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
-        document.getElementById('dash-greeting-time').textContent = h + ':' + m + ' ' + ampm;
+        el.textContent = h + ':' + m + ' ' + ampm;
       }
       updateClock();
-      setInterval(updateClock, 30000);
+      var clockTimer = setInterval(updateClock, 30000);
 
       if (user.role === 'owner' || user.role === 'admin') {
         const provLink = document.querySelector('.sidebar-link-providers');
