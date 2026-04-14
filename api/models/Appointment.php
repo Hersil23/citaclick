@@ -197,6 +197,10 @@ class Appointment
         $stmt->execute([':pid' => $providerId, ':date' => $date]);
         $booked = $stmt->fetchAll();
 
+        // If date is today, filter out past hours
+        $isToday = ($date === date('Y-m-d'));
+        $nowTime = $isToday ? date('H:i') : '00:00';
+
         $slots = [];
         foreach ($blocks as $block) {
             $slotDuration = $duration ?: (int)$block['slot_minutes'] ?: 30;
@@ -215,7 +219,7 @@ class Appointment
                     }
                 }
 
-                if (!$conflict) {
+                if (!$conflict && $slotStart >= $nowTime) {
                     $slots[] = [
                         'start_time' => $slotStart,
                         'end_time'   => $slotEnd,
