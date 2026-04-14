@@ -47,6 +47,11 @@ const Router = (() => {
       return;
     }
 
+    if (path.startsWith('/agendar/')) {
+      loadBookingPage(path);
+      return;
+    }
+
     if (path === '/') {
       window.location.href = '/';
       return;
@@ -100,6 +105,28 @@ const Router = (() => {
 
       if (onRouteChange) {
         onRouteChange(route);
+      }
+    } catch (err) {
+      load404();
+    }
+  }
+
+  async function loadBookingPage(path) {
+    const slug = path.replace('/agendar/', '').replace(/\/$/, '');
+    const view = document.getElementById('app-view');
+    if (!view) return;
+
+    try {
+      const response = await fetch('/pages/booking.html');
+      if (!response.ok) throw new Error('Booking page not found');
+      const html = await response.text();
+      view.innerHTML = html; // trusted source: own server pages
+      runScripts(view);
+      document.title = 'Agendar Cita \u2014 CitaClick';
+      window.scrollTo(0, 0);
+
+      if (typeof BookingPage !== 'undefined' && BookingPage.init) {
+        BookingPage.init(slug);
       }
     } catch (err) {
       load404();

@@ -94,6 +94,10 @@ $routes = [
     'GET /catalog/{slug}'       => ['CatalogController', 'show', false],
     'POST /catalog/{slug}/book' => ['CatalogController', 'book', false],
 
+    'GET /booking/{slug}'              => ['BookingController', 'show', false],
+    'GET /booking/{slug}/client'       => ['BookingController', 'findClient', false],
+    'POST /booking/{slug}/appointment' => ['BookingController', 'createAppointment', false],
+
     'GET /reports'              => ['ReportController', 'index', true],
 
     'GET /notifications'        => ['NotificationController', 'index', true],

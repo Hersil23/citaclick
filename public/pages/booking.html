@@ -1,0 +1,474 @@
+<div id="booking-page" class="bk-page">
+  <div class="bk-container">
+    <!-- Header -->
+    <div class="bk-header" id="bk-header">
+      <div class="bk-logo">
+        <svg viewBox="0 0 38 38" width="28" height="28" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="bk-logo-text"><span>cita</span><strong>click</strong></span>
+      </div>
+      <h1 class="bk-biz-name" id="bk-biz-name"></h1>
+      <p class="bk-biz-desc" id="bk-biz-desc"></p>
+    </div>
+
+    <!-- Progress -->
+    <div class="bk-progress">
+      <div class="bk-step-dot active" data-step="1">1</div>
+      <div class="bk-step-line"></div>
+      <div class="bk-step-dot" data-step="2">2</div>
+      <div class="bk-step-line"></div>
+      <div class="bk-step-dot" data-step="3">3</div>
+      <div class="bk-step-line"></div>
+      <div class="bk-step-dot" data-step="4">4</div>
+    </div>
+
+    <!-- Step 1: Identify -->
+    <div class="bk-step active" id="bk-step-1">
+      <h2 class="bk-step-title">Identificate</h2>
+      <p class="bk-step-desc">Ingresa tu numero de cedula o identificacion para verificar si ya tienes cuenta.</p>
+      <div class="form-group">
+        <label class="form-label">Cedula / Numero de identidad</label>
+        <div class="bk-id-row">
+          <input class="form-input" type="text" id="bk-id-number" placeholder="V-12345678, DNI, CC...">
+          <button class="btn btn-primary" id="bk-search-btn">Buscar</button>
+        </div>
+      </div>
+      <div id="bk-client-result" class="bk-client-result hidden"></div>
+      <div id="bk-client-form" class="hidden">
+        <p class="bk-new-client-label">No encontrado. Completa tus datos:</p>
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <input class="form-input" type="text" id="bk-name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Telefono</label>
+          <div class="bk-phone-row">
+            <select class="form-input bk-pcode" id="bk-pcode">
+              <option value="+58">+58 VE</option>
+              <option value="+57">+57 CO</option>
+              <option value="+52">+52 MX</option>
+              <option value="+1">+1 US</option>
+              <option value="+34">+34 ES</option>
+              <option value="+55">+55 BR</option>
+              <option value="+54">+54 AR</option>
+              <option value="+51">+51 PE</option>
+              <option value="+56">+56 CL</option>
+              <option value="+593">+593 EC</option>
+              <option value="+507">+507 PA</option>
+              <option value="+506">+506 CR</option>
+              <option value="+809">+809 DO</option>
+            </select>
+            <input class="form-input" type="tel" id="bk-phone" placeholder="4121234567" style="flex:1">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Correo (opcional)</label>
+          <input class="form-input" type="email" id="bk-email">
+        </div>
+      </div>
+      <div class="bk-nav">
+        <span></span>
+        <button class="btn btn-primary" id="bk-next-1" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Service -->
+    <div class="bk-step" id="bk-step-2">
+      <h2 class="bk-step-title">Elige tu servicio</h2>
+      <div id="bk-services-list" class="bk-services-grid"></div>
+      <div class="bk-nav">
+        <button class="btn btn-secondary" id="bk-prev-2">Anterior</button>
+        <button class="btn btn-primary" id="bk-next-2" disabled>Siguiente</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Date & Time -->
+    <div class="bk-step" id="bk-step-3">
+      <h2 class="bk-step-title">Fecha y hora</h2>
+      <div class="form-group">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" type="date" id="bk-date" min="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horarios disponibles</label>
+        <div id="bk-slots" class="bk-slots-grid">
+          <p class="text-sm text-muted">Selecciona una fecha para ver los horarios</p>
+        </div>
+      </div>
+      <div class="bk-nav">
+        <button class="btn btn-secondary" id="bk-prev-3">Anterior</button>
+        <button class="btn btn-primary" id="bk-next-3" disabled>Confirmar cita</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Confirmation -->
+    <div class="bk-step" id="bk-step-4">
+      <div class="bk-success">
+        <div class="bk-success-icon">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h2 class="bk-success-title">Cita agendada</h2>
+        <p class="bk-success-desc" id="bk-success-msg">Tu cita ha sido registrada exitosamente.</p>
+        <div class="bk-summary" id="bk-summary"></div>
+        <button class="btn btn-primary" id="bk-new-booking">Agendar otra cita</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bk-footer">
+      <a href="https://citaclick.net" target="_blank" rel="noopener" class="bk-powered">
+        <svg viewBox="0 0 38 38" width="18" height="18" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Powered by <strong>citaclick</strong></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bk-page { min-height: 100dvh; background: var(--color-surface); display: flex; justify-content: center; padding: var(--space-4); }
+  .bk-container { width: 100%; max-width: 520px; }
+
+  .bk-header { text-align: center; padding: var(--space-6) 0 var(--space-4); animation: bkFade 0.4s ease; }
+  .bk-logo { display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .bk-logo-text { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-semibold); letter-spacing: -0.02em; }
+  .bk-logo-text strong { color: var(--color-highlight); }
+  .bk-biz-name { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: -0.03em; margin-bottom: var(--space-1); }
+  .bk-biz-desc { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+  .bk-progress { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: var(--space-6); padding: 0 var(--space-4); }
+  .bk-step-dot { width: 32px; height: 32px; border-radius: var(--radius-full); border: 2px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-text-muted); background: var(--color-surface-raised); transition: all var(--transition-fast); flex-shrink: 0; }
+  .bk-step-dot.active { border-color: var(--color-highlight); background: var(--color-highlight); color: var(--color-text-inverse); }
+  .bk-step-dot.done { border-color: var(--color-success); background: var(--color-success); color: var(--color-text-inverse); }
+  .bk-step-line { flex: 1; height: 2px; background: var(--color-border-light); margin: 0 var(--space-1); }
+
+  .bk-step { display: none; background: var(--color-surface-raised); border: 1px solid var(--color-border-light); border-radius: var(--radius-xl); padding: var(--space-5); box-shadow: var(--shadow-sm); animation: bkSlide 0.3s ease; }
+  .bk-step.active { display: block; }
+  .bk-step-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--weight-bold); margin-bottom: var(--space-2); letter-spacing: -0.02em; }
+  .bk-step-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-5); line-height: var(--leading-relaxed); }
+
+  .bk-id-row { display: flex; gap: var(--space-2); }
+  .bk-id-row input { flex: 1; }
+  .bk-id-row .btn { flex-shrink: 0; }
+
+  .bk-client-result { margin-top: var(--space-4); padding: var(--space-4); background: color-mix(in srgb, var(--color-success) 8%, transparent); border: 1px solid color-mix(in srgb, var(--color-success) 25%, transparent); border-radius: var(--radius-lg); }
+  .bk-client-result .bk-found-name { font-family: var(--font-display); font-weight: var(--weight-bold); font-size: var(--text-lg); margin-bottom: var(--space-1); }
+  .bk-client-result .bk-found-detail { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+  .bk-new-client-label { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-3); padding-top: var(--space-3); border-top: 1px dashed var(--color-border-light); }
+
+  .bk-phone-row { display: flex; gap: var(--space-2); }
+  .bk-pcode { width: 100px; flex-shrink: 0; }
+
+  .bk-nav { display: flex; justify-content: space-between; margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-border-light); }
+
+  .bk-services-grid { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-2); }
+  .bk-svc-card { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); background: var(--color-surface); border: 2px solid var(--color-border-light); border-radius: var(--radius-lg); cursor: pointer; transition: all var(--transition-fast); }
+  .bk-svc-card:hover { border-color: var(--color-text-muted); }
+  .bk-svc-card.selected { border-color: var(--color-highlight); background: color-mix(in srgb, var(--color-highlight) 5%, transparent); }
+  .bk-svc-info h4 { font-family: var(--font-display); font-size: var(--text-base); font-weight: var(--weight-semibold); }
+  .bk-svc-info p { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: 2px; }
+  .bk-svc-price { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); color: var(--color-highlight); white-space: nowrap; }
+
+  .bk-slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--space-2); }
+  .bk-slot { padding: var(--space-2); text-align: center; font-size: var(--text-sm); font-weight: var(--weight-medium); border: 2px solid var(--color-border-light); border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast); background: var(--color-surface); }
+  .bk-slot:hover { border-color: var(--color-text-muted); }
+  .bk-slot.selected { border-color: var(--color-highlight); background: var(--color-highlight); color: var(--color-text-inverse); }
+
+  .bk-success { text-align: center; padding: var(--space-4) 0; }
+  .bk-success-icon { width: 72px; height: 72px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--color-success) 12%, transparent); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); color: var(--color-success); }
+  .bk-success-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
+  .bk-success-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-5); }
+  .bk-summary { text-align: left; padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-lg); margin-bottom: var(--space-5); }
+  .bk-summary-row { display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-light); font-size: var(--text-sm); }
+  .bk-summary-row:last-child { border-bottom: none; }
+  .bk-summary-label { color: var(--color-text-muted); }
+  .bk-summary-value { font-weight: var(--weight-semibold); text-align: right; }
+
+  .bk-footer { text-align: center; padding: var(--space-6) 0 var(--space-4); }
+  .bk-powered { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-muted); text-decoration: none; transition: color var(--transition-fast); }
+  .bk-powered:hover { color: var(--color-highlight); }
+  .bk-powered strong { font-weight: var(--weight-bold); }
+  .bk-powered svg { color: var(--color-highlight); }
+
+  @keyframes bkFade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bkSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 375px) {
+    .bk-container { padding: 0; }
+    .bk-step { padding: var(--space-4); border-radius: var(--radius-lg); }
+    .bk-biz-name { font-size: var(--text-xl); }
+    .bk-slots-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+
+<script>
+var BookingPage = (function() {
+  var slug = '';
+  var businessData = null;
+  var selectedService = null;
+  var selectedSlot = null;
+  var clientData = null;
+  var isNewClient = false;
+  var currentStep = 1;
+
+  function init(s) {
+    slug = s;
+    loadBusiness();
+    setupEvents();
+    var todayStr = new Date().toISOString().substring(0, 10);
+    document.getElementById('bk-date').min = todayStr;
+    document.getElementById('bk-date').value = todayStr;
+  }
+
+  async function loadBusiness() {
+    var res = await fetch('/api/booking/' + slug);
+    var json = await res.json();
+    if (!json.success) {
+      document.getElementById('bk-header').textContent = 'Negocio no encontrado';
+      return;
+    }
+    businessData = json.data;
+    var biz = businessData.business;
+    document.getElementById('bk-biz-name').textContent = biz.name;
+    document.getElementById('bk-biz-desc').textContent = biz.description || 'Agenda tu cita en linea';
+    if (biz.theme) document.documentElement.setAttribute('data-theme', biz.theme);
+    renderServices();
+  }
+
+  function renderServices() {
+    var list = document.getElementById('bk-services-list');
+    list.textContent = '';
+    (businessData.services || []).forEach(function(s) {
+      var card = document.createElement('div');
+      card.className = 'bk-svc-card';
+      card.dataset.id = s.id;
+
+      var info = document.createElement('div');
+      info.className = 'bk-svc-info';
+      var h4 = document.createElement('h4');
+      h4.textContent = s.name;
+      var p = document.createElement('p');
+      p.textContent = (s.duration_minutes || 30) + ' min';
+      if (s.description) p.textContent += ' \u2014 ' + s.description;
+      info.appendChild(h4);
+      info.appendChild(p);
+
+      var price = document.createElement('div');
+      price.className = 'bk-svc-price';
+      price.textContent = '$' + parseFloat(s.price_usd || 0).toFixed(2);
+
+      card.appendChild(info);
+      card.appendChild(price);
+
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.bk-svc-card').forEach(function(c) { c.classList.remove('selected'); });
+        card.classList.add('selected');
+        selectedService = s;
+        document.getElementById('bk-next-2').disabled = false;
+      });
+
+      list.appendChild(card);
+    });
+  }
+
+  function setupEvents() {
+    // Step 1: Search client
+    document.getElementById('bk-search-btn').addEventListener('click', searchClient);
+    document.getElementById('bk-id-number').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') searchClient();
+    });
+
+    // Navigation
+    document.getElementById('bk-next-1').addEventListener('click', function() { goStep(2); });
+    document.getElementById('bk-prev-2').addEventListener('click', function() { goStep(1); });
+    document.getElementById('bk-next-2').addEventListener('click', function() { goStep(3); loadSlots(); });
+    document.getElementById('bk-prev-3').addEventListener('click', function() { goStep(2); });
+    document.getElementById('bk-next-3').addEventListener('click', submitBooking);
+    document.getElementById('bk-new-booking').addEventListener('click', resetBooking);
+
+    // Date change
+    document.getElementById('bk-date').addEventListener('change', loadSlots);
+  }
+
+  async function searchClient() {
+    var idNum = document.getElementById('bk-id-number').value.trim();
+    if (!idNum) return;
+
+    var res = await fetch('/api/booking/' + slug + '/client?id_number=' + encodeURIComponent(idNum));
+    var json = await res.json();
+
+    var resultEl = document.getElementById('bk-client-result');
+    var formEl = document.getElementById('bk-client-form');
+    var nextBtn = document.getElementById('bk-next-1');
+
+    if (json.success && json.found) {
+      clientData = json.data;
+      isNewClient = false;
+      resultEl.classList.remove('hidden');
+      formEl.classList.add('hidden');
+      resultEl.textContent = '';
+
+      var nameEl = document.createElement('div');
+      nameEl.className = 'bk-found-name';
+      nameEl.textContent = clientData.name;
+      var detailEl = document.createElement('div');
+      detailEl.className = 'bk-found-detail';
+      detailEl.textContent = (clientData.phone || '') + (clientData.email ? ' \u2014 ' + clientData.email : '');
+      var check = document.createElement('div');
+      check.style.cssText = 'color:var(--color-success);font-size:var(--text-xs);margin-top:var(--space-1);font-weight:600';
+      check.textContent = '\u2713 Cliente encontrado';
+
+      resultEl.appendChild(nameEl);
+      resultEl.appendChild(detailEl);
+      resultEl.appendChild(check);
+      nextBtn.disabled = false;
+    } else {
+      isNewClient = true;
+      resultEl.classList.add('hidden');
+      formEl.classList.remove('hidden');
+      document.getElementById('bk-name').value = '';
+      document.getElementById('bk-phone').value = '';
+      document.getElementById('bk-email').value = '';
+      nextBtn.disabled = false;
+    }
+  }
+
+  async function loadSlots() {
+    var date = document.getElementById('bk-date').value;
+    if (!date || !selectedService) return;
+
+    var duration = selectedService.duration_minutes || 30;
+    var res = await fetch('/api/appointments/slots?date=' + date + '&duration=' + duration + (businessData.providers.length > 0 ? '&provider_id=' + businessData.providers[0].id : ''));
+    var json = await res.json();
+
+    var container = document.getElementById('bk-slots');
+    container.textContent = '';
+    selectedSlot = null;
+    document.getElementById('bk-next-3').disabled = true;
+
+    if (!json.success || !json.data || json.data.length === 0) {
+      var msg = document.createElement('p');
+      msg.className = 'text-sm text-muted';
+      msg.textContent = 'No hay horarios disponibles para esta fecha';
+      container.appendChild(msg);
+      return;
+    }
+
+    json.data.forEach(function(slot) {
+      var el = document.createElement('div');
+      el.className = 'bk-slot';
+      el.textContent = slot.start_time;
+      el.dataset.start = slot.start_time;
+      el.dataset.end = slot.end_time;
+
+      el.addEventListener('click', function() {
+        document.querySelectorAll('.bk-slot').forEach(function(s) { s.classList.remove('selected'); });
+        el.classList.add('selected');
+        selectedSlot = slot;
+        document.getElementById('bk-next-3').disabled = false;
+      });
+
+      container.appendChild(el);
+    });
+  }
+
+  async function submitBooking() {
+    var btn = document.getElementById('bk-next-3');
+    btn.disabled = true;
+    btn.textContent = 'Agendando...';
+
+    var idNum = document.getElementById('bk-id-number').value.trim();
+    var data = {
+      service_id: selectedService.id,
+      date: document.getElementById('bk-date').value,
+      start_time: selectedSlot.start_time,
+      client_id_number: idNum,
+      client_name: isNewClient ? document.getElementById('bk-name').value.trim() : clientData.name,
+      client_phone: isNewClient ? (document.getElementById('bk-pcode').value + document.getElementById('bk-phone').value.trim()) : clientData.phone,
+      client_email: isNewClient ? document.getElementById('bk-email').value.trim() : (clientData.email || ''),
+    };
+
+    if (businessData.providers.length > 0) {
+      data.provider_id = businessData.providers[0].id;
+    }
+
+    try {
+      var res = await fetch('/api/booking/' + slug + '/appointment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      var json = await res.json();
+
+      if (json.success) {
+        renderSummary(data);
+        goStep(4);
+      } else {
+        if (typeof showToast === 'function') showToast(json.message, 'error');
+        else alert(json.message);
+        btn.disabled = false;
+        btn.textContent = 'Confirmar cita';
+      }
+    } catch (e) {
+      alert('Error de conexion');
+      btn.disabled = false;
+      btn.textContent = 'Confirmar cita';
+    }
+  }
+
+  function renderSummary(data) {
+    var container = document.getElementById('bk-summary');
+    container.textContent = '';
+    var rows = [
+      ['Servicio', selectedService.name],
+      ['Fecha', data.date],
+      ['Hora', data.start_time + ' - ' + selectedSlot.end_time],
+      ['Precio', '$' + parseFloat(selectedService.price_usd || 0).toFixed(2)],
+      ['Cliente', data.client_name],
+    ];
+    rows.forEach(function(r) {
+      var row = document.createElement('div');
+      row.className = 'bk-summary-row';
+      var lbl = document.createElement('span');
+      lbl.className = 'bk-summary-label';
+      lbl.textContent = r[0];
+      var val = document.createElement('span');
+      val.className = 'bk-summary-value';
+      val.textContent = r[1];
+      row.appendChild(lbl);
+      row.appendChild(val);
+      container.appendChild(row);
+    });
+  }
+
+  function goStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.bk-step').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById('bk-step-' + n).classList.add('active');
+    document.querySelectorAll('.bk-step-dot').forEach(function(d) {
+      var s = parseInt(d.dataset.step);
+      d.classList.remove('active', 'done');
+      if (s === n) d.classList.add('active');
+      else if (s < n) d.classList.add('done');
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function resetBooking() {
+    selectedService = null;
+    selectedSlot = null;
+    clientData = null;
+    isNewClient = false;
+    document.getElementById('bk-id-number').value = '';
+    document.getElementById('bk-client-result').classList.add('hidden');
+    document.getElementById('bk-client-form').classList.add('hidden');
+    document.getElementById('bk-next-1').disabled = true;
+    document.getElementById('bk-next-2').disabled = true;
+    document.getElementById('bk-next-3').disabled = true;
+    document.getElementById('bk-next-3').textContent = 'Confirmar cita';
+    document.querySelectorAll('.bk-svc-card').forEach(function(c) { c.classList.remove('selected'); });
+    goStep(1);
+  }
+
+  return { init: init };
+})();
+</script>
