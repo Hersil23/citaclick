@@ -244,6 +244,8 @@ class AuthController
                         'business_name' => $businessName,
                         'slug'          => $slug,
                         'theme'         => $theme,
+                        'plan'          => $planSlug,
+                        'provider_id'   => $providerId,
                     ],
                 ],
             ]);

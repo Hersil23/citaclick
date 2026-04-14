@@ -28,6 +28,60 @@ class BusinessController
         sendJson(200, ['success' => true, 'data' => $business]);
     }
 
+    public function changePlan(array $args): void
+    {
+        $user = $args['user'];
+        $body = $args['body'];
+        $planName = trim($body['plan'] ?? '');
+
+        if (empty($planName)) {
+            sendJson(400, ['success' => false, 'message' => 'Plan requerido']);
+        }
+
+        $db = Database::getInstance();
+
+        $stmt = $db->prepare('SELECT id, name FROM plans WHERE name = :name LIMIT 1');
+        $stmt->execute([':name' => $planName]);
+        $plan = $stmt->fetch();
+
+        if (!$plan) {
+            sendJson(400, ['success' => false, 'message' => 'Plan no valido']);
+        }
+
+        // Deactivate current subscription
+        $stmt = $db->prepare('UPDATE subscriptions SET status = "cancelled" WHERE business_id = :bid AND status = "active"');
+        $stmt->execute([':bid' => $user['business_id']]);
+
+        // Create new subscription with 21 day trial
+        $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
+        $stmt = $db->prepare('
+            INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, created_at)
+            VALUES (:bid, :pid, "active", CURDATE(), NOW(), :ends_at, NOW())
+        ');
+        $stmt->execute([
+            ':bid'     => $user['business_id'],
+            ':pid'     => $plan['id'],
+            ':ends_at' => $trialEnd,
+        ]);
+
+        // Log the change
+        try {
+            $stmt = $db->prepare('
+                INSERT INTO subscription_history (subscription_id, to_plan_id, action, created_at)
+                VALUES (:sid, :pid, "change", NOW())
+            ');
+            $stmt->execute([':sid' => $db->lastInsertId(), ':pid' => $plan['id']]);
+        } catch (\PDOException $e) {
+            // subscription_history may not exist
+        }
+
+        sendJson(200, [
+            'success' => true,
+            'message' => 'Plan actualizado a ' . $planName,
+            'data' => ['plan' => $planName],
+        ]);
+    }
+
     public function update(array $args): void
     {
         $user = $args['user'];

@@ -892,10 +892,17 @@
     }
 
     document.querySelectorAll('.plan-select-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', async function() {
         var plan = this.dataset.plan;
         if (this.classList.contains('current-plan')) return;
-        showToast('Contacta soporte para cambiar a ' + plan, 'info');
+        if (!confirm('Cambiar al plan ' + plan + '?')) return;
+        var res = await Api.put('/business/plan', { plan: plan });
+        if (res.success) {
+          showToast(res.message, 'success');
+          var user = Auth.getUser();
+          if (user) { user.plan = plan; localStorage.setItem('cc_user', JSON.stringify(user)); }
+          loadPlanInfo();
+        }
       });
     });
 
