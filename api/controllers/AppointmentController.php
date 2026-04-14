@@ -176,21 +176,14 @@ class AppointmentController
     {
         $user = $args['user'];
         $id = (int)$args['params']['id'];
-        $body = $args['body'];
 
         $existing = Appointment::findById($id, $user['business_id']);
         if (!$existing) {
             sendJson(404, ['success' => false, 'message' => 'Cita no encontrada']);
         }
 
-        Appointment::updateStatus(
-            $id,
-            'cancelled',
-            $user['role'],
-            $body['reason'] ?? null
-        );
-
-        sendJson(200, ['success' => true, 'message' => 'Cita cancelada']);
+        Appointment::delete($id);
+        sendJson(200, ['success' => true, 'message' => 'Cita eliminada']);
     }
 
     public function availableSlots(array $args): void

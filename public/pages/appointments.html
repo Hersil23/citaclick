@@ -530,12 +530,22 @@
       btnNoShow.addEventListener('click',function(){updateStatus(a.id,'no_show');});
       actions.appendChild(btnNoShow);
     }
+    var btnDelete=document.createElement('button');btnDelete.className='btn btn-danger btn-sm';btnDelete.style.cssText='margin-left:auto';
+    btnDelete.textContent='Eliminar';
+    btnDelete.addEventListener('click',function(){deleteAppointment(a.id);});
+    actions.appendChild(btnDelete);
     openModal('modal-appt-detail');
   }
 
   async function updateStatus(id,status){
     var res=await Api.put('/appointments/'+id,{status:status});
     if(res.success){showToast(res.message,'success');closeModal('modal-appt-detail');loadAppointments();}
+  }
+
+  async function deleteAppointment(id){
+    if(!confirm('Eliminar esta cita permanentemente?'))return;
+    var res=await Api.delete('/appointments/'+id);
+    if(res.success){showToast('Cita eliminada','success');closeModal('modal-appt-detail');loadAppointments();}
   }
 
   async function loadFormData(){

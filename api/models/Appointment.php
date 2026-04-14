@@ -169,6 +169,13 @@ class Appointment
         return $stmt->execute($params);
     }
 
+    public static function delete(int $id): bool
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('DELETE FROM appointments WHERE id = :id');
+        return $stmt->execute([':id' => $id]);
+    }
+
     public static function getAvailableSlots(int $providerId, string $date, int $duration = 30): array
     {
         $db = Database::getInstance();
