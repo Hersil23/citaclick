@@ -2,7 +2,7 @@ const Router = (() => {
   const ROUTES = {
     '/login': { page: 'pages/login.html', auth: false, title: 'Iniciar Sesion' },
     '/register': { page: 'pages/register.html', auth: false, title: 'Registro' },
-    '/dashboard': { page: 'pages/dashboard.html', auth: true, title: 'Dashboard', isLayout: true },
+    '/dashboard': { page: 'pages/dashboard.html', auth: true, title: 'Dashboard' },
     '/appointments': { page: 'pages/appointments.html', auth: true, title: 'Citas' },
     '/clients': { page: 'pages/clients.html', auth: true, title: 'Clientes' },
     '/services': { page: 'pages/services.html', auth: true, title: 'Servicios' },
@@ -16,7 +16,6 @@ const Router = (() => {
 
   let currentPath = null;
   let onRouteChange = null;
-  let layoutLoaded = false;
 
   function init(callback) {
     onRouteChange = callback;
@@ -79,92 +78,7 @@ const Router = (() => {
     }
 
     currentPath = path;
-
-    if (!route.auth) {
-      layoutLoaded = false;
-      loadPage(route);
-    } else {
-      loadAuthPage(route);
-    }
-  }
-
-  async function loadAuthPage(route) {
-    const view = document.getElementById('app-view');
-    if (!view) return;
-
-    // Load dashboard layout shell if not yet loaded
-    if (!layoutLoaded) {
-      try {
-        const layoutRoute = ROUTES['/dashboard'];
-        const response = await fetch(layoutRoute.page);
-        if (!response.ok) throw new Error('Layout not found');
-        const html = await response.text();
-        // Safe: loading own server pages, not user content
-        view.innerHTML = html;
-        runScripts(view);
-        layoutLoaded = true;
-      } catch (err) {
-        load404();
-        return;
-      }
-    }
-
-    // For /dashboard, reload the full dashboard content (HTML + style + script)
-    if (route.isLayout) {
-      var appContent = document.querySelector('.app-content');
-      if (appContent) {
-        try {
-          var resp = await fetch(route.page);
-          var fullHtml = await resp.text();
-          var temp = document.createElement('div');
-          // Safe: own server pages
-          temp.innerHTML = fullHtml;
-
-          // Get inner HTML of app-content + all style/script tags from the page
-          var innerContent = temp.querySelector('.app-content');
-          var styles = temp.querySelectorAll('style');
-          var scripts = temp.querySelectorAll('script');
-
-          var parts = [];
-          if (innerContent) parts.push(innerContent.innerHTML);
-          styles.forEach(function(s) { parts.push(s.outerHTML); });
-          scripts.forEach(function(s) { parts.push(s.outerHTML); });
-
-          // Safe: own server pages
-          appContent.innerHTML = parts.join('\n');
-          runScripts(appContent);
-        } catch (e) {}
-      }
-      window.scrollTo(0, 0);
-      document.title = route.title + ' \u2014 CitaClick';
-      if (onRouteChange) onRouteChange(route);
-      return;
-    }
-
-    // For sub-pages, inject into app-content keeping sidebar intact
-    const appContent = document.querySelector('.app-content');
-    if (!appContent) return;
-
-    try {
-      const response = await fetch(route.page);
-      if (!response.ok) throw new Error('Page not found');
-      const html = await response.text();
-      // Safe: loading own server pages
-      appContent.innerHTML = html;
-      runScripts(appContent);
-      window.scrollTo(0, 0);
-      document.title = route.title + ' \u2014 CitaClick';
-
-      if (typeof i18n !== 'undefined' && i18n.applyTranslations) {
-        i18n.applyTranslations();
-      }
-
-      if (onRouteChange) {
-        onRouteChange(route);
-      }
-    } catch (err) {
-      load404();
-    }
+    loadPage(route);
   }
 
   async function loadPage(route) {
@@ -175,8 +89,7 @@ const Router = (() => {
       const response = await fetch(route.page);
       if (!response.ok) throw new Error('Page not found');
       const html = await response.text();
-      // Safe: loading own server pages
-      view.innerHTML = html;
+      view.innerHTML = html; // trusted source: own server pages
       runScripts(view);
       window.scrollTo(0, 0);
       document.title = route.title + ' \u2014 CitaClick';
@@ -198,14 +111,11 @@ const Router = (() => {
     const view = document.getElementById('app-view');
     if (!view) return;
 
-    layoutLoaded = false;
-
     try {
       const response = await fetch('pages/catalog.html');
       if (!response.ok) throw new Error('Catalog page not found');
       const html = await response.text();
-      // Safe: loading own server pages
-      view.innerHTML = html;
+      view.innerHTML = html; // trusted source: own server pages
       runScripts(view);
       document.title = 'CitaClick';
       window.scrollTo(0, 0);
@@ -223,7 +133,6 @@ const Router = (() => {
     if (!view) return;
 
     view.textContent = '';
-    layoutLoaded = false;
 
     const container = document.createElement('div');
     container.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60dvh;text-align:center;padding:2rem;';
