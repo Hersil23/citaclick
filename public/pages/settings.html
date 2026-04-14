@@ -908,14 +908,14 @@
 
     // --- CURRENCY TAB ---
     function loadCurrency(b) {
-      if (b.currency_code) document.getElementById('setting-currency').value = b.currency_code;
-      if (b.currency_mode) document.getElementById('setting-price-mode').value = b.currency_mode;
+      if (b.currency) document.getElementById('setting-currency').value = b.currency;
+      if (b.price_mode) document.getElementById('setting-price-mode').value = b.price_mode;
     }
 
     document.getElementById('btn-save-currency').addEventListener('click', async function() {
       var data = {
-        currency_code: document.getElementById('setting-currency').value,
-        currency_mode: document.getElementById('setting-price-mode').value,
+        currency: document.getElementById('setting-currency').value,
+        price_mode: document.getElementById('setting-price-mode').value,
       };
       var res = await Api.put('/business/profile', data);
       if (res.success) showToast('Moneda guardada', 'success');

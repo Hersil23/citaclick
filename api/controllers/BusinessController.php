@@ -91,9 +91,9 @@ class BusinessController
         $fields = [];
         $params = [':bid' => $user['business_id']];
 
-        $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
+        $allowed = ['name', 'description', 'logo', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency_code', 'currency_mode', 'exchange_rate', 'city', 'country'];
+                     'currency', 'price_mode', 'exchange_rate'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $body)) {

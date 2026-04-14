@@ -935,7 +935,7 @@
       var res = await Api.get('/business/profile');
       if (!res.success || !res.data) return;
       var b = res.data;
-      var currency = b.currency || b.currency_code;
+      var currency = b.currency;
       if (!currency || currency === 'USD') return;
 
       var bar = document.getElementById('dash-rate-bar');
