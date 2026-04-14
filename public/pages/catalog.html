@@ -68,7 +68,7 @@
     </div>
     <div class="booking-step" data-bstep="3">
       <h3 class="booking-step-title" data-i18n="catalog.select_datetime">Fecha y hora</h3>
-      <div class="form-group"><label class="form-label" data-i18n="appointments.date">Fecha</label><input class="form-input" type="date" id="book-date" required></div>
+      <div class="form-group"><label class="form-label" data-i18n="appointments.date">Fecha</label><input class="form-input" type="date" id="book-date" required min=""></div>
       <div class="form-group"><label class="form-label" data-i18n="appointments.select_time">Hora</label><select class="form-input" id="book-time"><option value="">Cargando...</option></select></div>
       <div class="booking-nav"><button class="btn btn-secondary book-prev" data-i18n="auth.previous">Anterior</button><button class="btn btn-primary" id="book-next-3" data-i18n="auth.next">Siguiente</button></div>
     </div>
@@ -196,7 +196,7 @@ var CatalogPage=(function(){
       btn.addEventListener('click',function(){selectedProvider=p.id;list.querySelectorAll('.btn').forEach(function(b){b.classList.remove('btn-primary');b.classList.add('btn-secondary');});btn.classList.remove('btn-secondary');btn.classList.add('btn-primary');});
       list.appendChild(btn);
     });}
-    document.getElementById('book-date').value=new Date().toISOString().substring(0,10);
+    var todayStr=new Date().toISOString().substring(0,10);document.getElementById('book-date').value=todayStr;document.getElementById('book-date').min=todayStr;
   }
 
   function startBooking(svc){selectedService=svc;bookingStep=1;selectedProvider=null;document.getElementById('book-name').value='';document.getElementById('book-phone').value='';document.getElementById('book-email').value='';goStep(1);document.getElementById('booking-overlay').classList.add('open');}

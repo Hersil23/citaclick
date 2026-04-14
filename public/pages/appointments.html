@@ -71,7 +71,7 @@
         <div class="flex gap-4">
           <div class="form-group" style="flex:1;">
             <label class="form-label" data-i18n="appointments.date">Fecha</label>
-            <input class="form-input" type="date" id="appt-date" required>
+            <input class="form-input" type="date" id="appt-date" required min="">
           </div>
           <div class="form-group" style="flex:1;">
             <label class="form-label" data-i18n="appointments.select_time">Hora</label>
@@ -143,7 +143,9 @@
   var monthEnd=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(new Date(today.getFullYear(),today.getMonth()+1,0).getDate()).padStart(2,'0');
   document.getElementById('appt-date-from').value=monthStart;
   document.getElementById('appt-date-to').value=monthEnd;
-  document.getElementById('appt-date').value=today.toISOString().substring(0,10);
+  var todayStr=today.toISOString().substring(0,10);
+  document.getElementById('appt-date').value=todayStr;
+  document.getElementById('appt-date').min=todayStr;
 
   async function loadAppointments(){
     var q='?date_from='+document.getElementById('appt-date-from').value+'&date_to='+document.getElementById('appt-date-to').value;

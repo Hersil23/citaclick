@@ -58,6 +58,10 @@ class AppointmentController
             }
         }
 
+        if ($body['date'] < date('Y-m-d')) {
+            sendJson(400, ['success' => false, 'message' => 'No se pueden agendar citas en fechas pasadas']);
+        }
+
         $providerId = $body['provider_id'] ?? $this->getProviderId($user['user_id']);
         if (!$providerId) {
             sendJson(400, ['success' => false, 'message' => 'Prestador no encontrado']);
