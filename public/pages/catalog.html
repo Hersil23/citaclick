@@ -105,8 +105,10 @@ var CatalogPage=(function(){
       msg.appendChild(h);msg.appendChild(p);page.appendChild(msg);return;
     }
     businessData=res.data;var biz=businessData.business;
+    window._canBook=!!businessData.can_book;
     if(biz.theme)document.documentElement.setAttribute('data-theme',biz.theme);
-    renderHeader(biz);renderServices(businessData.categories);renderQR(biz.slug);renderFooter();setupBooking(businessData.providers);
+    renderHeader(biz);renderServices(businessData.categories);renderQR(biz.slug);renderFooter();
+    if(window._canBook)setupBooking(businessData.providers);
   }
 
   function renderHeader(biz){
@@ -154,9 +156,15 @@ var CatalogPage=(function(){
         var dur=document.createElement('span');dur.className='catalog-svc-duration';dur.textContent=(svc.duration_minutes||svc.duration||0)+' min';
         var price=document.createElement('span');price.className='catalog-svc-price';price.textContent=formatCurrency(svc.price_usd||svc.price||0);
         meta.appendChild(dur);meta.appendChild(price);
-        var btn=document.createElement('button');btn.className='btn btn-primary';btn.textContent=i18n.t('catalog.book_now');
-        btn.addEventListener('click',function(){startBooking(svc);});
-        cb.appendChild(sn);cb.appendChild(meta);cb.appendChild(btn);card.appendChild(cb);grid.appendChild(card);
+        if(window._canBook){
+          var btn=document.createElement('button');btn.className='btn btn-primary';btn.textContent=i18n.t('catalog.book_now');
+          btn.addEventListener('click',function(){startBooking(svc);});
+          cb.appendChild(sn);cb.appendChild(meta);cb.appendChild(btn);
+        }else{
+          if(svc.description){var desc=document.createElement('p');desc.className='catalog-svc-desc';desc.textContent=svc.description;cb.appendChild(sn);cb.appendChild(desc);cb.appendChild(meta);}
+          else{cb.appendChild(sn);cb.appendChild(meta);}
+        }
+        card.appendChild(cb);grid.appendChild(card);
       });
       catSection.appendChild(grid);body.appendChild(catSection);
     });

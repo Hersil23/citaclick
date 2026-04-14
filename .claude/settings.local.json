@@ -7,7 +7,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(curl -s 'https://citaclick.net/api/appointments?debug_schema=1' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxNiwiYnVzaW5lc3NfaWQiOjE2LCJyb2xlIjoib3duZXIiLCJlbWFpbCI6ImRlYnVndGVzdDJAdGVzdC5jb20iLCJpYXQiOjE3NzYxMTc0MjMsImV4cCI6MTc3NjIwMzgyM30.4puwQaDX4xW-83DEuxwc4hwv01Ml8UNjkkYsQRxmxKQ')"
+      "Bash(curl -s 'https://citaclick.net/api/appointments?debug_schema=1' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxNiwiYnVzaW5lc3NfaWQiOjE2LCJyb2xlIjoib3duZXIiLCJlbWFpbCI6ImRlYnVndGVzdDJAdGVzdC5jb20iLCJpYXQiOjE3NzYxMTc0MjMsImV4cCI6MTc3NjIwMzgyM30.4puwQaDX4xW-83DEuxwc4hwv01Ml8UNjkkYsQRxmxKQ')",
+      "Bash(curl -s \"https://citaclick.net/api/catalog/debugtest2\")"
     ]
   }
 }

@@ -27,28 +27,29 @@ class CatalogController
             sendJson(404, ['success' => false, 'message' => 'Negocio no encontrado']);
         }
 
-        if (empty($business['has_catalog'])) {
-            sendJson(403, ['success' => false, 'message' => 'Catalogo no disponible en este plan']);
-        }
+        $hasCatalog = !empty($business['has_catalog']);
 
         $stmt = $db->prepare('
             SELECT s.*, sc.name AS category_name
             FROM services s
             LEFT JOIN service_categories sc ON sc.id = s.category_id
-            WHERE s.business_id = :bid AND s.status = "active"
+            WHERE s.business_id = :bid AND s.is_active = 1
             ORDER BY sc.name ASC, s.name ASC
         ');
         $stmt->execute([':bid' => $business['id']]);
         $services = $stmt->fetchAll();
 
-        $stmt = $db->prepare('
-            SELECT id, name, bio, avatar_url
-            FROM providers
-            WHERE business_id = :bid AND is_active = 1
-            ORDER BY name
-        ');
-        $stmt->execute([':bid' => $business['id']]);
-        $providers = $stmt->fetchAll();
+        $providers = [];
+        if ($hasCatalog) {
+            $stmt = $db->prepare('
+                SELECT id, name, bio, avatar_url
+                FROM providers
+                WHERE business_id = :bid AND is_active = 1
+                ORDER BY name
+            ');
+            $stmt->execute([':bid' => $business['id']]);
+            $providers = $stmt->fetchAll();
+        }
 
         $categories = [];
         foreach ($services as $svc) {
@@ -75,9 +76,10 @@ class CatalogController
                     'whatsapp'    => $business['whatsapp'] ?? '',
                     'google_maps' => $business['google_maps_url'] ?? '',
                 ],
-                'services'   => $services,
-                'categories' => $categories,
-                'providers'  => $providers,
+                'services'    => $services,
+                'categories'  => $categories,
+                'providers'   => $providers,
+                'can_book'    => $hasCatalog,
             ],
         ]);
     }

@@ -6,10 +6,16 @@
     </a>
     <h2 class="cl-title" data-i18n="nav.services">Servicios</h2>
   </div>
-  <button class="btn btn-primary" onclick="openModal('modal-service')">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    <span data-i18n="services.new">Nuevo servicio</span>
-  </button>
+  <div class="flex gap-2">
+    <button class="btn btn-secondary btn-sm" id="btn-share-catalog" title="Compartir catalogo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span>Compartir</span>
+    </button>
+    <button class="btn btn-primary" onclick="openModal('modal-service')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span data-i18n="services.new">Nuevo servicio</span>
+    </button>
+  </div>
 </div>
 
 <!-- Services Grid -->
@@ -369,6 +375,33 @@
         editingId = null;
         document.getElementById('service-form').reset();
         loadServices();
+      }
+    });
+
+    // Share catalog button
+    document.getElementById('btn-share-catalog').addEventListener('click', async function() {
+      var user = Auth.getUser();
+      if (!user || !user.slug) {
+        showToast('No se encontro el enlace del negocio', 'error');
+        return;
+      }
+      var url = window.location.origin + '/negocio/' + user.slug;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: user.business_name || 'Mi negocio', text: 'Mira mis servicios y agenda tu cita', url: url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          showToast('Enlace copiado: ' + url, 'success');
+        }
+      } catch (e) {
+        // Fallback: select and copy
+        var input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showToast('Enlace copiado: ' + url, 'success');
       }
     });
 
