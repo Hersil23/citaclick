@@ -247,12 +247,28 @@ var BookingPage = (function() {
     document.getElementById('bk-biz-name').textContent = biz.name;
     document.getElementById('bk-biz-desc').textContent = biz.description || 'Agenda tu cita en linea';
     if (biz.theme) document.documentElement.setAttribute('data-theme', biz.theme);
+
+    // Currency symbols
+    var currSymbols = {VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',UYU:'$',PYG:'Gs.',BOB:'Bs.',DOP:'RD$',CRC:'₡',PAB:'B/.',GTQ:'Q',HNL:'L',NIO:'C$',CUP:'$',EUR:'€',GBP:'£',CAD:'CA$',USD:'$'};
+    businessData._currSymbol = currSymbols[biz.currency_code] || biz.currency_code || '$';
+    businessData._rate = parseFloat(biz.exchange_rate) || 1;
+    businessData._mode = biz.currency_mode || 'usd';
     var backLink = document.getElementById('bk-back-link');
     if (backLink && slug) {
       backLink.href = '/negocio/' + slug;
       backLink.style.display = '';
     }
     renderServices();
+  }
+
+  function fmtPrice(usd) {
+    var p = parseFloat(usd || 0);
+    var mode = businessData._mode;
+    var rate = businessData._rate;
+    var sym = businessData._currSymbol;
+    if (mode === 'local' && rate > 0) return sym + ' ' + (p * rate).toFixed(2);
+    if (mode === 'both' && rate > 0) return '$' + p.toFixed(2) + ' / ' + sym + ' ' + (p * rate).toFixed(2);
+    return '$' + p.toFixed(2);
   }
 
   function renderServices() {
@@ -275,7 +291,7 @@ var BookingPage = (function() {
 
       var price = document.createElement('div');
       price.className = 'bk-svc-price';
-      price.textContent = '$' + parseFloat(s.price_usd || 0).toFixed(2);
+      price.textContent = fmtPrice(s.price_usd);
 
       card.appendChild(info);
       card.appendChild(price);
@@ -450,7 +466,7 @@ var BookingPage = (function() {
       ['Servicio', selectedService.name],
       ['Fecha', data.date],
       ['Hora', data.start_time + ' - ' + selectedSlot.end_time],
-      ['Precio', '$' + parseFloat(selectedService.price_usd || 0).toFixed(2)],
+      ['Precio', fmtPrice(selectedService.price_usd)],
       ['Cliente', data.client_name],
     ];
     rows.forEach(function(r) {

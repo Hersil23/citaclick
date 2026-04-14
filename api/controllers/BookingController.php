@@ -13,7 +13,8 @@ class BookingController
         $db = Database::getInstance();
 
         $stmt = $db->prepare('
-            SELECT b.id, b.name, b.slug, b.theme, b.description, b.logo_url, b.phone, b.whatsapp
+            SELECT b.id, b.name, b.slug, b.theme, b.description, b.logo_url, b.phone, b.whatsapp,
+                   b.currency_code, b.currency_mode, b.exchange_rate
             FROM businesses b
             WHERE b.slug = :slug AND b.is_active = 1
             LIMIT 1
