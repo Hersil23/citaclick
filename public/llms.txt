@@ -1,0 +1,58 @@
+# CitaClick
+
+> Sistema de gestion de citas online para barberias, salones de belleza, psicologos, consultorios y profesionales independientes.
+
+## Que es CitaClick?
+
+CitaClick es una plataforma web (PWA) que permite a negocios de servicios gestionar sus citas de manera profesional. Los clientes pueden agendar citas en linea a traves de un link compartible, sin necesidad de llamar o escribir.
+
+## Funcionalidades principales
+
+- **Calendario de citas**: Vista mensual, semanal y diaria con gestion completa de citas
+- **Link de agendamiento**: URL unica que el negocio comparte para que clientes reserven online
+- **Gestion de clientes**: Base de datos de clientes con historial de citas
+- **Gestion de servicios**: Catalogo de servicios con precios y duracion
+- **Recordatorios automaticos**: Notificaciones por email y WhatsApp 24h y 1h antes de la cita
+- **Catalogo publico**: Pagina publica del negocio con servicios y fotos (plan Premium)
+- **Codigo QR**: QR descargable para imprimir en el negocio (plan Premium)
+- **Google Maps**: Ubicacion del negocio integrada (plan Premium)
+- **Multi-prestador**: Multiples profesionales con agendas independientes (plan Salon VIP)
+- **Roles de usuario**: Admin, Asistente y Prestador con permisos diferenciados
+- **Tasa de cambio**: Precios en USD y moneda local configurable
+- **Modo claro/oscuro**: Dos temas visuales (Caballeros y Damas)
+- **PWA**: Instalable en celular como app nativa
+
+## Planes y precios
+
+### Standard - $7/mes
+Para profesionales independientes. Incluye 1 prestador, calendario, gestion de citas y clientes, link de agendamiento, lista de servicios, tasa de cambio, recordatorios por email.
+
+### Premium - $13/mes
+Para negocios en crecimiento. Todo lo de Standard mas 1 asistente, catalogo visual con fotos, codigo QR, Google Maps, notificaciones WhatsApp, reportes basicos.
+
+### Salon VIP - $25/mes
+Para equipos completos. Todo lo de Premium mas 5 prestadores incluidos (+$5 por extra), agenda y link por prestador, dashboard individual, roles de usuario, reportes avanzados.
+
+Todos los planes incluyen 21 dias de prueba gratis.
+
+## Publico objetivo
+
+- Barberos y estilistas independientes
+- Salones de belleza y peluquerias
+- Manicuristas y esteticistas
+- Psicologos y terapeutas
+- Abogados y consultores
+- Centros de bienestar
+- Cualquier profesional que trabaje con citas
+
+## Tecnologia
+
+- Frontend: HTML/CSS/JS vanilla (SPA), PWA
+- Backend: PHP con MySQL
+- Notificaciones: Email (SMTP) + WhatsApp (Wamundo API)
+- Hosting: cPanel compatible
+
+## Contacto
+
+- Web: https://citaclick.net
+- Desarrollado por: @herasi.dev (https://www.herasi.dev)

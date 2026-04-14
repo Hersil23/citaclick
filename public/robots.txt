@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Allow: /negocio/
+Allow: /agendar/
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /appointments
+Disallow: /clients
+Disallow: /services
+Disallow: /providers
+Disallow: /settings
+Disallow: /reports
+Disallow: /admin
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://citaclick.net/sitemap.xml

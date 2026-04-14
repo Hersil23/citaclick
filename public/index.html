@@ -3,16 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="CitaClick — Gestion de citas profesional para barberias, salones, psicologos y mas. Agenda en un clic.">
+<title>CitaClick — Sistema de Citas Online para Barberias, Salones y Profesionales</title>
+<meta name="description" content="CitaClick es el software de gestion de citas online para barberias, salones de belleza, psicologos, consultorios y profesionales independientes. Agenda, calendario, recordatorios WhatsApp, catalogo publico y mas. Prueba gratis 21 dias.">
+<meta name="keywords" content="sistema de citas, agenda online, citas barberia, citas salon de belleza, software de agendamiento, reservar citas, gestion de citas, calendario de citas, citaclick, agendar citas online, recordatorio whatsapp citas">
+<meta name="author" content="CitaClick">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://citaclick.net/">
 <meta name="theme-color" content="#1A1A2E">
-<title>CitaClick — Gestion de citas profesional</title>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://citaclick.net/">
+<meta property="og:title" content="CitaClick — Sistema de Citas Online para tu Negocio">
+<meta property="og:description" content="Gestiona las citas de tu barberia, salon o consultorio. Calendario, recordatorios WhatsApp, catalogo publico, link de agendamiento. 21 dias gratis.">
+<meta property="og:image" content="https://citaclick.net/assets/icons/og-image.svg">
+<meta property="og:site_name" content="CitaClick">
+<meta property="og:locale" content="es_ES">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CitaClick — Sistema de Citas Online">
+<meta name="twitter:description" content="Agenda, gestiona y organiza las citas de tu negocio. Prueba gratis 21 dias.">
+<meta name="twitter:image" content="https://citaclick.net/assets/icons/og-image.svg">
+
+<!-- Structured Data: SoftwareApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "CitaClick",
+  "url": "https://citaclick.net",
+  "description": "Sistema de gestion de citas online para barberias, salones de belleza, psicologos, consultorios y profesionales independientes. Incluye calendario, recordatorios por WhatsApp y email, catalogo publico, link de agendamiento compartible y codigo QR.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, Android, iOS",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Standard",
+      "price": "7.00",
+      "priceCurrency": "USD",
+      "description": "1 prestador, calendario, gestion de citas y clientes, link de agendamiento, recordatorios por email",
+      "eligibleRegion": "Worldwide"
+    },
+    {
+      "@type": "Offer",
+      "name": "Premium",
+      "price": "13.00",
+      "priceCurrency": "USD",
+      "description": "Todo Standard mas catalogo con fotos, codigo QR, Google Maps, notificaciones WhatsApp, reportes"
+    },
+    {
+      "@type": "Offer",
+      "name": "Salon VIP",
+      "price": "25.00",
+      "priceCurrency": "USD",
+      "description": "Todo Premium mas 5 prestadores, dashboard individual por prestador, roles de usuario, reportes avanzados"
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "50"
+  },
+  "creator": {
+    "@type": "Organization",
+    "name": "CitaClick",
+    "url": "https://citaclick.net"
+  }
+}
+</script>
+
+<!-- Structured Data: FAQPage (helps AI search engines) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Que es CitaClick?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CitaClick es un sistema de gestion de citas online para barberias, salones de belleza, psicologos, consultorios y profesionales independientes. Permite agendar citas, gestionar clientes, enviar recordatorios por WhatsApp y email, y compartir un link de agendamiento para que los clientes reserven en linea."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cuanto cuesta CitaClick?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CitaClick tiene 3 planes: Standard a $7/mes para profesionales independientes, Premium a $13/mes con catalogo, QR y WhatsApp, y Salon VIP a $25/mes para equipos con multiples prestadores. Todos incluyen 21 dias de prueba gratis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como funciona el agendamiento online de CitaClick?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El negocio comparte un link unico de agendamiento con sus clientes. Los clientes abren el link, eligen un servicio, seleccionan fecha y hora disponible, y confirman la cita. El sistema envia confirmacion automatica por email y WhatsApp (plan Premium)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "CitaClick envia recordatorios de citas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Si. CitaClick envia recordatorios automaticos por email (todos los planes) y por WhatsApp (plan Premium y Salon VIP) 24 horas y 1 hora antes de cada cita."
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="icon" type="image/svg+xml" href="/assets/icons/icon-32.svg">
 <link rel="apple-touch-icon" href="/assets/icons/icon-180.svg">
 <link rel="manifest" href="/manifest.json">
-<meta property="og:title" content="CitaClick — Gestion de citas profesional">
-<meta property="og:description" content="Agenda, gestiona y organiza las citas de tu negocio.">
-<meta property="og:image" content="/assets/icons/og-image.svg">
-<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
