@@ -2,7 +2,7 @@
   <div class="login-visual desktop-only">
     <div class="login-visual-inner">
       <div class="login-visual-logo">
-        <svg viewBox="0 0 38 38" width="44" height="44" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="#1A1A2E" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 38 38" width="44" height="44" fill="none" style="color:var(--color-highlight)"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><line x1="11" y1="0" x2="11" y2="5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="27" y1="0" x2="27" y2="5.5" stroke="#1A1A2E" stroke-width="2.2" stroke-linecap="round"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="lv-wordmark"><span>cita</span><b>click</b></span>
       </div>
       <h2 class="lv-title" data-lt="visual_title">Tu agenda te espera</h2>
@@ -14,7 +14,7 @@
   <div class="login-form-side">
     <div class="login-topbar">
       <div class="lm-logo mobile-only">
-        <svg viewBox="0 0 38 38" width="26" height="26" fill="none"><rect x="1" y="1" width="36" height="36" rx="6" stroke="#E8000D" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="#E8000D"/><rect x="1" y="8" width="36" height="5" fill="#E8000D"/><polyline points="11,25 16,30 27,20" fill="none" stroke="#E8000D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 38 38" width="26" height="26" fill="none" style="color:var(--color-highlight)"><rect x="1" y="1" width="36" height="36" rx="6" stroke="currentColor" stroke-width="1.8"/><rect x="1" y="1" width="36" height="12" rx="6" fill="currentColor"/><rect x="1" y="8" width="36" height="5" fill="currentColor"/><polyline points="11,25 16,30 27,20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span class="lm-wordmark"><span>cita</span><b>click</b></span>
       </div>
       <div class="lpill-wrap">
@@ -73,10 +73,10 @@
 .login-visual-inner{position:relative;z-index:1;text-align:center;padding:2rem;width:100%;max-width:420px}
 .login-visual-logo{display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.5rem}
 .lv-wordmark{font-family:system-ui,sans-serif;font-size:1.5rem;letter-spacing:-.5px;color:#F0F0F8}
-.lv-wordmark b{font-weight:700;color:#E8000D}
+.lv-wordmark b{font-weight:700;color:var(--color-highlight)}
 .lv-wordmark span{font-weight:500}
 .lv-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:600;font-style:italic;color:#fff;margin:0;max-width:320px;line-height:1.2;letter-spacing:-.02em;text-shadow:0 2px 20px rgba(0,0,0,.4)}
-.lv-accent{display:block;width:48px;height:2px;background:#E8000D;border-radius:2px;margin:1rem auto 1.5rem}
+.lv-accent{display:block;width:48px;height:2px;background:var(--color-highlight);border-radius:2px;margin:1rem auto 1.5rem}
 
 /* === GOOGLE CALENDAR STYLE === */
 .gcal{background:#fff;border-radius:10px;overflow:hidden;width:100%;box-shadow:0 2px 12px rgba(0,0,0,.15);color:#333}
@@ -91,7 +91,7 @@
 .gcal-day{padding:4px 2px 6px;text-align:center;min-height:52px;border-top:1px solid #F0F0F0;cursor:default;position:relative}
 .gcal-day:hover{background:#F8F8FA}
 .gcal-dn{font-size:.8rem;font-weight:400;color:#666;margin-bottom:3px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%}
-.gcal-day.today .gcal-dn{background:#E8000D;color:#fff;font-weight:700}
+.gcal-day.today .gcal-dn{background:var(--color-highlight);color:#fff;font-weight:700}
 .gcal-day.other .gcal-dn{color:#CCC}
 .gcal-ev{display:block;margin:1px 2px;padding:2px 6px;border-radius:4px;font-size:.6875rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;line-height:1.4}
 
@@ -100,7 +100,7 @@
 .login-topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;flex-shrink:0}
 .lm-logo{display:flex;align-items:center;gap:.4rem}
 .lm-wordmark{font-family:system-ui,sans-serif;font-size:1rem;letter-spacing:-.5px;color:#1A1A2E}
-.lm-wordmark b{font-weight:700;color:#E8000D}
+.lm-wordmark b{font-weight:700;color:var(--color-highlight)}
 .lm-wordmark span{font-weight:500}
 .lpill-wrap{margin-left:auto}
 .lpill{display:flex;background:#E8E8F0;border-radius:999px;padding:3px;gap:2px}
@@ -115,7 +115,7 @@
 .lf-group{margin-bottom:.75rem}
 .lf-label{display:block;font-size:.75rem;font-weight:600;color:#4A4A68;margin-bottom:.3rem}
 .lf-input-wrap{display:flex;align-items:center;background:#fff;border:1.5px solid #D8D8E4;border-radius:10px;transition:border-color .2s,box-shadow .2s;overflow:hidden}
-.lf-input-wrap:focus-within{border-color:#E8000D;box-shadow:0 0 0 3px rgba(232,0,13,.08)}
+.lf-input-wrap:focus-within{border-color:var(--color-highlight);box-shadow:0 0 0 3px color-mix(in srgb, var(--color-highlight) 8%, transparent)}
 .lf-icon{width:18px;height:18px;margin-left:12px;color:#8888A0;flex-shrink:0}
 .lf-input{flex:1;border:none;background:none;padding:9px 12px;font-size:.875rem;color:#1A1A2E;outline:none}
 .lf-input::placeholder{color:#B0B0CC}
@@ -124,12 +124,12 @@
 .lf-eye svg{width:18px;height:18px}
 .lf-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;font-size:.8125rem}
 .lf-check{display:flex;align-items:center;gap:.4rem;color:#4A4A68;cursor:pointer}
-.lf-check input{accent-color:#E8000D;width:16px;height:16px}
-.lf-forgot{color:#E8000D;font-weight:500;font-size:.8125rem;transition:opacity .15s}
+.lf-check input{accent-color:var(--color-highlight);width:16px;height:16px}
+.lf-forgot{color:var(--color-highlight);font-weight:500;font-size:.8125rem;transition:opacity .15s}
 .lf-forgot:hover{opacity:.7}
 .lf-error{font-size:.75rem;color:#EF4444;min-height:.75rem}
-.lf-btn-primary{width:100%;padding:10px;background:#E8000D;color:#fff;font-weight:600;font-size:.9375rem;border-radius:10px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
-.lf-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,0,13,.3)}
+.lf-btn-primary{width:100%;padding:10px;background:var(--color-highlight);color:#fff;font-weight:600;font-size:.9375rem;border-radius:10px;border:none;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.lf-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px color-mix(in srgb, var(--color-highlight) 30%, transparent)}
 .lf-btn-primary:active{transform:translateY(0)}
 .lf-btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
 .lf-divider{display:flex;align-items:center;gap:.75rem;margin:.75rem 0;color:#B0B0CC;font-size:.75rem}
@@ -139,7 +139,7 @@
 .lf-btn-google{background:#fff;border:1.5px solid #D8D8E4;color:#333}
 .lf-btn-wa{background:#25D366;color:#fff}
 .lf-switch{text-align:center;font-size:.8125rem;color:#8888A0;margin-top:.75rem}
-.lf-switch a{color:#E8000D;font-weight:600}
+.lf-switch a{color:var(--color-highlight);font-weight:600}
 
 @media(min-width:768px){
   .login-page{flex-direction:row}
