@@ -201,11 +201,6 @@ class Appointment
         $isToday = ($date === date('Y-m-d'));
         $nowTime = $isToday ? date('H:i') : '00:00';
 
-        // Temporary debug - remove later
-        if (!empty($_GET['debug_slots'])) {
-            return ['_debug' => true, '_blocks' => $blocks, '_booked' => $booked, '_date' => $date, '_dow' => $dayOfWeek, '_isToday' => $isToday, '_now' => $nowTime, '_duration' => $duration];
-        }
-
         $slots = [];
         foreach ($blocks as $block) {
             $slotDuration = $duration ?: (int)$block['slot_minutes'] ?: 30;
