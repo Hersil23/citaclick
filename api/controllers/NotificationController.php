@@ -4,6 +4,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/wamundo.php';
 require_once __DIR__ . '/../config/mail.php';
 require_once __DIR__ . '/../models/Appointment.php';
+require_once __DIR__ . '/../middleware/plan.php';
 
 class NotificationController
 {
@@ -109,6 +110,12 @@ class NotificationController
 
     private static function sendWhatsApp(?string $phone, string $template, array $vars, int $businessId, int $appointmentId, string $type): void
     {
+        // WhatsApp only for Premium and Salon VIP
+        $plan = getBusinessPlan($businessId);
+        if (!$plan || $plan === 'Standard') {
+            return;
+        }
+
         if (empty($phone)) {
             self::logNotification($businessId, $appointmentId, 'whatsapp', $type, 'failed', 'No phone number');
             return;

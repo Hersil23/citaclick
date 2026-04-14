@@ -10,16 +10,22 @@ CREATE TABLE IF NOT EXISTS `plans` (
   `has_assistant` TINYINT(1) NOT NULL DEFAULT 0,
   `has_dollar_api` TINYINT(1) NOT NULL DEFAULT 0,
   `has_google_maps` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_whatsapp` TINYINT(1) NOT NULL DEFAULT 0,
+  `has_reports` TINYINT(1) NOT NULL DEFAULT 0,
+  `extra_provider_price` DECIMAL(8,2) NOT NULL DEFAULT 0,
   `price_monthly` DECIMAL(8,2) NOT NULL DEFAULT 0,
   `trial_days` INT NOT NULL DEFAULT 21,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `plans` (`name`, `max_providers`, `has_catalog`, `has_qr`, `has_assistant`, `has_dollar_api`, `has_google_maps`, `price_monthly`, `trial_days`) VALUES
-  ('Standard',  1, 0, 0, 0, 0, 0,  7.00, 21),
-  ('Premium',   2, 1, 1, 1, 1, 1, 13.00, 21),
-  ('Salon VIP', 5, 1, 1, 1, 1, 1, 25.00, 21)
+-- Standard: 1 prestador, link agendamiento, lista servicios, tasa cambio, email, sin reportes
+-- Premium: +1 asistente, catalogo con fotos, QR, Google Maps, WhatsApp, reportes
+-- Salon VIP: 5 prestadores (+$5 c/u extra), roles, reportes avanzados, todo Premium
+INSERT INTO `plans` (`name`, `max_providers`, `has_catalog`, `has_qr`, `has_assistant`, `has_dollar_api`, `has_google_maps`, `has_whatsapp`, `has_reports`, `extra_provider_price`, `price_monthly`, `trial_days`) VALUES
+  ('Standard',  1, 0, 0, 0, 1, 0, 0, 0, 0.00,  7.00, 21),
+  ('Premium',   2, 1, 1, 1, 1, 1, 1, 1, 0.00, 13.00, 21),
+  ('Salon VIP', 5, 1, 1, 1, 1, 1, 1, 1, 5.00, 25.00, 21)
 ON DUPLICATE KEY UPDATE `name`=VALUES(`name`);
 
 CREATE TABLE IF NOT EXISTS `businesses` (

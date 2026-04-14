@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Appointment.php';
 require_once __DIR__ . '/../middleware/rate_limit.php';
+require_once __DIR__ . '/NotificationController.php';
 
 class BookingController
 {
@@ -252,6 +253,12 @@ class BookingController
             'end_time'    => $endTime,
             'price'       => $service['price_usd'],
         ]);
+
+        try {
+            NotificationController::sendConfirmation($appointmentId, $bid);
+        } catch (\Exception $e) {
+            // notification failure should not block booking
+        }
 
         sendJson(201, [
             'success' => true,

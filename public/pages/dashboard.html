@@ -27,7 +27,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
           <span data-i18n="nav.providers">Prestadores</span>
         </a>
-        <a href="/reports" data-link class="sidebar-link">
+        <a href="/reports" data-link class="sidebar-link sidebar-link-reports" style="display:none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
           <span data-i18n="nav.reports">Reportes</span>
         </a>
@@ -768,6 +768,11 @@
       if (user.role === 'owner' || user.role === 'admin') {
         const provLink = document.querySelector('.sidebar-link-providers');
         if (provLink) provLink.style.display = '';
+      }
+
+      if (user.plan && user.plan !== 'Standard') {
+        var reportLink = document.querySelector('.sidebar-link-reports');
+        if (reportLink) reportLink.style.display = '';
       }
     }
 

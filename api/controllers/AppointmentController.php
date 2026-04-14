@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/Appointment.php';
+require_once __DIR__ . '/NotificationController.php';
 
 class AppointmentController
 {
@@ -108,6 +109,12 @@ class AppointmentController
 
         $appointment = Appointment::findById($id, $user['business_id']);
 
+        try {
+            NotificationController::sendConfirmation($id, $user['business_id']);
+        } catch (\Exception $e) {
+            // notification failure should not block appointment creation
+        }
+
         sendJson(201, [
             'success' => true,
             'message' => 'Cita creada exitosamente',
@@ -152,6 +159,7 @@ class AppointmentController
                     $user['role'],
                     $body['cancel_reason'] ?? null
                 );
+                try { NotificationController::sendCancellation($id, $user['business_id']); } catch (\Exception $e) {}
             } else {
                 Appointment::updateStatus($id, $body['status']);
             }
@@ -166,6 +174,9 @@ class AppointmentController
 
         if (!empty($updateFields)) {
             Appointment::update($id, $updateFields);
+            if (isset($updateFields['date']) || isset($updateFields['start_time'])) {
+                try { NotificationController::sendReschedule($id, $user['business_id']); } catch (\Exception $e) {}
+            }
         }
 
         $updated = Appointment::findById($id, $user['business_id']);

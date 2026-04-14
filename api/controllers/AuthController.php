@@ -32,7 +32,10 @@ class AuthController
         $db = Database::getInstance();
         $stmt = $db->prepare('
             SELECT u.*, b.id AS business_id, b.name AS business_name,
-                   b.slug, b.theme
+                   b.slug, b.theme,
+                   (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
+                    WHERE s.business_id = b.id AND s.status = "active"
+                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.email = :email
@@ -81,6 +84,7 @@ class AuthController
                     'business_name' => $user['business_name'],
                     'slug'          => $user['slug'],
                     'theme'         => $user['theme'],
+                    'plan'          => $user['plan_name'] ?? 'Standard',
                 ],
             ],
         ]);
@@ -347,7 +351,10 @@ class AuthController
         $stmt->execute([':phone' => $phone]);
 
         $stmt = $db->prepare('
-            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme
+            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme,
+                   (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
+                    WHERE s.business_id = b.id AND s.status = "active"
+                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.phone = :phone
@@ -384,6 +391,7 @@ class AuthController
                     'business_name' => $user['business_name'],
                     'slug'          => $user['slug'],
                     'theme'         => $user['theme'],
+                    'plan'          => $user['plan_name'] ?? 'Standard',
                 ],
             ],
         ]);
