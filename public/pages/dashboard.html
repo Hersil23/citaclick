@@ -155,19 +155,15 @@
       <div class="dash-rate-bar" id="dash-rate-bar" style="display:none">
         <div class="dash-rate-left">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <span class="dash-rate-label">1 USD =</span>
-          <input type="number" class="dash-rate-input" id="dash-rate-value" step="0.01" min="0">
-          <span class="dash-rate-currency" id="dash-rate-currency">VES</span>
-        </div>
-        <div class="dash-rate-right">
-          <select class="dash-rate-ref" id="dash-rate-ref">
-            <option value="manual">Manual</option>
-            <option value="bcv">BCV</option>
-            <option value="usdt">USDT</option>
-          </select>
+          <span class="dash-rate-label">Tasa:</span>
+          <input type="number" class="dash-rate-input" id="dash-rate-value" step="0.01" min="0" placeholder="0.00">
+          <span class="dash-rate-currency" id="dash-rate-currency">Bs/$</span>
           <button class="btn btn-ghost btn-sm" id="btn-save-rate" title="Guardar tasa">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </button>
+        </div>
+        <div class="dash-rate-right">
+          <span class="dash-rate-preview" id="dash-rate-preview">$1 = Bs. 0</span>
         </div>
       </div>
 
@@ -423,18 +419,14 @@
   .dash-rate-right {
     display: flex;
     align-items: center;
-    gap: var(--space-1);
     flex-shrink: 0;
   }
 
-  .dash-rate-ref {
-    padding: 4px 6px;
+  .dash-rate-preview {
     font-size: var(--text-xs);
-    font-weight: var(--weight-semibold);
-    background: var(--color-surface-sunken);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-sm);
-    color: var(--color-text);
+    font-weight: var(--weight-bold);
+    color: var(--color-highlight);
+    white-space: nowrap;
   }
 
   /* --- CALENDAR (compact on mobile) --- */
@@ -931,24 +923,43 @@
     }
 
     // Exchange rate widget
+    var currSymbols = {VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',UYU:'$',BOB:'Bs.',DOP:'RD$',EUR:'€',GBP:'£'};
+    var bizCurrency = '';
+
     async function loadExchangeRate() {
       var res = await Api.get('/business/profile');
       if (!res.success || !res.data) return;
       var b = res.data;
-      var currency = b.currency;
-      if (!currency || currency === 'USD') return;
+      bizCurrency = b.currency_code;
+      if (!bizCurrency || bizCurrency === 'USD') return;
 
+      var sym = currSymbols[bizCurrency] || bizCurrency;
       var bar = document.getElementById('dash-rate-bar');
       bar.style.display = '';
-      document.getElementById('dash-rate-currency').textContent = currency;
-      document.getElementById('dash-rate-value').value = parseFloat(b.exchange_rate || 1).toFixed(2);
+      document.getElementById('dash-rate-currency').textContent = sym + '/$';
+      var rate = parseFloat(b.exchange_rate || 0);
+      document.getElementById('dash-rate-value').value = rate > 1 ? rate.toFixed(2) : '';
+      updateRatePreview();
     }
+
+    function updateRatePreview() {
+      var rate = parseFloat(document.getElementById('dash-rate-value').value) || 0;
+      var sym = currSymbols[bizCurrency] || bizCurrency;
+      var preview = document.getElementById('dash-rate-preview');
+      if (rate > 0) {
+        preview.textContent = '$1 = ' + sym + ' ' + rate.toFixed(2);
+      } else {
+        preview.textContent = 'Sin tasa';
+      }
+    }
+
+    document.getElementById('dash-rate-value').addEventListener('input', updateRatePreview);
 
     document.getElementById('btn-save-rate').addEventListener('click', async function() {
       var rate = parseFloat(document.getElementById('dash-rate-value').value);
-      if (!rate || rate <= 0) { showToast('Tasa invalida', 'error'); return; }
+      if (!rate || rate <= 0) { showToast('Ingresa una tasa valida', 'error'); return; }
       var res = await Api.put('/business/profile', { exchange_rate: rate });
-      if (res.success) showToast('Tasa actualizada', 'success');
+      if (res.success) showToast('Tasa actualizada: $1 = ' + (currSymbols[bizCurrency]||bizCurrency) + ' ' + rate.toFixed(2), 'success');
     });
 
     loadExchangeRate();
