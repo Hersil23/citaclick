@@ -1331,50 +1331,43 @@
   position: fixed;
   bottom: calc(var(--footer-height) + var(--space-4));
   right: var(--space-4);
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: var(--z-sticky);
   cursor: pointer;
   transition: all var(--transition-fast);
-  background: linear-gradient(
-    135deg,
-    var(--color-highlight),
-    color-mix(in srgb, var(--color-highlight) 80%, #000)
-  );
+  background-color: var(--color-highlight);
   color: var(--color-text-inverse);
-  box-shadow:
-    0 4px 14px color-mix(in srgb, var(--color-highlight) 40%, transparent),
-    0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .fab:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow:
-    0 8px 24px color-mix(in srgb, var(--color-highlight) 45%, transparent),
-    0 4px 8px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .fab:active {
-  transform: translateY(0) scale(0.97);
+  transform: translateY(0) scale(0.95);
 }
 
 .fab svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .fab-lg {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-xl);
 }
 
 .fab-lg svg {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 639px) {
