@@ -34,9 +34,9 @@ class Business
         $db = Database::getInstance();
         $fields = [];
         $params = [':id' => $id];
-        $allowed = ['name', 'description', 'logo', 'address', 'phone', 'theme',
+        $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency', 'price_mode', 'exchange_rate', 'status', 'business_type'];
+                     'currency_code', 'currency_mode', 'exchange_rate', 'status', 'business_type'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {

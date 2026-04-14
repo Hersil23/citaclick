@@ -17,6 +17,11 @@ class BusinessController
             sendJson(404, ['success' => false, 'message' => 'Negocio no encontrado']);
         }
 
+        // Normalize column names for frontend
+        if (isset($business['currency_code'])) $business['currency'] = $business['currency_code'];
+        if (isset($business['currency_mode'])) $business['price_mode'] = $business['currency_mode'];
+        if (isset($business['logo_url'])) $business['logo'] = $business['logo_url'];
+
         // Plan info (separate query to avoid JOIN failures)
         $business['plan_name'] = null;
         $business['end_date'] = null;
@@ -104,9 +109,22 @@ class BusinessController
         $fields = [];
         $params = [':bid' => $user['business_id']];
 
-        $allowed = ['name', 'description', 'logo', 'address', 'phone', 'theme',
+        // Map frontend keys to actual DB column names
+        $columnMap = [
+            'currency' => 'currency_code',
+            'price_mode' => 'currency_mode',
+        ];
+        // Remap body keys
+        foreach ($columnMap as $from => $to) {
+            if (array_key_exists($from, $body)) {
+                $body[$to] = $body[$from];
+                unset($body[$from]);
+            }
+        }
+
+        $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
                      'instagram', 'facebook', 'whatsapp', 'google_maps_url',
-                     'currency', 'price_mode', 'exchange_rate'];
+                     'currency_code', 'currency_mode', 'exchange_rate'];
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $body)) {
