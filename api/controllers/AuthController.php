@@ -31,12 +31,7 @@ class AuthController
 
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            SELECT u.*, b.id AS business_id, b.name AS business_name,
-                   b.slug, b.theme,
-                   (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
-                    WHERE s.business_id = b.id AND s.status IN ("active", "trial")
-                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name,
-                   (SELECT pr.id FROM providers pr WHERE pr.user_id = u.id LIMIT 1) AS provider_id
+            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.email = :email
@@ -44,6 +39,23 @@ class AuthController
         ');
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
+
+        // Get plan and provider separately
+        if ($user) {
+            try {
+                $ps = $db->prepare('SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id WHERE s.business_id = :bid AND s.status IN ("active","trial") ORDER BY s.created_at DESC LIMIT 1');
+                $ps->execute([':bid' => $user['business_id']]);
+                $pr = $ps->fetch();
+                $user['plan_name'] = $pr ? $pr['name'] : null;
+            } catch (\PDOException $e) { $user['plan_name'] = null; }
+
+            try {
+                $pp = $db->prepare('SELECT id FROM providers WHERE user_id = :uid LIMIT 1');
+                $pp->execute([':uid' => $user['id']]);
+                $prov = $pp->fetch();
+                $user['provider_id'] = $prov ? (int)$prov['id'] : null;
+            } catch (\PDOException $e) { $user['provider_id'] = null; }
+        }
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
             recordAttempt($email . '|' . $ip, 'login');
@@ -356,10 +368,7 @@ class AuthController
         $stmt->execute([':phone' => $phone]);
 
         $stmt = $db->prepare('
-            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme,
-                   (SELECT p.name FROM subscriptions s JOIN plans p ON p.id = s.plan_id
-                    WHERE s.business_id = b.id AND s.status IN ("active", "trial")
-                    ORDER BY s.created_at DESC LIMIT 1) AS plan_name
+            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.phone = :phone

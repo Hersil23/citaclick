@@ -113,15 +113,6 @@ $routes = [
     'POST /admin/businesses/{id}/activate' => ['AdminController', 'activate', true, 'superadmin'],
 ];
 
-// TEMP: reset password
-if ($method === 'GET' && $uri === '/reset-pass-temp') {
-    $hash = password_hash('Miranda01@', PASSWORD_BCRYPT, ['cost' => 12]);
-    $db = Database::getInstance();
-    $db->prepare('UPDATE users SET password_hash = ? WHERE email = ?')->execute([$hash, 'chefherasi@gmail.com']);
-    $db->prepare('UPDATE users SET password_hash = ? WHERE email = ?')->execute([password_hash('Miranda01@', PASSWORD_BCRYPT, ['cost' => 12]), 'herasidesweb@gmail.com']);
-    sendJson(200, ['success' => true, 'message' => 'Done']);
-}
-
 $matched = false;
 
 foreach ($routes as $route => $config) {
