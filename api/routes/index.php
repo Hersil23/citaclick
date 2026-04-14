@@ -100,6 +100,8 @@ $routes = [
     'GET /booking/{slug}/slots'        => ['BookingController', 'getSlots', false],
     'POST /booking/{slug}/appointment' => ['BookingController', 'createAppointment', false],
 
+    'GET /rates/dollar'         => ['RateController', 'dollar', true],
+
     'GET /reports'              => ['ReportController', 'index', true],
 
     'GET /notifications'        => ['NotificationController', 'index', true],

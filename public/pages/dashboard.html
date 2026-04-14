@@ -951,20 +951,15 @@
       document.getElementById('dash-rate-bar').style.display = '';
       document.getElementById('dash-rate-currency').textContent = sym;
 
-      // Fetch live rates from dolarapi
+      // Fetch live rates via our proxy (avoids CSP block)
       if (bizCurrency === 'VES') {
         try {
-          var apiRes = await fetch('https://ve.dolarapi.com/v1/dolares');
-          var data = await apiRes.json();
-          console.log('dolarapi response:', data);
-          data.forEach(function(d) {
-            if (d.fuente === 'oficial') apiRates.bcv = d.promedio || 0;
-            if (d.fuente === 'paralelo') apiRates.paralelo = d.promedio || 0;
-          });
-          console.log('Rates loaded - BCV:', apiRates.bcv, 'Paralelo:', apiRates.paralelo);
-        } catch(e) {
-          console.error('dolarapi error:', e);
-        }
+          var rateRes = await Api.get('/rates/dollar');
+          if (rateRes.success && rateRes.data) {
+            apiRates.bcv = rateRes.data.bcv || 0;
+            apiRates.paralelo = rateRes.data.paralelo || 0;
+          }
+        } catch(e) {}
       }
 
       // Always start fresh from API
