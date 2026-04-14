@@ -9,5 +9,4 @@ RewriteRule ^ - [L]
 # Apache serves index.html automatically for /
 
 # SPA app routes → app.html
-RewriteRule ^(login|register|dashboard|appointments|clients|services|providers|settings|reports|admin|negocio/.*)$ app.html [L]
-RewriteRule ^agendar/(.+)$ app.html [L]
+RewriteRule ^(login|register|dashboard|appointments|clients|services|providers|settings|reports|admin|negocio/.*|agendar/.*)$ app.html [L]
