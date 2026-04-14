@@ -170,13 +170,29 @@ const Calendar = (() => {
 
       if (dayAppts.length > 3) {
         const more = el('div', 'cal-event');
-        more.style.cssText = 'color:var(--color-text-muted);background:transparent;font-size:0.625rem;';
+        more.style.cssText = 'color:var(--color-text-muted);background:transparent;font-size:0.625rem;cursor:pointer;';
         more.textContent = '+' + (dayAppts.length - 3) + ' mas';
+        more.addEventListener('click', (e) => {
+          e.stopPropagation();
+          currentDate = new Date(date);
+          currentView = 'day';
+          document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'day'));
+          loadAppointments();
+        });
         cell.appendChild(more);
       }
 
       cell.addEventListener('click', () => {
-        if (callbacks.onSlotClick) callbacks.onSlotClick(dateStr);
+        if (dayAppts.length > 0) {
+          // Has appointments: switch to day view
+          currentDate = new Date(date);
+          currentView = 'day';
+          document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'day'));
+          loadAppointments();
+        } else {
+          // Empty day: create new appointment
+          if (callbacks.onSlotClick) callbacks.onSlotClick(dateStr);
+        }
       });
 
       grid.appendChild(cell);
