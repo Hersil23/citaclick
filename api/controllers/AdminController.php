@@ -17,8 +17,8 @@ class AdminController
         $stmt = $db->prepare("
             SELECT COUNT(DISTINCT s.business_id) as cnt
             FROM subscriptions s
-            WHERE s.status = 'active' AND s.ends_at >= NOW()
-              AND s.starts_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            WHERE s.status = 'active' AND (s.end_date IS NULL OR s.end_date >= CURDATE())
+              AND s.start_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
         ");
         $stmt->execute();
         $trialBusinesses = (int)$stmt->fetch()['cnt'];
@@ -29,7 +29,7 @@ class AdminController
             SELECT COALESCE(SUM(p.price_monthly), 0) as revenue
             FROM subscriptions s
             JOIN plans p ON p.id = s.plan_id
-            WHERE s.status = 'active' AND s.start_date <= :end AND (s.ends_at IS NULL OR s.ends_at >= NOW())
+            WHERE s.status = 'active' AND s.start_date <= :end AND (s.end_date IS NULL OR s.end_date >= CURDATE())
         ");
         $stmt->execute([':end' => $monthEnd]);
         $monthlyRevenue = (float)$stmt->fetch()['revenue'];
@@ -73,7 +73,7 @@ class AdminController
 
         $stmt = $db->prepare("
             SELECT b.*, p.name AS plan_name, p.price_monthly,
-                   s.status AS sub_status, s.ends_at
+                   s.status AS sub_status, s.end_date
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = 'active'
             LEFT JOIN plans p ON p.id = s.plan_id

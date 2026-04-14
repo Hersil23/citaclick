@@ -11,7 +11,7 @@ class BusinessController
 
         $stmt = $db->prepare('
             SELECT b.*, p.name AS plan_name, p.price_monthly, p.max_providers,
-                   s.status AS sub_status, s.start_date, s.ends_at
+                   s.status AS sub_status, s.start_date, s.end_date
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -55,13 +55,13 @@ class BusinessController
         // Create new subscription with 21 day trial
         $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
         $stmt = $db->prepare('
-            INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, created_at)
-            VALUES (:bid, :pid, "active", CURDATE(), NOW(), :ends_at, NOW())
+            INSERT INTO subscriptions (business_id, plan_id, status, start_date, end_date, created_at)
+            VALUES (:bid, :pid, "active", CURDATE(), :end_date, NOW())
         ');
         $stmt->execute([
-            ':bid'     => $user['business_id'],
-            ':pid'     => $plan['id'],
-            ':ends_at' => $trialEnd,
+            ':bid'      => $user['business_id'],
+            ':pid'      => $plan['id'],
+            ':end_date' => date('Y-m-d', strtotime('+21 days')),
         ]);
 
         // Log the change
