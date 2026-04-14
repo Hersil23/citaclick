@@ -9,20 +9,33 @@ class BusinessController
         $user = $args['user'];
         $db = Database::getInstance();
 
-        $stmt = $db->prepare('
-            SELECT b.*, p.name AS plan_name, p.price_monthly, p.max_providers,
-                   s.status AS sub_status, s.start_date, s.end_date
-            FROM businesses b
-            LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status = "active"
-            LEFT JOIN plans p ON p.id = s.plan_id
-            WHERE b.id = :bid
-            LIMIT 1
-        ');
+        $stmt = $db->prepare('SELECT * FROM businesses WHERE id = :bid LIMIT 1');
         $stmt->execute([':bid' => $user['business_id']]);
         $business = $stmt->fetch();
 
         if (!$business) {
             sendJson(404, ['success' => false, 'message' => 'Negocio no encontrado']);
+        }
+
+        // Plan info (separate query to avoid JOIN failures)
+        $business['plan_name'] = null;
+        $business['end_date'] = null;
+        try {
+            $stmt = $db->prepare('
+                SELECT p.name AS plan_name, s.end_date, s.start_date
+                FROM subscriptions s
+                JOIN plans p ON p.id = s.plan_id
+                WHERE s.business_id = :bid AND s.status = "active"
+                ORDER BY s.created_at DESC LIMIT 1
+            ');
+            $stmt->execute([':bid' => $user['business_id']]);
+            $sub = $stmt->fetch();
+            if ($sub) {
+                $business['plan_name'] = $sub['plan_name'];
+                $business['end_date'] = $sub['end_date'];
+            }
+        } catch (\PDOException $e) {
+            // subscriptions or plans table may have different schema
         }
 
         sendJson(200, ['success' => true, 'data' => $business]);
@@ -97,7 +110,7 @@ class BusinessController
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $body)) {
-                $fields[] = "{$f} = :{$f}";
+                $fields[] = "`{$f}` = :{$f}";
                 $params[":{$f}"] = $body[$f];
             }
         }
@@ -107,8 +120,12 @@ class BusinessController
         }
         $fieldStr = implode(', ', $fields);
 
-        $stmt = $db->prepare("UPDATE businesses SET {$fieldStr} WHERE id = :bid");
-        $stmt->execute($params);
+        try {
+            $stmt = $db->prepare("UPDATE businesses SET {$fieldStr} WHERE id = :bid");
+            $stmt->execute($params);
+        } catch (\PDOException $e) {
+            sendJson(500, ['success' => false, 'message' => 'Error al actualizar', 'debug' => $e->getMessage()]);
+        }
 
         $this->show($args);
     }
