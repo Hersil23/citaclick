@@ -113,10 +113,11 @@ $routes = [
 
 // TEMP: debug schema
 if ($method === 'GET' && $uri === '/debug-schema') {
-    $tables = $db->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+    $dbc = Database::getInstance();
+    $tables = $dbc->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
     $result = [];
     foreach ($tables as $t) {
-        $cols = $db->query("SHOW COLUMNS FROM `{$t}`")->fetchAll(PDO::FETCH_ASSOC);
+        $cols = $dbc->query("SHOW COLUMNS FROM `{$t}`")->fetchAll(PDO::FETCH_ASSOC);
         $result[$t] = array_map(function($c) { return $c['Field'] . ' (' . $c['Type'] . ')'; }, $cols);
     }
     sendJson(200, ['success' => true, 'data' => $result]);
