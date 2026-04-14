@@ -48,6 +48,18 @@
   .booking-success{text-align:center;padding:var(--space-6) 0}
   .booking-success h3{font-family:var(--font-display);font-size:var(--text-xl);margin-bottom:var(--space-2)}
   .booking-success p{color:var(--color-text-muted);font-size:var(--text-sm);margin-bottom:var(--space-5)}
+  .catalog-footer{padding:var(--space-8) clamp(1rem,4vw,3rem) var(--space-6);display:flex;flex-direction:column;align-items:center;gap:var(--space-4);border-top:1px solid var(--color-border-light)}
+  .catalog-powered{display:flex;align-items:center;gap:var(--space-3);text-decoration:none;color:var(--color-text);transition:all var(--transition-fast);padding:var(--space-3) var(--space-5);border-radius:var(--radius-lg);background:var(--color-surface-raised);border:1px solid var(--color-border-light);box-shadow:var(--shadow-xs)}
+  .catalog-powered:hover{box-shadow:var(--shadow-md);border-color:var(--color-highlight);transform:translateY(-1px)}
+  .catalog-powered svg{color:var(--color-highlight);flex-shrink:0}
+  .catalog-powered-text{display:flex;flex-direction:column;line-height:1.2}
+  .catalog-powered-label{font-size:0.625rem;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:var(--weight-medium)}
+  .catalog-powered-brand{font-family:var(--font-display);font-size:var(--text-base);font-weight:var(--weight-semibold);letter-spacing:-0.02em}
+  .catalog-powered-brand strong{color:var(--color-highlight);font-weight:var(--weight-bold)}
+  .catalog-dev{font-size:var(--text-xs);color:var(--color-text-muted)}
+  .catalog-dev a{color:var(--color-text-muted);transition:color var(--transition-fast)}
+  .catalog-dev a:hover{color:var(--color-highlight)}
+  .catalog-svc-desc{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-2);line-height:var(--leading-relaxed)}
   @media(min-width:640px){.booking-overlay{align-items:center;padding:var(--space-4)}.booking-panel{border-radius:var(--radius-xl);transform:scale(.95) translateY(16px)}.booking-overlay.open .booking-panel{transform:scale(1) translateY(0)}}
 </style>
 
@@ -184,8 +196,44 @@ var CatalogPage=(function(){
 
   function renderFooter(){
     var page=document.getElementById('catalog-page');
-    var f=document.createElement('footer');f.className='site-footer';f.textContent='Desarrollado por ';
-    var a=document.createElement('a');a.href='https://www.herasi.dev';a.target='_blank';a.rel='noopener noreferrer';a.textContent='@herasi.dev';f.appendChild(a);page.appendChild(f);
+    var f=document.createElement('footer');f.className='catalog-footer';
+
+    // Powered by CitaClick
+    var powered=document.createElement('a');
+    powered.href='https://citaclick.net';
+    powered.target='_blank';
+    powered.rel='noopener noreferrer';
+    powered.className='catalog-powered';
+
+    var ns='http://www.w3.org/2000/svg';
+    var svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 38 38');svg.setAttribute('width','22');svg.setAttribute('height','22');svg.setAttribute('fill','none');
+    var r1=document.createElementNS(ns,'rect');r1.setAttribute('x','1');r1.setAttribute('y','1');r1.setAttribute('width','36');r1.setAttribute('height','36');r1.setAttribute('rx','6');r1.setAttribute('stroke','currentColor');r1.setAttribute('stroke-width','1.8');
+    var r2=document.createElementNS(ns,'rect');r2.setAttribute('x','1');r2.setAttribute('y','1');r2.setAttribute('width','36');r2.setAttribute('height','12');r2.setAttribute('rx','6');r2.setAttribute('fill','currentColor');
+    var r3=document.createElementNS(ns,'rect');r3.setAttribute('x','1');r3.setAttribute('y','8');r3.setAttribute('width','36');r3.setAttribute('height','5');r3.setAttribute('fill','currentColor');
+    var pl=document.createElementNS(ns,'polyline');pl.setAttribute('points','11,25 16,30 27,20');pl.setAttribute('fill','none');pl.setAttribute('stroke','currentColor');pl.setAttribute('stroke-width','2.2');pl.setAttribute('stroke-linecap','round');pl.setAttribute('stroke-linejoin','round');
+    svg.appendChild(r1);svg.appendChild(r2);svg.appendChild(r3);svg.appendChild(pl);
+
+    var txt=document.createElement('span');
+    txt.className='catalog-powered-text';
+    var small=document.createElement('span');small.className='catalog-powered-label';small.textContent='Powered by';
+    var brand=document.createElement('span');brand.className='catalog-powered-brand';
+    var b1=document.createTextNode('cita');
+    var b2=document.createElement('strong');b2.textContent='click';
+    brand.appendChild(b1);brand.appendChild(b2);
+    txt.appendChild(small);txt.appendChild(brand);
+
+    powered.appendChild(svg);
+    powered.appendChild(txt);
+    f.appendChild(powered);
+
+    // Developer credit
+    var dev=document.createElement('div');dev.className='catalog-dev';
+    dev.textContent='Desarrollado por ';
+    var devLink=document.createElement('a');devLink.href='https://www.herasi.dev';devLink.target='_blank';devLink.rel='noopener noreferrer';devLink.textContent='@herasi.dev';
+    dev.appendChild(devLink);
+    f.appendChild(dev);
+
+    page.appendChild(f);
   }
 
   function setupBooking(providers){
