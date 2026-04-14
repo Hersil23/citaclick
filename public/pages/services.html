@@ -385,7 +385,10 @@
         showToast('No se encontro el enlace del negocio', 'error');
         return;
       }
-      var url = window.location.origin + '/negocio/' + user.slug;
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      var ref = '';
+      for (var i = 0; i < 6; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
+      var url = window.location.origin + '/agendar/' + user.slug + '?ref=' + ref;
       try {
         if (navigator.share) {
           await navigator.share({ title: user.business_name || 'Mi negocio', text: 'Mira mis servicios y agenda tu cita', url: url });

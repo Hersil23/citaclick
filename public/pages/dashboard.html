@@ -622,17 +622,25 @@
       }
     }
 
-    // Share booking link
+    // Share booking link with unique ref code
+    function generateRef() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      var ref = '';
+      for (var i = 0; i < 6; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
+      return ref;
+    }
+
     var shareBtn = document.getElementById('btn-share-booking');
     if (shareBtn && user) {
       shareBtn.addEventListener('click', async function() {
-        var url = window.location.origin + '/agendar/' + (user.slug || '');
+        var ref = generateRef();
+        var url = window.location.origin + '/agendar/' + (user.slug || '') + '?ref=' + ref;
         try {
           if (navigator.share) {
-            await navigator.share({ title: user.business_name || 'Agenda tu cita', text: 'Agenda tu cita en linea', url: url });
+            await navigator.share({ title: (user.business_name || 'Agenda tu cita'), text: 'Agenda tu cita en linea', url: url });
           } else {
             await navigator.clipboard.writeText(url);
-            showToast('Link copiado: ' + url, 'success');
+            showToast('Link copiado', 'success');
           }
         } catch (e) {
           var input = document.createElement('input');
@@ -641,7 +649,7 @@
           input.select();
           document.execCommand('copy');
           document.body.removeChild(input);
-          showToast('Link copiado: ' + url, 'success');
+          showToast('Link copiado', 'success');
         }
       });
     }
