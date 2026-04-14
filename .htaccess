@@ -1,11 +1,13 @@
+Options -MultiViews
 RewriteEngine On
+RewriteBase /
 
 # Route API requests
 RewriteCond %{REQUEST_URI} ^/api/ [NC]
 RewriteRule ^api/(.*)$ api/routes/index.php [QSA,L]
 
 # SPA routes that need app.html directly
-RewriteRule ^agendar/(.*)$ public/app.html [L]
+RewriteRule ^agendar(/.*)?$ public/app.html [L]
 
 # Redirect all other requests to public/ except api/
 RewriteCond %{REQUEST_URI} !^/api/ [NC]

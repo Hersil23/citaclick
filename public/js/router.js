@@ -47,7 +47,7 @@ const Router = (() => {
       return;
     }
 
-    if (path.startsWith('/agendar/')) {
+    if (path === '/agendar' || path.startsWith('/agendar/')) {
       loadBookingPage(path);
       return;
     }
@@ -112,7 +112,7 @@ const Router = (() => {
   }
 
   async function loadBookingPage(path) {
-    const slug = path.replace('/agendar/', '').replace(/\/$/, '');
+    const slug = path.replace(/^\/agendar\/?/, '').replace(/\/$/, '');
     const view = document.getElementById('app-view');
     if (!view) return;
 
