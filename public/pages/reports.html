@@ -1,39 +1,127 @@
-<div class="page-header">
-  <div class="flex items-center gap-3">
-    <a href="/dashboard" data-link class="btn btn-ghost btn-sm" style="padding:var(--space-2)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
-    <h2 class="page-title" data-i18n="reports.title">Reportes</h2>
+<!-- Header -->
+<div class="rp-header">
+  <div class="rp-header-left">
+    <a href="/dashboard" data-link class="cl-back" aria-label="Volver">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <h2 class="rp-title" data-i18n="reports.title">Reportes</h2>
   </div>
-  <div class="flex gap-2">
+  <div class="rp-export-btns">
     <button class="btn btn-secondary btn-sm" id="btn-export-excel" data-i18n="reports.export_excel">Exportar Excel</button>
     <button class="btn btn-secondary btn-sm" id="btn-export-pdf" data-i18n="reports.export_pdf">Exportar PDF</button>
   </div>
 </div>
 
-<div class="flex gap-3 mb-6" style="flex-wrap:wrap;">
-  <div class="form-group" style="margin-bottom:0;">
-    <label class="form-label text-xs">Desde</label>
-    <input class="form-input" type="date" id="report-from" style="max-width:180px;">
+<!-- Filters -->
+<div class="rp-filters">
+  <div class="rp-filter-group">
+    <label class="rp-filter-label">Desde</label>
+    <input class="form-input" type="date" id="report-from">
   </div>
-  <div class="form-group" style="margin-bottom:0;">
-    <label class="form-label text-xs">Hasta</label>
-    <input class="form-input" type="date" id="report-to" style="max-width:180px;">
+  <div class="rp-filter-group">
+    <label class="rp-filter-label">Hasta</label>
+    <input class="form-input" type="date" id="report-to">
   </div>
-  <button class="btn btn-primary btn-sm" id="btn-load-report" style="align-self:flex-end;" data-i18n="common.search">Buscar</button>
+  <button class="btn btn-primary btn-sm rp-filter-btn" id="btn-load-report" data-i18n="common.search">Buscar</button>
 </div>
 
-<div class="dashboard-metrics" id="report-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--space-6);">
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-total">0</span><span class="metric-label" data-i18n="reports.total_appointments">Total citas</span></div></div>
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-completed">0</span><span class="metric-label" data-i18n="reports.completed">Completadas</span></div></div>
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-cancelled">0</span><span class="metric-label" data-i18n="reports.cancelled">Canceladas</span></div></div>
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-rate">0%</span><span class="metric-label" data-i18n="reports.attendance_rate">Tasa asistencia</span></div></div>
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-revenue">$0</span><span class="metric-label" data-i18n="reports.total_revenue">Ingresos</span></div></div>
-  <div class="metric-card"><div class="metric-data"><span class="metric-value" id="rep-avg">$0</span><span class="metric-label" data-i18n="reports.avg_ticket">Ticket promedio</span></div></div>
+<!-- Metrics -->
+<div class="rp-metrics" id="report-metrics">
+  <div class="rp-metric"><span class="rp-metric-value" id="rep-total">0</span><span class="rp-metric-label" data-i18n="reports.total_appointments">Total citas</span></div>
+  <div class="rp-metric"><span class="rp-metric-value" id="rep-completed">0</span><span class="rp-metric-label" data-i18n="reports.completed">Completadas</span></div>
+  <div class="rp-metric"><span class="rp-metric-value" id="rep-cancelled">0</span><span class="rp-metric-label" data-i18n="reports.cancelled">Canceladas</span></div>
+  <div class="rp-metric"><span class="rp-metric-value rp-accent" id="rep-rate">0%</span><span class="rp-metric-label" data-i18n="reports.attendance_rate">Tasa asistencia</span></div>
+  <div class="rp-metric"><span class="rp-metric-value rp-accent" id="rep-revenue">$0</span><span class="rp-metric-label" data-i18n="reports.total_revenue">Ingresos</span></div>
+  <div class="rp-metric"><span class="rp-metric-value" id="rep-avg">$0</span><span class="rp-metric-label" data-i18n="reports.avg_ticket">Ticket promedio</span></div>
 </div>
 
-<div class="grid-2 gap-4 mb-6">
-  <div class="card"><h4 class="card-title mb-4" data-i18n="reports.by_day">Por dia</h4><canvas id="chart-daily" height="250"></canvas></div>
-  <div class="card"><h4 class="card-title mb-4" data-i18n="reports.by_status">Por estado</h4><canvas id="chart-status" height="250"></canvas></div>
+<!-- Charts -->
+<div class="rp-charts">
+  <div class="rp-chart-card">
+    <h4 class="rp-chart-title" data-i18n="reports.by_day">Por dia</h4>
+    <canvas id="chart-daily" height="250"></canvas>
+  </div>
+  <div class="rp-chart-card">
+    <h4 class="rp-chart-title" data-i18n="reports.by_status">Por estado</h4>
+    <canvas id="chart-status" height="250"></canvas>
+  </div>
 </div>
+
+<style>
+  .rp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--space-5); gap: var(--space-3); flex-wrap: wrap;
+    animation: rpFade 0.4s ease;
+  }
+  .rp-header-left { display: flex; align-items: center; gap: var(--space-3); }
+  .rp-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold); letter-spacing: -0.03em; }
+  .rp-export-btns { display: flex; gap: var(--space-2); }
+
+  .cl-back {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    color: var(--color-text-muted); transition: all var(--transition-fast);
+  }
+  .cl-back:hover { background: var(--color-surface-sunken); color: var(--color-text); transform: translateX(-2px); }
+
+  .rp-filters {
+    display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: flex-end;
+    padding: var(--space-4); margin-bottom: var(--space-5);
+    background: var(--color-surface-raised); border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl); box-shadow: var(--shadow-xs);
+    animation: rpFade 0.4s ease 0.05s both;
+  }
+  .rp-filter-group { display: flex; flex-direction: column; gap: var(--space-1); flex: 1; min-width: 140px; }
+  .rp-filter-label { font-size: 0.6875rem; font-weight: var(--weight-bold); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .rp-filter-btn { align-self: flex-end; }
+
+  .rp-metrics {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);
+    margin-bottom: var(--space-6); animation: rpSlide 0.5s ease 0.1s both;
+  }
+  .rp-metric {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--space-4) var(--space-3);
+    background: var(--color-surface-raised); border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);
+    transition: all var(--transition-fast);
+  }
+  .rp-metric:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .rp-metric-value {
+    font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--weight-bold);
+    color: var(--color-text); line-height: 1; letter-spacing: -0.02em;
+  }
+  .rp-metric-value.rp-accent { color: var(--color-highlight); }
+  .rp-metric-label { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+
+  .rp-charts {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);
+    margin-bottom: var(--space-6); animation: rpSlide 0.5s ease 0.15s both;
+  }
+  .rp-chart-card {
+    background: var(--color-surface-raised); border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-xl); padding: var(--space-5); box-shadow: var(--shadow-sm);
+  }
+  .rp-chart-title {
+    font-family: var(--font-display); font-size: var(--text-base); font-weight: var(--weight-semibold);
+    color: var(--color-text); margin-bottom: var(--space-4); letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 639px) {
+    .rp-metrics { grid-template-columns: repeat(2, 1fr); }
+    .rp-charts { grid-template-columns: 1fr; }
+    .rp-export-btns { width: 100%; }
+    .rp-export-btns .btn { flex: 1; }
+  }
+  @media (max-width: 375px) {
+    .rp-title { font-size: var(--text-xl); }
+    .rp-metric { padding: var(--space-3) var(--space-2); }
+    .rp-metric-value { font-size: var(--text-lg); }
+  }
+
+  @keyframes rpFade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes rpSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 
 <script>
   (function () {
