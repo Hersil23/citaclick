@@ -26,7 +26,7 @@ class Client
             $stmt = $db->prepare("
                 SELECT c.*,
                        (SELECT COUNT(*) FROM appointments WHERE client_id = c.id) AS total_visits,
-                       (SELECT MAX(date) FROM appointments WHERE client_id = c.id AND status = 'completed') AS last_visit
+                       (SELECT MAX(appointment_date) FROM appointments WHERE client_id = c.id AND status = 'completed') AS last_visit
                 FROM clients c
                 WHERE {$whereStr}
                 ORDER BY c.name ASC
