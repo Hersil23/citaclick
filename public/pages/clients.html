@@ -14,12 +14,14 @@
   <table class="table" id="clients-table">
     <thead>
       <tr>
+        <th>#</th>
         <th>Nombre</th>
         <th>Cedula / ID</th>
         <th>Telefono</th>
         <th>Email</th>
         <th class="text-center">Visitas</th>
         <th>Ultima visita</th>
+        <th class="text-center">Acciones</th>
       </tr>
     </thead>
     <tbody id="clients-tbody"></tbody>
@@ -181,6 +183,18 @@
   .client-mobile-info p { font-size: var(--text-xs); color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .client-mobile-visits { font-family: var(--font-display); font-size: var(--text-lg); font-weight: var(--weight-bold); color: var(--color-highlight); flex-shrink: 0; }
 
+  .action-btns { display: flex; gap: var(--space-1); justify-content: center; }
+  .action-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    color: var(--color-text-muted); transition: all var(--transition-fast); cursor: pointer;
+  }
+  .action-btn:hover { background: var(--color-surface-sunken); color: var(--color-text); }
+  .action-btn.danger:hover { background: var(--color-error); color: var(--color-text-inverse); }
+  .action-btn svg { width: 16px; height: 16px; }
+
+  .client-mobile-actions { display: flex; gap: var(--space-1); flex-shrink: 0; }
+
   .table-responsive { display: block; }
 
   @media (max-width: 768px) {
@@ -233,11 +247,15 @@
       tableWrap.classList.remove('hidden');
       cardsEl.classList.remove('hidden');
 
-      clients.forEach(function(c) {
+      clients.forEach(function(c, idx) {
         // Table row (desktop)
         var tr = document.createElement('tr');
         tr.style.cursor = 'pointer';
         tr.addEventListener('click', function() { editClient(c); });
+
+        var tdNum = document.createElement('td');
+        tdNum.className = 'text-muted';
+        tdNum.textContent = ((currentPage - 1) * pageSize) + idx + 1;
 
         var tdName = document.createElement('td');
         var nameStrong = document.createElement('strong');
@@ -263,12 +281,31 @@
         var tdLast = document.createElement('td');
         tdLast.textContent = c.last_visit ? new Date(c.last_visit).toLocaleDateString() : '-';
 
+        var tdActions = document.createElement('td');
+        var actionsDiv = document.createElement('div');
+        actionsDiv.className = 'action-btns';
+        var btnEdit = document.createElement('button');
+        btnEdit.className = 'action-btn';
+        btnEdit.title = 'Editar';
+        btnEdit.textContent = '\u270E';
+        btnEdit.addEventListener('click', function(e) { e.stopPropagation(); editClient(c); });
+        var btnDel = document.createElement('button');
+        btnDel.className = 'action-btn danger';
+        btnDel.title = 'Eliminar';
+        btnDel.textContent = '\u2716';
+        btnDel.addEventListener('click', function(e) { e.stopPropagation(); deleteClient(c.id, c.name); });
+        actionsDiv.appendChild(btnEdit);
+        actionsDiv.appendChild(btnDel);
+        tdActions.appendChild(actionsDiv);
+
+        tr.appendChild(tdNum);
         tr.appendChild(tdName);
         tr.appendChild(tdId);
         tr.appendChild(tdPhone);
         tr.appendChild(tdEmail);
         tr.appendChild(tdVisits);
         tr.appendChild(tdLast);
+        tr.appendChild(tdActions);
         tbody.appendChild(tr);
 
         // Mobile card
@@ -289,13 +326,22 @@
         info.appendChild(h4);
         info.appendChild(p);
 
-        var visits = document.createElement('div');
-        visits.className = 'client-mobile-visits';
-        visits.textContent = c.total_visits || 0;
+        var mActions = document.createElement('div');
+        mActions.className = 'client-mobile-actions';
+        var mEdit = document.createElement('button');
+        mEdit.className = 'action-btn';
+        mEdit.textContent = '\u270E';
+        mEdit.addEventListener('click', function(e) { e.stopPropagation(); editClient(c); });
+        var mDel = document.createElement('button');
+        mDel.className = 'action-btn danger';
+        mDel.textContent = '\u2716';
+        mDel.addEventListener('click', function(e) { e.stopPropagation(); deleteClient(c.id, c.name); });
+        mActions.appendChild(mEdit);
+        mActions.appendChild(mDel);
 
         card.appendChild(avatar);
         card.appendChild(info);
-        card.appendChild(visits);
+        card.appendChild(mActions);
         cardsEl.appendChild(card);
       });
 
@@ -392,6 +438,15 @@
     document.getElementById('btn-new-client').addEventListener('click', openNewClient);
     var btnEmpty = document.getElementById('btn-new-client-empty');
     if (btnEmpty) btnEmpty.addEventListener('click', openNewClient);
+
+    async function deleteClient(id, name) {
+      if (!confirm('Eliminar a "' + name + '"? Esta accion no se puede deshacer.')) return;
+      var res = await Api.delete('/clients/' + id);
+      if (res.success) {
+        showToast('Cliente eliminado', 'success');
+        loadClients(searchInput.value.trim(), currentPage);
+      }
+    }
 
     searchInput.addEventListener('input', debounce(function() {
       loadClients(searchInput.value.trim(), 1);

@@ -24,6 +24,18 @@ function ensureTables(): void
             break;
         }
     }
+    // Column additions (always run, safe if column already exists)
+    $alterations = [
+        "ALTER TABLE clients ADD COLUMN id_number VARCHAR(50) NULL AFTER name",
+    ];
+    foreach ($alterations as $alt) {
+        try {
+            $db->exec($alt);
+        } catch (\PDOException $e) {
+            // Column already exists — ignore
+        }
+    }
+
     if ($allExist) return;
 
     $tables = [
@@ -191,15 +203,4 @@ function ensureTables(): void
         }
     }
 
-    // Column additions (safe to run multiple times)
-    $alterations = [
-        "ALTER TABLE clients ADD COLUMN id_number VARCHAR(50) NULL AFTER name",
-    ];
-    foreach ($alterations as $alt) {
-        try {
-            $db->exec($alt);
-        } catch (\PDOException $e) {
-            // Column likely already exists
-        }
-    }
 }
