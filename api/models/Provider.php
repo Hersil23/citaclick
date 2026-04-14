@@ -84,7 +84,7 @@ class Provider
     public static function getSchedule(int $providerId): array
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT * FROM provider_schedules WHERE provider_id = :pid ORDER BY day_of_week');
+        $stmt = $db->prepare('SELECT * FROM provider_schedules WHERE provider_id = :pid ORDER BY day_of_week, start_time');
         $stmt->execute([':pid' => $providerId]);
         return $stmt->fetchAll();
     }
