@@ -506,6 +506,8 @@
       tbody.appendChild(tr);
 
       var card=document.createElement('div');card.className='appt-card';
+      var statusColors={pending:'var(--status-pending)',confirmed:'var(--status-confirmed)',completed:'var(--status-completed)',cancelled:'var(--status-cancelled)',no_show:'var(--status-no-show)'};
+      card.style.borderLeftColor=statusColors[a.status]||'var(--color-highlight)';
       card.addEventListener('click',function(){showDetail(a);});
       var info=document.createElement('div');info.className='appt-card-info';
       var h4=document.createElement('h4');h4.textContent=a.client_name||'';
