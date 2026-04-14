@@ -147,7 +147,7 @@ var CatalogPage=(function(){
     if(social.children.length)section.appendChild(social);
     if(biz.address){
       var addr=document.createElement('div');addr.className='catalog-address';
-      if(biz.google_maps){var al=document.createElement('a');al.href=biz.google_maps;al.target='_blank';al.rel='noopener';al.textContent=biz.address;addr.appendChild(al);}
+      if(biz.google_maps&&businessData.has_maps){var al=document.createElement('a');al.href=biz.google_maps;al.target='_blank';al.rel='noopener';al.textContent=biz.address;addr.appendChild(al);}
       else addr.textContent=biz.address;
       section.appendChild(addr);
     }

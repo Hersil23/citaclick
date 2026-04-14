@@ -13,7 +13,7 @@ class CatalogController
 
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            SELECT b.*, p.name AS plan_name, p.has_catalog, p.has_qr
+            SELECT b.*, p.name AS plan_name, p.has_catalog, p.has_qr, p.has_google_maps
             FROM businesses b
             LEFT JOIN subscriptions s ON s.business_id = b.id AND s.status IN ("active", "trial")
             LEFT JOIN plans p ON p.id = s.plan_id
@@ -84,6 +84,7 @@ class CatalogController
                 'providers'   => $providers,
                 'can_book'    => $hasCatalog,
                 'has_qr'      => !empty($business['has_qr']),
+                'has_maps'    => !empty($business['has_google_maps']),
             ],
         ]);
     }
