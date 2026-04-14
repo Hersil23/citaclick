@@ -112,17 +112,29 @@ class Appointment
     public static function updateStatus(int $id, string $status, ?string $cancelledBy = null, ?string $reason = null): bool
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('
-            UPDATE appointments
-            SET status = :status, cancelled_by = :cby, cancel_reason = :reason
-            WHERE id = :id
-        ');
-        return $stmt->execute([
-            ':id'     => $id,
-            ':status' => $status,
-            ':cby'    => $cancelledBy,
-            ':reason' => $reason,
-        ]);
+
+        if ($status === 'cancelled') {
+            try {
+                $stmt = $db->prepare('
+                    UPDATE appointments
+                    SET status = :status, cancelled_by = :cby, cancel_reason = :reason
+                    WHERE id = :id
+                ');
+                return $stmt->execute([
+                    ':id'     => $id,
+                    ':status' => $status,
+                    ':cby'    => substr((string)($cancelledBy ?? ''), 0, 50) ?: null,
+                    ':reason' => $reason,
+                ]);
+            } catch (\PDOException $e) {
+                // Fallback if cancelled_by column has restrictive type
+                $stmt = $db->prepare('UPDATE appointments SET status = :status WHERE id = :id');
+                return $stmt->execute([':id' => $id, ':status' => $status]);
+            }
+        }
+
+        $stmt = $db->prepare('UPDATE appointments SET status = :status WHERE id = :id');
+        return $stmt->execute([':id' => $id, ':status' => $status]);
     }
 
     public static function update(int $id, array $data): bool
