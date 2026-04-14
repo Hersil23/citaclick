@@ -1,4 +1,4 @@
-const CACHE_NAME = 'citaclick-v1';
+const CACHE_NAME = 'citaclick-v2';
 const STATIC_ASSETS = [
   '/',
   '/css/variables.css',
