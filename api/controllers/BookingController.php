@@ -56,6 +56,41 @@ class BookingController
         ]);
     }
 
+    public function getSlots(array $args): void
+    {
+        $slug = $args['params']['slug'] ?? '';
+        $query = $args['query'];
+        $db = Database::getInstance();
+
+        $stmt = $db->prepare('SELECT id FROM businesses WHERE slug = :slug AND is_active = 1 LIMIT 1');
+        $stmt->execute([':slug' => $slug]);
+        $business = $stmt->fetch();
+
+        if (!$business) {
+            sendJson(404, ['success' => false, 'message' => 'Negocio no encontrado']);
+        }
+
+        $bid = (int)$business['id'];
+        $date = $query['date'] ?? date('Y-m-d');
+        $duration = (int)($query['duration'] ?? 30);
+
+        $providerId = $query['provider_id'] ?? null;
+        if (!$providerId) {
+            $stmt = $db->prepare('SELECT id FROM providers WHERE business_id = :bid AND is_active = 1 ORDER BY id LIMIT 1');
+            $stmt->execute([':bid' => $bid]);
+            $prov = $stmt->fetch();
+            $providerId = $prov ? (int)$prov['id'] : null;
+        }
+
+        if (!$providerId) {
+            sendJson(200, ['success' => true, 'data' => []]);
+            return;
+        }
+
+        $slots = Appointment::getAvailableSlots((int)$providerId, $date, $duration);
+        sendJson(200, ['success' => true, 'data' => $slots]);
+    }
+
     public function findClient(array $args): void
     {
         $slug = $args['params']['slug'] ?? '';

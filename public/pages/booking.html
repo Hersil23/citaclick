@@ -337,7 +337,7 @@ var BookingPage = (function() {
     if (!date || !selectedService) return;
 
     var duration = selectedService.duration_minutes || 30;
-    var res = await fetch('/api/appointments/slots?date=' + date + '&duration=' + duration + (businessData.providers.length > 0 ? '&provider_id=' + businessData.providers[0].id : ''));
+    var res = await fetch('/api/booking/' + slug + '/slots?date=' + date + '&duration=' + duration);
     var json = await res.json();
 
     var container = document.getElementById('bk-slots');
