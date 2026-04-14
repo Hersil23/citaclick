@@ -119,6 +119,16 @@ var CatalogPage=(function(){
     businessData=res.data;var biz=businessData.business;
     window._canBook=!!businessData.can_book;
     if(biz.theme)document.documentElement.setAttribute('data-theme',biz.theme);
+
+    // Currency config
+    var _cs={VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',BOB:'Bs.',DOP:'RD$',EUR:'€',GBP:'£'};
+    var _cc=biz.currency_code||'USD',_cm=biz.currency_mode||'usd',_cr=parseFloat(biz.exchange_rate)||0;
+    window._fmtPrice=function(usd){
+      var p=parseFloat(usd||0),sym=_cs[_cc]||_cc;
+      if(_cm==='local'&&_cr>0)return sym+' '+(p*_cr).toFixed(2);
+      if(_cm==='both'&&_cr>0)return '$'+p.toFixed(2)+' / '+sym+' '+(p*_cr).toFixed(2);
+      return '$'+p.toFixed(2);
+    };
     renderHeader(biz);renderServices(businessData.categories);renderQR(biz.slug);renderFooter();
     if(window._canBook)setupBooking(businessData.providers);
   }
@@ -166,7 +176,7 @@ var CatalogPage=(function(){
         var sn=document.createElement('div');sn.className='catalog-svc-name';sn.textContent=svc.name;
         var meta=document.createElement('div');meta.className='catalog-svc-meta';
         var dur=document.createElement('span');dur.className='catalog-svc-duration';dur.textContent=(svc.duration_minutes||svc.duration||0)+' min';
-        var price=document.createElement('span');price.className='catalog-svc-price';price.textContent=formatCurrency(svc.price_usd||svc.price||0);
+        var price=document.createElement('span');price.className='catalog-svc-price';price.textContent=window._fmtPrice?window._fmtPrice(svc.price_usd||svc.price||0):formatCurrency(svc.price_usd||svc.price||0);
         meta.appendChild(dur);meta.appendChild(price);
         if(window._canBook){
           var btn=document.createElement('button');btn.className='btn btn-primary';btn.textContent=i18n.t('catalog.book_now');
@@ -269,7 +279,7 @@ var CatalogPage=(function(){
 
   function renderSummary(){
     var sum=document.getElementById('book-summary');sum.textContent='';
-    [[i18n.t('clients.name'),document.getElementById('book-name').value],[i18n.t('clients.phone'),document.getElementById('book-phone').value],[i18n.t('nav.services'),selectedService?selectedService.name:''],[i18n.t('appointments.price'),selectedService?formatCurrency(selectedService.price_usd||selectedService.price||0):''],[i18n.t('common.date'),document.getElementById('book-date').value],[i18n.t('common.time'),document.getElementById('book-time').value]].forEach(function(r){
+    [[i18n.t('clients.name'),document.getElementById('book-name').value],[i18n.t('clients.phone'),document.getElementById('book-phone').value],[i18n.t('nav.services'),selectedService?selectedService.name:''],[i18n.t('appointments.price'),selectedService?(window._fmtPrice?window._fmtPrice(selectedService.price_usd||selectedService.price||0):formatCurrency(selectedService.price_usd||selectedService.price||0)):''],[i18n.t('common.date'),document.getElementById('book-date').value],[i18n.t('common.time'),document.getElementById('book-time').value]].forEach(function(r){
       var row=document.createElement('div');row.className='booking-summary-row';
       var lbl=document.createElement('span');lbl.className='booking-summary-label';lbl.textContent=r[0];
       var val=document.createElement('span');val.textContent=r[1];

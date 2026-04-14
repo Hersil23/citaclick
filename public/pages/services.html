@@ -467,19 +467,15 @@
         showToast('No se encontro el enlace del negocio', 'error');
         return;
       }
-      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-      var ref = '';
-      for (var i = 0; i < 6; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
-      var url = window.location.origin + '/agendar/' + user.slug + '?ref=' + ref;
+      var url = window.location.origin + '/negocio/' + user.slug;
       try {
         if (navigator.share) {
-          await navigator.share({ title: user.business_name || 'Mi negocio', text: 'Mira mis servicios y agenda tu cita', url: url });
+          await navigator.share({ title: user.business_name || 'Mi negocio', text: 'Mira mis servicios y precios', url: url });
         } else {
           await navigator.clipboard.writeText(url);
-          showToast('Enlace copiado: ' + url, 'success');
+          showToast('Link de servicios copiado', 'success');
         }
       } catch (e) {
-        // Fallback: select and copy
         var input = document.createElement('input');
         input.value = url;
         document.body.appendChild(input);
