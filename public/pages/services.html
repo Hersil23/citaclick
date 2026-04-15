@@ -14,7 +14,7 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       <span>Compartir</span>
     </button>
-    <button class="btn btn-primary" onclick="openModal('modal-service')">
+    <button class="btn btn-primary" onclick="openNewService()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <span data-i18n="services.new">Nuevo servicio</span>
     </button>
@@ -41,7 +41,7 @@
   </div>
   <h3 class="cl-empty-title" data-i18n="services.no_services">Aun no tienes servicios registrados</h3>
   <p class="cl-empty-desc">Agrega tus servicios para que los clientes puedan agendar citas facilmente.</p>
-  <button class="btn btn-primary" onclick="openModal('modal-service')" data-i18n="services.new">Nuevo servicio</button>
+  <button class="btn btn-primary" onclick="openNewService()" data-i18n="services.new">Nuevo servicio</button>
 </div>
 
 <!-- Modal -->
@@ -62,6 +62,15 @@
         <div class="form-group">
           <label class="form-label" data-i18n="services.category">Categoria</label>
           <select class="form-input" id="svc-category"></select>
+          <div id="svc-new-cat-group" class="mt-2" style="display:none">
+            <div class="flex gap-2">
+              <input class="form-input" type="text" id="svc-new-cat-name" placeholder="Nombre de la categoria" style="flex:1">
+              <button type="button" class="btn btn-primary btn-sm" id="btn-create-cat">Crear</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-cancel-cat">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
         <div class="flex gap-4">
           <div class="form-group" style="flex:1;">
@@ -319,6 +328,16 @@
     const listEl = document.getElementById('services-list');
     const emptyEl = document.getElementById('services-empty');
     let editingId = null;
+
+    window.openNewService = function() {
+      editingId = null;
+      document.getElementById('service-form').reset();
+      document.getElementById('svc-category').value = '';
+      document.getElementById('svc-new-cat-group').style.display = 'none';
+      document.getElementById('svc-new-cat-name').value = '';
+      document.querySelector('#modal-service .modal-title').textContent = i18n.t('services.new');
+      openModal('modal-service');
+    };
     var bizRate = 0, bizCurrency = '', bizMode = 'usd';
     var currSymbols = {VES:'Bs.',COP:'$',MXN:'$',ARS:'$',PEN:'S/.',BRL:'R$',CLP:'$',BOB:'Bs.',DOP:'RD$',EUR:'€',GBP:'£'};
 
@@ -404,7 +423,7 @@
       });
     }
 
-    async function loadCategories() {
+    async function loadCategories(selectValue) {
       const res = await Api.get('/service-categories');
       const sel = document.getElementById('svc-category');
       sel.textContent = '';
@@ -421,7 +440,46 @@
           sel.appendChild(opt);
         });
       }
+
+      const optNew = document.createElement('option');
+      optNew.value = '__new__';
+      optNew.textContent = '+ Nueva categoria';
+      sel.appendChild(optNew);
+
+      if (selectValue) sel.value = selectValue;
     }
+
+    document.getElementById('svc-category').addEventListener('change', function() {
+      var newCatGroup = document.getElementById('svc-new-cat-group');
+      if (this.value === '__new__') {
+        newCatGroup.style.display = '';
+        document.getElementById('svc-new-cat-name').focus();
+      } else {
+        newCatGroup.style.display = 'none';
+      }
+    });
+
+    document.getElementById('btn-cancel-cat').addEventListener('click', function() {
+      document.getElementById('svc-new-cat-group').style.display = 'none';
+      document.getElementById('svc-category').value = '';
+      document.getElementById('svc-new-cat-name').value = '';
+    });
+
+    document.getElementById('btn-create-cat').addEventListener('click', async function() {
+      var name = document.getElementById('svc-new-cat-name').value.trim();
+      if (!name) { showToast('Escribe el nombre de la categoria', 'error'); return; }
+      var res = await Api.post('/service-categories', { name: name });
+      if (res.success && res.data) {
+        await loadCategories(res.data.id);
+        document.getElementById('svc-new-cat-group').style.display = 'none';
+        document.getElementById('svc-new-cat-name').value = '';
+        showToast('Categoria creada', 'success');
+      }
+    });
+
+    document.getElementById('svc-new-cat-name').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-create-cat').click(); }
+    });
 
     function editService(s) {
       editingId = s.id;
@@ -430,13 +488,15 @@
       document.getElementById('svc-duration').value = s.duration_minutes || s.duration || 30;
       document.getElementById('svc-price').value = s.price_usd || s.price || 0;
       document.getElementById('svc-description').value = s.description || '';
+      document.getElementById('svc-new-cat-group').style.display = 'none';
+      document.getElementById('svc-new-cat-name').value = '';
       openModal('modal-service');
     }
 
     document.getElementById('btn-save-service').addEventListener('click', async () => {
       const data = {
         name: document.getElementById('svc-name').value.trim(),
-        category_id: document.getElementById('svc-category').value || null,
+        category_id: (document.getElementById('svc-category').value && document.getElementById('svc-category').value !== '__new__') ? document.getElementById('svc-category').value : null,
         duration: parseInt(document.getElementById('svc-duration').value, 10),
         price: parseFloat(document.getElementById('svc-price').value),
         description: document.getElementById('svc-description').value.trim(),
