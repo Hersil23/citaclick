@@ -37,6 +37,7 @@ class ClientController
         $id = Client::create([
             'business_id' => $user['business_id'],
             'name'        => trim($body['name']),
+            'id_number'   => !empty($body['id_number']) ? trim($body['id_number']) : null,
             'phone'       => trim($body['phone']),
             'email'       => trim($body['email']),
             'notes'       => $body['notes'] ?? null,
