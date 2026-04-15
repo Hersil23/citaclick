@@ -96,38 +96,33 @@ function debounce(fn, delay) {
 
 function generateQR(url, size) {
   var qrSize = size || 200;
-  if (typeof qrcode === 'undefined') {
-    // Fallback if library not loaded
-    var img = document.createElement('img');
-    img.alt = 'QR Code';
-    img.width = qrSize;
-    img.height = qrSize;
-    return img;
-  }
-  var qr = qrcode(0, 'M');
-  qr.addData(url);
-  qr.make();
-  var moduleCount = qr.getModuleCount();
-  var canvas = document.createElement('canvas');
-  canvas.width = qrSize;
-  canvas.height = qrSize;
-  var ctx = canvas.getContext('2d');
-  var cellSize = qrSize / moduleCount;
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, qrSize, qrSize);
-  ctx.fillStyle = '#000000';
-  for (var r = 0; r < moduleCount; r++) {
-    for (var c = 0; c < moduleCount; c++) {
-      if (qr.isDark(r, c)) {
-        ctx.fillRect(Math.round(c * cellSize), Math.round(r * cellSize), Math.ceil(cellSize), Math.ceil(cellSize));
-      }
-    }
-  }
   var img = document.createElement('img');
-  img.src = canvas.toDataURL('image/png');
   img.alt = 'QR Code';
   img.width = qrSize;
   img.height = qrSize;
+  img.style.display = 'block';
+  try {
+    if (typeof qrcode === 'undefined') throw 'qrcode lib not loaded';
+    var qr = qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    img.src = qr.createDataURL(Math.floor(qrSize / qr.getModuleCount()), 0);
+  } catch (e) {
+    // Fallback: load library dynamically
+    var script = document.createElement('script');
+    script.src = '/js/qrcode.min.js';
+    script.onload = function() {
+      try {
+        var qr2 = qrcode(0, 'M');
+        qr2.addData(url);
+        qr2.make();
+        img.src = qr2.createDataURL(Math.floor(qrSize / qr2.getModuleCount()), 0);
+      } catch (e2) {
+        console.error('QR generation failed:', e2);
+      }
+    };
+    document.head.appendChild(script);
+  }
   return img;
 }
 
