@@ -161,7 +161,7 @@ class BookingController
         $bid = (int)$business['id'];
 
         // Validate required fields
-        $required = ['service_id', 'date', 'start_time', 'client_name', 'client_phone', 'client_id_number'];
+        $required = ['service_id', 'date', 'start_time', 'client_name', 'client_phone', 'client_id_number', 'client_email'];
         foreach ($required as $field) {
             if (empty(trim($body[$field] ?? ''))) {
                 sendJson(400, ['success' => false, 'message' => 'Todos los campos son requeridos']);

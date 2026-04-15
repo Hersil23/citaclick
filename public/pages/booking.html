@@ -65,8 +65,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Correo (opcional)</label>
-          <input class="form-input" type="email" id="bk-email">
+          <label class="form-label">Correo <span style="color:var(--color-error)">*</span></label>
+          <input class="form-input" type="email" id="bk-email" required placeholder="ejemplo@correo.com">
         </div>
       </div>
       <div class="bk-nav">
@@ -419,6 +419,16 @@ var BookingPage = (function() {
     btn.textContent = 'Agendando...';
 
     var idNum = document.getElementById('bk-id-number').value.trim();
+    var clientEmail = isNewClient ? document.getElementById('bk-email').value.trim() : (clientData.email || '');
+    if (!clientEmail) {
+      if (typeof showToast === 'function') showToast('El correo es obligatorio', 'error');
+      else alert('El correo es obligatorio');
+      btn.disabled = false;
+      btn.textContent = 'Confirmar cita';
+      if (isNewClient) document.getElementById('bk-email').focus();
+      return;
+    }
+
     var data = {
       service_id: selectedService.id,
       date: document.getElementById('bk-date').value,
@@ -426,7 +436,7 @@ var BookingPage = (function() {
       client_id_number: idNum,
       client_name: isNewClient ? document.getElementById('bk-name').value.trim() : clientData.name,
       client_phone: isNewClient ? (document.getElementById('bk-pcode').value + document.getElementById('bk-phone').value.trim()) : clientData.phone,
-      client_email: isNewClient ? document.getElementById('bk-email').value.trim() : (clientData.email || ''),
+      client_email: clientEmail,
     };
 
     if (fixedProviderId) {
