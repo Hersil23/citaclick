@@ -157,9 +157,9 @@ class BusinessController
         }
 
         $file = $_FILES['logo'];
-        $maxSize = 2 * 1024 * 1024; // 2MB
+        $maxSize = 5 * 1024 * 1024; // 5MB
         if ($file['size'] > $maxSize) {
-            sendJson(400, ['success' => false, 'message' => 'La imagen no debe superar 2MB']);
+            sendJson(400, ['success' => false, 'message' => 'La imagen no debe superar 5MB']);
         }
 
         $allowed = ['image/jpeg', 'image/png', 'image/webp'];

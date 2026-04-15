@@ -764,7 +764,6 @@
     logoFile.addEventListener('change', function() {
       if (!this.files || !this.files[0]) return;
       var file = this.files[0];
-      if (file.size > 2 * 1024 * 1024) { showToast('La imagen no debe superar 2MB', 'error'); return; }
       originalFile = file;
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -847,44 +846,56 @@
 
       ctx.drawImage(cropSource, srcX, srcY, srcSize, srcSize, 0, 0, size, size);
 
-      canvas.toBlob(async function(blob) {
-        var formData = new FormData();
-        formData.append('logo', blob, 'logo.jpg');
+      // Compress progressively until under 2MB
+      var maxBytes = 2 * 1024 * 1024;
+      var quality = 0.92;
 
-        var btn = document.getElementById('btn-crop-save');
-        btn.disabled = true;
-        btn.textContent = 'Subiendo...';
-
-        try {
-          var res = await fetch('/api/business/logo', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + Auth.getToken() },
-            body: formData,
-          });
-          var json = await res.json();
-          if (json.success) {
-            logoImg.src = json.data.logo_url + '?t=' + Date.now();
-            logoImg.style.display = '';
-            logoPlaceholder.style.display = 'none';
-            // Update header and sidebar avatars
-            var headerAv = document.getElementById('header-avatar');
-            var sidebarAv = document.getElementById('sidebar-avatar');
-            if (headerAv) { headerAv.textContent = ''; headerAv.style.backgroundImage = 'url(' + json.data.logo_url + '?t=' + Date.now() + ')'; headerAv.style.backgroundSize = 'cover'; headerAv.style.backgroundPosition = 'center'; }
-            if (sidebarAv) { sidebarAv.textContent = ''; sidebarAv.style.backgroundImage = 'url(' + json.data.logo_url + '?t=' + Date.now() + ')'; sidebarAv.style.backgroundSize = 'cover'; sidebarAv.style.backgroundPosition = 'center'; }
-            // Update user in localStorage
-            var u = Auth.getUser();
-            if (u) { u.logo = json.data.logo_url; localStorage.setItem('cc_user', JSON.stringify(u)); }
-            showToast('Logo actualizado', 'success');
-            closeCropModal();
-          } else {
-            showToast(json.message || 'Error al subir', 'error');
+      function tryCompress() {
+        canvas.toBlob(async function(blob) {
+          if (blob.size > maxBytes && quality > 0.3) {
+            quality -= 0.1;
+            tryCompress();
+            return;
           }
-        } catch (e) {
-          showToast('Error de conexion', 'error');
-        }
-        btn.disabled = false;
-        btn.textContent = 'Guardar';
-      }, 'image/jpeg', 0.9);
+
+          var btn = document.getElementById('btn-crop-save');
+          btn.disabled = true;
+          btn.textContent = 'Subiendo...';
+
+          var formData = new FormData();
+          formData.append('logo', blob, 'logo.jpg');
+
+          try {
+            var res = await fetch('/api/business/logo', {
+              method: 'POST',
+              headers: { 'Authorization': 'Bearer ' + Auth.getToken() },
+              body: formData,
+            });
+            var json = await res.json();
+            if (json.success) {
+              var ts = '?t=' + Date.now();
+              logoImg.src = json.data.logo_url + ts;
+              logoImg.style.display = '';
+              logoPlaceholder.style.display = 'none';
+              var headerAv = document.getElementById('header-avatar');
+              var sidebarAv = document.getElementById('sidebar-avatar');
+              if (headerAv) { headerAv.textContent = ''; headerAv.style.backgroundImage = 'url(' + json.data.logo_url + ts + ')'; headerAv.style.backgroundSize = 'cover'; headerAv.style.backgroundPosition = 'center'; }
+              if (sidebarAv) { sidebarAv.textContent = ''; sidebarAv.style.backgroundImage = 'url(' + json.data.logo_url + ts + ')'; sidebarAv.style.backgroundSize = 'cover'; sidebarAv.style.backgroundPosition = 'center'; }
+              var u = Auth.getUser();
+              if (u) { u.logo = json.data.logo_url; localStorage.setItem('cc_user', JSON.stringify(u)); }
+              showToast('Logo actualizado', 'success');
+              closeCropModal();
+            } else {
+              showToast(json.message || 'Error al subir', 'error');
+            }
+          } catch (e) {
+            showToast('Error de conexion', 'error');
+          }
+          btn.disabled = false;
+          btn.textContent = 'Guardar';
+        }, 'image/jpeg', quality);
+      }
+      tryCompress();
     });
 
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
