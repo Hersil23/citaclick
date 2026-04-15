@@ -147,4 +147,63 @@ class BusinessController
 
         $this->show($args);
     }
+
+    public function uploadLogo(array $args): void
+    {
+        $user = $args['user'];
+
+        if (empty($_FILES['logo']) || $_FILES['logo']['error'] !== UPLOAD_ERR_OK) {
+            sendJson(400, ['success' => false, 'message' => 'No se recibio ninguna imagen']);
+        }
+
+        $file = $_FILES['logo'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+        if ($file['size'] > $maxSize) {
+            sendJson(400, ['success' => false, 'message' => 'La imagen no debe superar 2MB']);
+        }
+
+        $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($file['tmp_name']);
+        if (!in_array($mime, $allowed, true)) {
+            sendJson(400, ['success' => false, 'message' => 'Formato no permitido. Usa JPG, PNG o WebP']);
+        }
+
+        $ext = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'][$mime];
+        $filename = 'logo_' . $user['business_id'] . '_' . time() . '.' . $ext;
+        $uploadDir = realpath(__DIR__ . '/../../public/uploads/logos');
+
+        if (!$uploadDir) {
+            @mkdir(__DIR__ . '/../../public/uploads/logos', 0755, true);
+            $uploadDir = realpath(__DIR__ . '/../../public/uploads/logos');
+        }
+
+        $dest = $uploadDir . DIRECTORY_SEPARATOR . $filename;
+
+        if (!move_uploaded_file($file['tmp_name'], $dest)) {
+            sendJson(500, ['success' => false, 'message' => 'Error al guardar la imagen']);
+        }
+
+        // Delete old logo file if exists
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT logo_url FROM businesses WHERE id = :bid LIMIT 1');
+        $stmt->execute([':bid' => $user['business_id']]);
+        $old = $stmt->fetch();
+        if (!empty($old['logo_url'])) {
+            $oldPath = realpath(__DIR__ . '/../../public' . $old['logo_url']);
+            if ($oldPath && file_exists($oldPath)) {
+                @unlink($oldPath);
+            }
+        }
+
+        $logoUrl = '/uploads/logos/' . $filename;
+        $stmt = $db->prepare('UPDATE businesses SET logo_url = :logo WHERE id = :bid');
+        $stmt->execute([':logo' => $logoUrl, ':bid' => $user['business_id']]);
+
+        sendJson(200, [
+            'success' => true,
+            'message' => 'Logo actualizado',
+            'data' => ['logo_url' => $logoUrl],
+        ]);
+    }
 }

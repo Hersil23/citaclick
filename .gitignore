@@ -26,6 +26,8 @@ error_log
 # Uploads
 public/assets/uploads/*
 !public/assets/uploads/.gitkeep
+public/uploads/logos/*
+!public/uploads/logos/.gitkeep
 
 # Build
 dist/

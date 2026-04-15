@@ -20,7 +20,48 @@
     <form id="profile-form" novalidate>
       <div class="form-group">
         <label class="form-label" data-i18n="settings.logo">Logo</label>
-        <input class="form-input" type="file" id="setting-logo" accept="image/*">
+        <div class="logo-upload-area" id="logo-upload-area">
+          <div class="logo-preview" id="logo-preview">
+            <span class="logo-placeholder" id="logo-placeholder">+</span>
+            <img id="logo-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);">
+          </div>
+          <div class="logo-upload-info">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-choose-logo">Cambiar logo</button>
+            <p class="text-xs text-muted mt-1">JPG, PNG o WebP. Max 2MB.</p>
+          </div>
+        </div>
+        <input type="file" id="setting-logo" accept="image/jpeg,image/png,image/webp" style="display:none">
+      </div>
+
+      <!-- Modal recortar logo -->
+      <div class="modal-overlay" id="modal-crop-logo" style="display:none">
+        <div class="modal" style="max-width:400px">
+          <div class="modal-header">
+            <h3 class="modal-title">Ajustar logo</h3>
+            <button class="modal-close" id="btn-crop-cancel" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="modal-body" style="text-align:center">
+            <div class="crop-container" id="crop-container">
+              <img id="crop-source" style="max-width:100%;display:block;">
+              <div class="crop-overlay" id="crop-overlay"></div>
+            </div>
+            <div class="flex gap-2 mt-3" style="justify-content:center">
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-crop-zoom-out" title="Alejar">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+              <input type="range" id="crop-zoom" min="100" max="300" value="100" style="width:120px">
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-crop-zoom-in" title="Acercar">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="btn-crop-cancel2">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="btn-crop-save">Guardar</button>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label" data-i18n="auth.business_name">Nombre del negocio</label>
@@ -254,6 +295,67 @@
 </div>
 
 <style>
+  /* ---- LOGO UPLOAD ---- */
+  .logo-upload-area {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .logo-preview {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-sunken);
+    border: 2px dashed var(--color-border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+  }
+
+  .logo-preview:hover {
+    border-color: var(--color-highlight);
+  }
+
+  .logo-placeholder {
+    font-size: var(--text-2xl);
+    color: var(--color-text-muted);
+    font-weight: var(--weight-light);
+  }
+
+  .crop-container {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-sunken);
+    cursor: grab;
+  }
+
+  .crop-container:active { cursor: grabbing; }
+
+  .crop-container img {
+    position: absolute;
+    transform-origin: 0 0;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .crop-overlay {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-highlight);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+    box-shadow: inset 0 0 0 2000px rgba(0,0,0,0.3);
+  }
+
   .settings-tabs {
     display: flex;
     gap: 2px;
@@ -645,6 +747,147 @@
       showToast('Idioma cambiado', 'success');
     });
 
+    // --- LOGO UPLOAD + CROP ---
+    var logoFile = document.getElementById('setting-logo');
+    var logoImg = document.getElementById('logo-img');
+    var logoPlaceholder = document.getElementById('logo-placeholder');
+    var cropModal = document.getElementById('modal-crop-logo');
+    var cropSource = document.getElementById('crop-source');
+    var cropContainer = document.getElementById('crop-container');
+    var cropZoom = document.getElementById('crop-zoom');
+    var cropState = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, imgW: 0, imgH: 0 };
+    var originalFile = null;
+
+    document.getElementById('btn-choose-logo').addEventListener('click', function() { logoFile.click(); });
+    document.getElementById('logo-preview').addEventListener('click', function() { logoFile.click(); });
+
+    logoFile.addEventListener('change', function() {
+      if (!this.files || !this.files[0]) return;
+      var file = this.files[0];
+      if (file.size > 2 * 1024 * 1024) { showToast('La imagen no debe superar 2MB', 'error'); return; }
+      originalFile = file;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        cropSource.onload = function() {
+          cropState.imgW = cropSource.naturalWidth;
+          cropState.imgH = cropSource.naturalHeight;
+          cropState.scale = 1;
+          cropState.x = 0;
+          cropState.y = 0;
+          cropZoom.value = 100;
+          fitCropImage();
+          cropModal.style.display = '';
+          cropModal.classList.add('open');
+        };
+        cropSource.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function fitCropImage() {
+      var containerSize = 250;
+      var minDim = Math.min(cropState.imgW, cropState.imgH);
+      var baseScale = containerSize / minDim;
+      var zoom = cropState.scale;
+      var totalScale = baseScale * zoom;
+      var w = cropState.imgW * totalScale;
+      var h = cropState.imgH * totalScale;
+      // Clamp position
+      var maxX = 0, maxY = 0;
+      var minX = containerSize - w, minY = containerSize - h;
+      cropState.x = Math.min(maxX, Math.max(minX, cropState.x));
+      cropState.y = Math.min(maxY, Math.max(minY, cropState.y));
+      cropSource.style.width = w + 'px';
+      cropSource.style.height = h + 'px';
+      cropSource.style.left = cropState.x + 'px';
+      cropSource.style.top = cropState.y + 'px';
+    }
+
+    cropZoom.addEventListener('input', function() {
+      cropState.scale = this.value / 100;
+      fitCropImage();
+    });
+    document.getElementById('btn-crop-zoom-in').addEventListener('click', function() {
+      cropZoom.value = Math.min(300, parseInt(cropZoom.value) + 20);
+      cropState.scale = cropZoom.value / 100;
+      fitCropImage();
+    });
+    document.getElementById('btn-crop-zoom-out').addEventListener('click', function() {
+      cropZoom.value = Math.max(100, parseInt(cropZoom.value) - 20);
+      cropState.scale = cropZoom.value / 100;
+      fitCropImage();
+    });
+
+    // Drag to pan
+    cropContainer.addEventListener('mousedown', function(e) { e.preventDefault(); cropState.dragging = true; cropState.startX = e.clientX - cropState.x; cropState.startY = e.clientY - cropState.y; });
+    cropContainer.addEventListener('touchstart', function(e) { var t = e.touches[0]; cropState.dragging = true; cropState.startX = t.clientX - cropState.x; cropState.startY = t.clientY - cropState.y; }, { passive: true });
+    document.addEventListener('mousemove', function(e) { if (!cropState.dragging) return; cropState.x = e.clientX - cropState.startX; cropState.y = e.clientY - cropState.startY; fitCropImage(); });
+    document.addEventListener('touchmove', function(e) { if (!cropState.dragging) return; var t = e.touches[0]; cropState.x = t.clientX - cropState.startX; cropState.y = t.clientY - cropState.startY; fitCropImage(); });
+    document.addEventListener('mouseup', function() { cropState.dragging = false; });
+    document.addEventListener('touchend', function() { cropState.dragging = false; });
+
+    function closeCropModal() { cropModal.classList.remove('open'); setTimeout(function() { cropModal.style.display = 'none'; }, 300); }
+    document.getElementById('btn-crop-cancel').addEventListener('click', closeCropModal);
+    document.getElementById('btn-crop-cancel2').addEventListener('click', closeCropModal);
+
+    document.getElementById('btn-crop-save').addEventListener('click', async function() {
+      var canvas = document.createElement('canvas');
+      var size = 400;
+      canvas.width = size;
+      canvas.height = size;
+      var ctx = canvas.getContext('2d');
+
+      var containerSize = 250;
+      var minDim = Math.min(cropState.imgW, cropState.imgH);
+      var baseScale = containerSize / minDim;
+      var totalScale = baseScale * cropState.scale;
+      // Map canvas coordinates back to source image
+      var srcX = -cropState.x / totalScale;
+      var srcY = -cropState.y / totalScale;
+      var srcSize = containerSize / totalScale;
+
+      ctx.drawImage(cropSource, srcX, srcY, srcSize, srcSize, 0, 0, size, size);
+
+      canvas.toBlob(async function(blob) {
+        var formData = new FormData();
+        formData.append('logo', blob, 'logo.jpg');
+
+        var btn = document.getElementById('btn-crop-save');
+        btn.disabled = true;
+        btn.textContent = 'Subiendo...';
+
+        try {
+          var res = await fetch('/api/business/logo', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + Auth.getToken() },
+            body: formData,
+          });
+          var json = await res.json();
+          if (json.success) {
+            logoImg.src = json.data.logo_url + '?t=' + Date.now();
+            logoImg.style.display = '';
+            logoPlaceholder.style.display = 'none';
+            // Update header and sidebar avatars
+            var headerAv = document.getElementById('header-avatar');
+            var sidebarAv = document.getElementById('sidebar-avatar');
+            if (headerAv) { headerAv.textContent = ''; headerAv.style.backgroundImage = 'url(' + json.data.logo_url + '?t=' + Date.now() + ')'; headerAv.style.backgroundSize = 'cover'; headerAv.style.backgroundPosition = 'center'; }
+            if (sidebarAv) { sidebarAv.textContent = ''; sidebarAv.style.backgroundImage = 'url(' + json.data.logo_url + '?t=' + Date.now() + ')'; sidebarAv.style.backgroundSize = 'cover'; sidebarAv.style.backgroundPosition = 'center'; }
+            // Update user in localStorage
+            var u = Auth.getUser();
+            if (u) { u.logo = json.data.logo_url; localStorage.setItem('cc_user', JSON.stringify(u)); }
+            showToast('Logo actualizado', 'success');
+            closeCropModal();
+          } else {
+            showToast(json.message || 'Error al subir', 'error');
+          }
+        } catch (e) {
+          showToast('Error de conexion', 'error');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Guardar';
+      }, 'image/jpeg', 0.9);
+    });
+
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -945,6 +1188,13 @@
         document.getElementById('setting-tiktok').value = b.tiktok || '';
         document.getElementById('setting-facebook').value = b.facebook || '';
         document.getElementById('setting-whatsapp').value = b.whatsapp || '';
+        // Load logo preview
+        if (b.logo_url || b.logo) {
+          var src = b.logo_url || b.logo;
+          document.getElementById('logo-img').src = src;
+          document.getElementById('logo-img').style.display = '';
+          document.getElementById('logo-placeholder').style.display = 'none';
+        }
         loadCurrency(b);
       }
       loadSchedule();

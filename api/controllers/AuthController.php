@@ -31,7 +31,7 @@ class AuthController
 
         $db = Database::getInstance();
         $stmt = $db->prepare('
-            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme
+            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme, b.logo_url
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.email = :email
@@ -99,6 +99,7 @@ class AuthController
                     'theme'         => $user['theme'],
                     'plan'          => $user['plan_name'] ?? 'Standard',
                     'provider_id'   => $user['provider_id'] ? (int)$user['provider_id'] : null,
+                    'logo'          => $user['logo_url'] ?? null,
                 ],
             ],
         ]);
@@ -368,7 +369,7 @@ class AuthController
         $stmt->execute([':phone' => $phone]);
 
         $stmt = $db->prepare('
-            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme
+            SELECT u.*, b.id AS business_id, b.name AS business_name, b.slug, b.theme, b.logo_url
             FROM users u
             LEFT JOIN businesses b ON b.id = u.business_id
             WHERE u.phone = :phone
@@ -406,6 +407,7 @@ class AuthController
                     'slug'          => $user['slug'],
                     'theme'         => $user['theme'],
                     'plan'          => $user['plan_name'] ?? 'Standard',
+                    'logo'          => $user['logo_url'] ?? null,
                 ],
             ],
         ]);

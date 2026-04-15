@@ -59,6 +59,7 @@ $routes = [
 
     'GET /business/profile'     => ['BusinessController', 'show', true],
     'PUT /business/profile'     => ['BusinessController', 'update', true],
+    'POST /business/logo'       => ['BusinessController', 'uploadLogo', true],
     'PUT /business/plan'        => ['BusinessController', 'changePlan', true],
 
     'GET /appointments'         => ['AppointmentController', 'index', true],

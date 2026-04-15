@@ -831,9 +831,22 @@
     if (user) {
       if (user.theme) App.setTheme(user.theme);
 
-      const avatarHtml = getInitials(user.name);
-      document.getElementById('sidebar-avatar').textContent = avatarHtml;
-      document.getElementById('header-avatar').textContent = avatarHtml;
+      var sidebarAv = document.getElementById('sidebar-avatar');
+      var headerAv = document.getElementById('header-avatar');
+      if (user.logo) {
+        sidebarAv.textContent = '';
+        sidebarAv.style.backgroundImage = 'url(' + user.logo + ')';
+        sidebarAv.style.backgroundSize = 'cover';
+        sidebarAv.style.backgroundPosition = 'center';
+        headerAv.textContent = '';
+        headerAv.style.backgroundImage = 'url(' + user.logo + ')';
+        headerAv.style.backgroundSize = 'cover';
+        headerAv.style.backgroundPosition = 'center';
+      } else {
+        var avatarHtml = getInitials(user.name);
+        sidebarAv.textContent = avatarHtml;
+        headerAv.textContent = avatarHtml;
+      }
       document.getElementById('sidebar-username').textContent = user.name || '';
       document.getElementById('sidebar-role').textContent = user.role || '';
       document.getElementById('lang-btn').textContent = i18n.getLocale().toUpperCase();
