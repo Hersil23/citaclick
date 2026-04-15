@@ -147,7 +147,10 @@
           <button class="btn btn-ghost btn-sm" id="btn-refresh-link" title="Generar nuevo link">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
           </button>
-          <button class="btn btn-primary btn-sm" id="btn-share-booking">Copiar link</button>
+          <button class="btn btn-ghost btn-sm" id="btn-copy-booking" title="Copiar link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="btn btn-primary btn-sm" id="btn-share-booking">Compartir</button>
         </div>
       </div>
 
@@ -900,25 +903,38 @@
     }
     if (user) buildBookingUrl();
 
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() { showToast('Link copiado', 'success'); });
+      } else {
+        var input = document.createElement('input');
+        input.value = text;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showToast('Link copiado', 'success');
+      }
+    }
+
+    var copyBtn = document.getElementById('btn-copy-booking');
+    if (copyBtn && user) {
+      copyBtn.addEventListener('click', function() {
+        var url = currentBookingUrl || buildBookingUrl();
+        copyToClipboard(url);
+      });
+    }
+
     var shareBtn = document.getElementById('btn-share-booking');
     if (shareBtn && user) {
       shareBtn.addEventListener('click', async function() {
         var url = currentBookingUrl || buildBookingUrl();
-        try {
-          if (navigator.share) {
+        if (navigator.share) {
+          try {
             await navigator.share({ title: (user.business_name || 'Agenda tu cita'), text: 'Agenda tu cita en linea', url: url });
-          } else {
-            await navigator.clipboard.writeText(url);
-            showToast('Link copiado', 'success');
-          }
-        } catch (e) {
-          var input = document.createElement('input');
-          input.value = url;
-          document.body.appendChild(input);
-          input.select();
-          document.execCommand('copy');
-          document.body.removeChild(input);
-          showToast('Link copiado', 'success');
+          } catch (e) { /* user cancelled share */ }
+        } else {
+          copyToClipboard(url);
         }
       });
     }

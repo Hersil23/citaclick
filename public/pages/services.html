@@ -7,6 +7,9 @@
     <h2 class="cl-title" data-i18n="nav.services">Servicios</h2>
   </div>
   <div class="flex gap-2">
+    <button class="btn btn-ghost btn-sm" id="btn-copy-catalog" title="Copiar link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    </button>
     <button class="btn btn-secondary btn-sm" id="btn-share-catalog" title="Compartir catalogo">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       <span>Compartir</span>
@@ -460,29 +463,42 @@
       }
     });
 
-    // Share catalog button
-    document.getElementById('btn-share-catalog').addEventListener('click', async function() {
+    // Copy & Share catalog buttons
+    function getCatalogUrl() {
       var user = Auth.getUser();
-      if (!user || !user.slug) {
-        showToast('No se encontro el enlace del negocio', 'error');
-        return;
-      }
-      var url = window.location.origin + '/negocio/' + user.slug;
-      try {
-        if (navigator.share) {
-          await navigator.share({ title: user.business_name || 'Mi negocio', text: 'Mira mis servicios y precios', url: url });
-        } else {
-          await navigator.clipboard.writeText(url);
-          showToast('Link de servicios copiado', 'success');
-        }
-      } catch (e) {
+      if (!user || !user.slug) return null;
+      return window.location.origin + '/negocio/' + user.slug;
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() { showToast('Link copiado', 'success'); });
+      } else {
         var input = document.createElement('input');
-        input.value = url;
+        input.value = text;
         document.body.appendChild(input);
         input.select();
         document.execCommand('copy');
         document.body.removeChild(input);
-        showToast('Enlace copiado: ' + url, 'success');
+        showToast('Link copiado', 'success');
+      }
+    }
+
+    document.getElementById('btn-copy-catalog').addEventListener('click', function() {
+      var url = getCatalogUrl();
+      if (!url) { showToast('No se encontro el enlace del negocio', 'error'); return; }
+      copyToClipboard(url);
+    });
+
+    document.getElementById('btn-share-catalog').addEventListener('click', async function() {
+      var url = getCatalogUrl();
+      if (!url) { showToast('No se encontro el enlace del negocio', 'error'); return; }
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: Auth.getUser().business_name || 'Mi negocio', text: 'Mira mis servicios y precios', url: url });
+        } catch (e) { /* user cancelled share */ }
+      } else {
+        copyToClipboard(url);
       }
     });
 
