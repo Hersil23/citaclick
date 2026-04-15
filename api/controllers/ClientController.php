@@ -27,12 +27,18 @@ class ClientController
         if (empty(trim($body['name'] ?? ''))) {
             sendJson(400, ['success' => false, 'message' => 'El nombre es requerido']);
         }
+        if (empty(trim($body['phone'] ?? ''))) {
+            sendJson(400, ['success' => false, 'message' => 'El telefono es requerido']);
+        }
+        if (empty(trim($body['email'] ?? ''))) {
+            sendJson(400, ['success' => false, 'message' => 'El correo es requerido']);
+        }
 
         $id = Client::create([
             'business_id' => $user['business_id'],
             'name'        => trim($body['name']),
-            'phone'       => $body['phone'] ?? null,
-            'email'       => $body['email'] ?? null,
+            'phone'       => trim($body['phone']),
+            'email'       => trim($body['email']),
             'notes'       => $body['notes'] ?? null,
         ]);
 

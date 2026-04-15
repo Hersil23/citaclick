@@ -68,7 +68,7 @@
     <div class="modal-body">
       <form id="client-form" novalidate>
         <div class="form-group">
-          <label class="form-label" data-i18n="clients.name">Nombre completo</label>
+          <label class="form-label">Nombre completo <span style="color:var(--color-error)">*</span></label>
           <input class="form-input" type="text" id="client-name" required>
         </div>
         <div class="form-group">
@@ -76,7 +76,7 @@
           <input class="form-input" type="text" id="client-id-number" placeholder="V-12345678, DNI, CC...">
         </div>
         <div class="form-group">
-          <label class="form-label" data-i18n="clients.phone">Telefono</label>
+          <label class="form-label">Telefono <span style="color:var(--color-error)">*</span></label>
           <div class="phone-input-group">
             <select class="form-input phone-code-select" id="client-pcode">
               <option value="+58">+58 VE</option>
@@ -705,7 +705,8 @@
         notes: document.getElementById('client-notes').value.trim(),
       };
 
-      if (!data.name) { showToast('El nombre es requerido', 'error'); return; }
+      if (!data.name) { showToast('El nombre es requerido', 'error'); document.getElementById('client-name').focus(); return; }
+      if (!data.phone) { showToast('El telefono es obligatorio', 'error'); document.getElementById('client-phone').focus(); return; }
       if (!data.email) { showToast('El correo es obligatorio', 'error'); document.getElementById('client-email').focus(); return; }
 
       var res;
