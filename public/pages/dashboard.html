@@ -833,20 +833,35 @@
 
       var sidebarAv = document.getElementById('sidebar-avatar');
       var headerAv = document.getElementById('header-avatar');
-      if (user.logo) {
-        sidebarAv.textContent = '';
-        sidebarAv.style.backgroundImage = 'url(' + user.logo + ')';
-        sidebarAv.style.backgroundSize = 'cover';
-        sidebarAv.style.backgroundPosition = 'center';
-        headerAv.textContent = '';
-        headerAv.style.backgroundImage = 'url(' + user.logo + ')';
-        headerAv.style.backgroundSize = 'cover';
-        headerAv.style.backgroundPosition = 'center';
-      } else {
-        var avatarHtml = getInitials(user.name);
-        sidebarAv.textContent = avatarHtml;
-        headerAv.textContent = avatarHtml;
+      function setAvatarLogo(url) {
+        [sidebarAv, headerAv].forEach(function(el) {
+          el.textContent = '';
+          el.style.backgroundImage = 'url(' + url + ')';
+          el.style.backgroundSize = 'cover';
+          el.style.backgroundPosition = 'center';
+        });
       }
+      function setAvatarInitials() {
+        var initials = getInitials(user.name);
+        sidebarAv.textContent = initials;
+        headerAv.textContent = initials;
+      }
+      if (user.logo) {
+        setAvatarLogo(user.logo);
+      } else {
+        setAvatarInitials();
+      }
+      // Always fetch fresh logo from profile
+      Api.get('/business/profile').then(function(res) {
+        if (res.success && res.data) {
+          var logo = res.data.logo_url || res.data.logo;
+          if (logo) {
+            setAvatarLogo(logo);
+            user.logo = logo;
+            localStorage.setItem('cc_user', JSON.stringify(user));
+          }
+        }
+      });
       document.getElementById('sidebar-username').textContent = user.name || '';
       document.getElementById('sidebar-role').textContent = user.role || '';
       document.getElementById('lang-btn').textContent = i18n.getLocale().toUpperCase();

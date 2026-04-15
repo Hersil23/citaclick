@@ -34,7 +34,7 @@
       </div>
 
       <!-- Modal recortar logo -->
-      <div class="modal-overlay" id="modal-crop-logo" style="display:none">
+      <div class="modal-overlay" id="modal-crop-logo">
         <div class="modal" style="max-width:400px">
           <div class="modal-header">
             <h3 class="modal-title">Ajustar logo</h3>
@@ -776,8 +776,7 @@
           cropState.y = 0;
           cropZoom.value = 100;
           fitCropImage();
-          cropModal.style.display = '';
-          cropModal.classList.add('open');
+          openModal('modal-crop-logo');
         };
         cropSource.src = e.target.result;
       };
@@ -826,7 +825,7 @@
     document.addEventListener('mouseup', function() { cropState.dragging = false; });
     document.addEventListener('touchend', function() { cropState.dragging = false; });
 
-    function closeCropModal() { cropModal.classList.remove('open'); setTimeout(function() { cropModal.style.display = 'none'; }, 300); }
+    function closeCropModal() { closeModal('modal-crop-logo'); }
     document.getElementById('btn-crop-cancel').addEventListener('click', closeCropModal);
     document.getElementById('btn-crop-cancel2').addEventListener('click', closeCropModal);
 
