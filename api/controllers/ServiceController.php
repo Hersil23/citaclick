@@ -102,12 +102,57 @@ class ServiceController
     {
         $user = $args['user'];
         $body = $args['body'];
+        $name = trim($body['name'] ?? '');
 
-        if (empty(trim($body['name'] ?? ''))) {
+        if (empty($name)) {
             sendJson(400, ['success' => false, 'message' => 'El nombre es requerido']);
         }
 
-        $id = Service::createCategory($user['business_id'], trim($body['name']));
-        sendJson(201, ['success' => true, 'data' => ['id' => $id, 'name' => trim($body['name'])]]);
+        if (Service::categoryExists($user['business_id'], $name)) {
+            sendJson(409, ['success' => false, 'message' => 'Ya existe una categoria con ese nombre']);
+        }
+
+        $id = Service::createCategory($user['business_id'], $name);
+        $category = Service::findCategoryById($id, $user['business_id']);
+        sendJson(201, ['success' => true, 'message' => 'Categoria creada', 'data' => $category]);
+    }
+
+    public function updateCategory(array $args): void
+    {
+        $user = $args['user'];
+        $id = (int)$args['params']['id'];
+        $body = $args['body'];
+        $name = trim($body['name'] ?? '');
+
+        if (empty($name)) {
+            sendJson(400, ['success' => false, 'message' => 'El nombre es requerido']);
+        }
+
+        $category = Service::findCategoryById($id, $user['business_id']);
+        if (!$category) {
+            sendJson(404, ['success' => false, 'message' => 'Categoria no encontrada']);
+        }
+
+        if (Service::categoryExists($user['business_id'], $name, $id)) {
+            sendJson(409, ['success' => false, 'message' => 'Ya existe una categoria con ese nombre']);
+        }
+
+        Service::updateCategory($id, $user['business_id'], $name);
+        $updated = Service::findCategoryById($id, $user['business_id']);
+        sendJson(200, ['success' => true, 'message' => 'Categoria actualizada', 'data' => $updated]);
+    }
+
+    public function destroyCategory(array $args): void
+    {
+        $user = $args['user'];
+        $id = (int)$args['params']['id'];
+
+        $category = Service::findCategoryById($id, $user['business_id']);
+        if (!$category) {
+            sendJson(404, ['success' => false, 'message' => 'Categoria no encontrada']);
+        }
+
+        Service::deleteCategory($id, $user['business_id']);
+        sendJson(200, ['success' => true, 'message' => 'Categoria eliminada']);
     }
 }

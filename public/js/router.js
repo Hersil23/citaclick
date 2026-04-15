@@ -6,6 +6,7 @@ const Router = (() => {
     '/appointments': { page: 'pages/appointments.html', auth: true, title: 'Citas' },
     '/clients': { page: 'pages/clients.html', auth: true, title: 'Clientes' },
     '/services': { page: 'pages/services.html', auth: true, title: 'Servicios' },
+    '/categories': { page: 'pages/categories.html', auth: true, title: 'Categorias' },
     '/providers': { page: 'pages/providers.html', auth: true, title: 'Prestadores' },
     '/settings': { page: 'pages/settings.html', auth: true, title: 'Configuracion' },
     '/reports': { page: 'pages/reports.html', auth: true, title: 'Reportes' },

@@ -81,8 +81,10 @@ $routes = [
     'PUT /services/{id}'        => ['ServiceController', 'update', true],
     'DELETE /services/{id}'     => ['ServiceController', 'destroy', true],
 
-    'GET /service-categories'         => ['ServiceController', 'categories', true],
-    'POST /service-categories'        => ['ServiceController', 'storeCategory', true],
+    'GET /service-categories'             => ['ServiceController', 'categories', true],
+    'POST /service-categories'            => ['ServiceController', 'storeCategory', true],
+    'PUT /service-categories/{id}'        => ['ServiceController', 'updateCategory', true],
+    'DELETE /service-categories/{id}'     => ['ServiceController', 'destroyCategory', true],
 
     'GET /providers'            => ['ProviderController', 'index', true],
     'POST /providers'           => ['ProviderController', 'store', true],

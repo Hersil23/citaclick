@@ -99,9 +99,46 @@ class Service
     public static function getCategories(int $businessId): array
     {
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT * FROM service_categories WHERE business_id = :bid ORDER BY sort_order ASC, name ASC');
+        $stmt = $db->prepare('
+            SELECT sc.*, COUNT(s.id) AS service_count
+            FROM service_categories sc
+            LEFT JOIN services s ON s.category_id = sc.id
+            WHERE sc.business_id = :bid
+            GROUP BY sc.id
+            ORDER BY sc.name ASC
+        ');
         $stmt->execute([':bid' => $businessId]);
         return $stmt->fetchAll();
+    }
+
+    public static function findCategoryById(int $id, int $businessId): ?array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+            SELECT sc.*, COUNT(s.id) AS service_count
+            FROM service_categories sc
+            LEFT JOIN services s ON s.category_id = sc.id
+            WHERE sc.id = :id AND sc.business_id = :bid
+            GROUP BY sc.id
+            LIMIT 1
+        ');
+        $stmt->execute([':id' => $id, ':bid' => $businessId]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public static function categoryExists(int $businessId, string $name, ?int $excludeId = null): bool
+    {
+        $db = Database::getInstance();
+        $sql = 'SELECT id FROM service_categories WHERE business_id = :bid AND LOWER(name) = LOWER(:name)';
+        $params = [':bid' => $businessId, ':name' => $name];
+        if ($excludeId) {
+            $sql .= ' AND id != :eid';
+            $params[':eid'] = $excludeId;
+        }
+        $stmt = $db->prepare($sql . ' LIMIT 1');
+        $stmt->execute($params);
+        return (bool)$stmt->fetch();
     }
 
     public static function createCategory(int $businessId, string $name): int
@@ -110,5 +147,19 @@ class Service
         $stmt = $db->prepare('INSERT INTO service_categories (business_id, name) VALUES (:bid, :name)');
         $stmt->execute([':bid' => $businessId, ':name' => $name]);
         return (int)$db->lastInsertId();
+    }
+
+    public static function updateCategory(int $id, int $businessId, string $name): bool
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('UPDATE service_categories SET name = :name WHERE id = :id AND business_id = :bid');
+        return $stmt->execute([':name' => $name, ':id' => $id, ':bid' => $businessId]);
+    }
+
+    public static function deleteCategory(int $id, int $businessId): bool
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('DELETE FROM service_categories WHERE id = :id AND business_id = :bid');
+        return $stmt->execute([':id' => $id, ':bid' => $businessId]);
     }
 }
