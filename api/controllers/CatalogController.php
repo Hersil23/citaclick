@@ -84,7 +84,7 @@ class CatalogController
                 'categories'  => $categories,
                 'providers'   => $providers,
                 'can_book'    => $hasCatalog,
-                'has_qr'      => !empty($business['has_qr']),
+                'has_qr'      => !empty($business['has_qr']) || in_array($business['plan_name'] ?? '', ['Premium', 'Salon VIP'], true),
                 'has_maps'    => !empty($business['has_google_maps']),
             ],
         ]);

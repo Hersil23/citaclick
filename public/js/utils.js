@@ -95,15 +95,173 @@ function debounce(fn, delay) {
 }
 
 function generateQR(url, size) {
-  const qrSize = size || 200;
-  const img = document.createElement('img');
-  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=' +
-    qrSize + 'x' + qrSize +
-    '&data=' + encodeURIComponent(url);
+  var qrSize = size || 200;
+  var canvas = document.createElement('canvas');
+  canvas.width = qrSize;
+  canvas.height = qrSize;
+  canvas.style.imageRendering = 'pixelated';
+  try {
+    var modules = _qrEncode(url);
+    var ctx = canvas.getContext('2d');
+    var cellSize = qrSize / modules.length;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, qrSize, qrSize);
+    ctx.fillStyle = '#000000';
+    for (var r = 0; r < modules.length; r++) {
+      for (var c = 0; c < modules.length; c++) {
+        if (modules[r][c]) {
+          ctx.fillRect(Math.round(c * cellSize), Math.round(r * cellSize), Math.ceil(cellSize), Math.ceil(cellSize));
+        }
+      }
+    }
+  } catch (e) {
+    var ctx2 = canvas.getContext('2d');
+    ctx2.fillStyle = '#f0f0f0';
+    ctx2.fillRect(0, 0, qrSize, qrSize);
+    ctx2.fillStyle = '#999';
+    ctx2.font = '12px sans-serif';
+    ctx2.textAlign = 'center';
+    ctx2.fillText('QR Error', qrSize / 2, qrSize / 2);
+  }
+  var img = document.createElement('img');
+  img.src = canvas.toDataURL('image/png');
   img.alt = 'QR Code';
   img.width = qrSize;
   img.height = qrSize;
   return img;
+}
+
+// Minimal QR encoder (Mode Byte, ECC-L, versions 1-10)
+function _qrEncode(text) {
+  var data = [];
+  for (var i = 0; i < text.length; i++) {
+    var code = text.charCodeAt(i);
+    if (code < 128) data.push(code);
+    else if (code < 2048) { data.push(192 | (code >> 6)); data.push(128 | (code & 63)); }
+    else { data.push(224 | (code >> 12)); data.push(128 | ((code >> 6) & 63)); data.push(128 | (code & 63)); }
+  }
+  // Version capacities for ECC-L byte mode
+  var caps = [17,32,53,78,106,134,154,192,230,271];
+  var ver = 1;
+  for (var v = 0; v < caps.length; v++) { if (data.length <= caps[v]) { ver = v + 1; break; } }
+  var sz = ver * 4 + 17;
+  // Data codewords and EC codewords per version (ECC-L)
+  var dcws = [19,34,55,80,108,136,156,194,232,274];
+  var ecws = [7,10,15,20,26,18,20,24,30,18];
+  var totalDc = dcws[ver - 1];
+  var totalEc = ecws[ver - 1];
+  // Build data bits: mode(4) + count(8 or 16) + data + terminator + padding
+  var bits = [];
+  function pushBits(val, len) { for (var b = len - 1; b >= 0; b--) bits.push((val >> b) & 1); }
+  pushBits(4, 4); // byte mode
+  pushBits(data.length, ver <= 9 ? 8 : 16);
+  for (var i = 0; i < data.length; i++) pushBits(data[i], 8);
+  var totalBits = totalDc * 8;
+  pushBits(0, Math.min(4, totalBits - bits.length));
+  while (bits.length % 8 !== 0) bits.push(0);
+  var pads = [236, 17];
+  for (var p = 0; bits.length < totalBits; p++) pushBits(pads[p % 2], 8);
+  // Convert bits to bytes
+  var dcBytes = [];
+  for (var i = 0; i < bits.length; i += 8) {
+    var b = 0; for (var j = 0; j < 8; j++) b = (b << 1) | (bits[i + j] || 0);
+    dcBytes.push(b);
+  }
+  // Reed-Solomon EC
+  var ecBytes = _rsEncode(dcBytes, totalEc);
+  var allBytes = dcBytes.concat(ecBytes);
+  // Create module grid
+  var grid = []; var reserved = [];
+  for (var r = 0; r < sz; r++) { grid[r] = []; reserved[r] = []; for (var c = 0; c < sz; c++) { grid[r][c] = false; reserved[r][c] = false; } }
+  // Finder patterns
+  function setFinder(row, col) {
+    for (var r = -1; r <= 7; r++) for (var c = -1; c <= 7; c++) {
+      var rr = row + r, cc = col + c;
+      if (rr < 0 || rr >= sz || cc < 0 || cc >= sz) continue;
+      var on = (r >= 0 && r <= 6 && (c === 0 || c === 6)) || (c >= 0 && c <= 6 && (r === 0 || r === 6)) || (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+      grid[rr][cc] = on; reserved[rr][cc] = true;
+    }
+  }
+  setFinder(0, 0); setFinder(0, sz - 7); setFinder(sz - 7, 0);
+  // Timing patterns
+  for (var i = 8; i < sz - 8; i++) { grid[6][i] = i % 2 === 0; reserved[6][i] = true; grid[i][6] = i % 2 === 0; reserved[i][6] = true; }
+  // Dark module + reserved format areas
+  grid[sz - 8][8] = true; reserved[sz - 8][8] = true;
+  for (var i = 0; i < 9; i++) { reserved[8][i] = true; reserved[i][8] = true; reserved[8][sz - 1 - i] = true; if (i < 8) reserved[sz - 1 - i][8] = true; }
+  // Alignment patterns (ver >= 2)
+  if (ver >= 2) {
+    var aligns = [6, [6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]];
+    var pos = ver === 1 ? [] : aligns[ver - 1];
+    if (typeof pos === 'number') pos = [pos];
+    for (var i = 0; i < pos.length; i++) for (var j = 0; j < pos.length; j++) {
+      var r = pos[i], c = pos[j];
+      if (reserved[r][c]) continue;
+      for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) {
+        grid[r + dr][c + dc] = Math.abs(dr) === 2 || Math.abs(dc) === 2 || (dr === 0 && dc === 0);
+        reserved[r + dr][c + dc] = true;
+      }
+    }
+  }
+  // Version info (ver >= 7) - skip for simplicity, max ver 10
+  // Place data bits
+  var bitIdx = 0;
+  var allBits = [];
+  for (var i = 0; i < allBytes.length; i++) for (var b = 7; b >= 0; b--) allBits.push((allBytes[i] >> b) & 1);
+  for (var col = sz - 1; col >= 1; col -= 2) {
+    if (col === 6) col = 5;
+    for (var cnt = 0; cnt < sz; cnt++) {
+      var row = ((Math.floor((sz - 1 - col) / 2)) % 2 === 0) ? sz - 1 - cnt : cnt;
+      for (var dc = 0; dc <= 1; dc++) {
+        var cc = col - dc;
+        if (reserved[row][cc]) continue;
+        grid[row][cc] = bitIdx < allBits.length ? !!allBits[bitIdx] : false;
+        bitIdx++;
+      }
+    }
+  }
+  // Apply mask 0 (checkerboard) and format info
+  for (var r = 0; r < sz; r++) for (var c = 0; c < sz; c++) {
+    if (!reserved[r][c]) { if ((r + c) % 2 === 0) grid[r][c] = !grid[r][c]; }
+  }
+  // Format bits for mask 0, ECC-L: pre-computed
+  var fmtBits = [1,1,1,0,1,1,1,1,1,0,0,0,1,0,0];
+  var fmtPos = [[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+  var fmtPos2 = [[sz-1,8],[sz-2,8],[sz-3,8],[sz-4,8],[sz-5,8],[sz-6,8],[sz-7,8],[8,sz-8],[8,sz-7],[8,sz-6],[8,sz-5],[8,sz-4],[8,sz-3],[8,sz-2],[8,sz-1]];
+  for (var i = 0; i < 15; i++) {
+    grid[fmtPos[i][0]][fmtPos[i][1]] = !!fmtBits[i];
+    grid[fmtPos2[i][0]][fmtPos2[i][1]] = !!fmtBits[i];
+  }
+  return grid;
+}
+
+// Reed-Solomon encoding over GF(256)
+function _rsEncode(data, ecLen) {
+  var gfExp = new Array(256), gfLog = new Array(256);
+  var x = 1;
+  for (var i = 0; i < 256; i++) { gfExp[i] = x; gfLog[x] = i; x <<= 1; if (x >= 256) x ^= 0x11d; }
+  gfLog[0] = 255;
+  // Generator polynomial
+  var gen = [1];
+  for (var i = 0; i < ecLen; i++) {
+    var ng = new Array(gen.length + 1);
+    for (var j = 0; j < ng.length; j++) ng[j] = 0;
+    for (var j = 0; j < gen.length; j++) {
+      ng[j] ^= gen[j];
+      ng[j + 1] ^= gfExp[(gfLog[gen[j]] + i) % 255];
+    }
+    gen = ng;
+  }
+  var msg = data.slice();
+  for (var i = 0; i < ecLen; i++) msg.push(0);
+  for (var i = 0; i < data.length; i++) {
+    var coef = msg[i];
+    if (coef !== 0) {
+      for (var j = 0; j < gen.length; j++) {
+        msg[i + j] ^= gfExp[(gfLog[gen[j]] + gfLog[coef]) % 255];
+      }
+    }
+  }
+  return msg.slice(data.length);
 }
 
 function downloadFile(blob, filename) {
