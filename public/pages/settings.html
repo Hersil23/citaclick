@@ -47,8 +47,16 @@
         <input class="form-input" type="text" id="setting-instagram" placeholder="@usuario">
       </div>
       <div class="form-group">
+        <label class="form-label">TikTok</label>
+        <input class="form-input" type="text" id="setting-tiktok" placeholder="@usuario">
+      </div>
+      <div class="form-group">
         <label class="form-label" data-i18n="settings.facebook">Facebook</label>
         <input class="form-input" type="url" id="setting-facebook">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp</label>
+        <input class="form-input" type="tel" id="setting-whatsapp" placeholder="+584121234567">
       </div>
       <button type="submit" class="btn btn-primary" data-i18n="common.save">Guardar</button>
     </form>
@@ -646,7 +654,9 @@
         phone: document.getElementById('setting-phone').value.trim(),
         google_maps_url: document.getElementById('setting-maps').value.trim(),
         instagram: document.getElementById('setting-instagram').value.trim(),
+        tiktok: document.getElementById('setting-tiktok').value.trim(),
         facebook: document.getElementById('setting-facebook').value.trim(),
+        whatsapp: document.getElementById('setting-whatsapp').value.trim(),
       };
       const res = await Api.put('/business/profile', data);
       if (res.success) showToast(i18n.t('common.success'), 'success');
@@ -932,7 +942,9 @@
         document.getElementById('setting-phone').value = b.phone || '';
         document.getElementById('setting-maps').value = b.google_maps_url || '';
         document.getElementById('setting-instagram').value = b.instagram || '';
+        document.getElementById('setting-tiktok').value = b.tiktok || '';
         document.getElementById('setting-facebook').value = b.facebook || '';
+        document.getElementById('setting-whatsapp').value = b.whatsapp || '';
         loadCurrency(b);
       }
       loadSchedule();

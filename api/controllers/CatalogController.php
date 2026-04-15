@@ -72,6 +72,7 @@ class CatalogController
                     'address'       => $business['address'] ?? '',
                     'phone'         => $business['phone'] ?? '',
                     'instagram'     => $business['instagram'] ?? '',
+                    'tiktok'        => $business['tiktok'] ?? '',
                     'facebook'      => $business['facebook'] ?? '',
                     'whatsapp'      => $business['whatsapp'] ?? '',
                     'google_maps'   => $business['google_maps_url'] ?? '',
@@ -105,7 +106,7 @@ class CatalogController
 
         $businessId = (int)$business['id'];
 
-        $required = ['client_name', 'client_phone', 'service_id', 'date', 'start_time'];
+        $required = ['client_name', 'client_phone', 'client_email', 'service_id', 'date', 'start_time'];
         foreach ($required as $field) {
             if (empty($body[$field])) {
                 sendJson(400, [

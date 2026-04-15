@@ -123,7 +123,7 @@ class BusinessController
         }
 
         $allowed = ['name', 'description', 'logo_url', 'address', 'phone', 'theme',
-                     'instagram', 'facebook', 'whatsapp', 'google_maps_url',
+                     'instagram', 'tiktok', 'facebook', 'whatsapp', 'google_maps_url',
                      'currency_code', 'currency_mode', 'exchange_rate'];
 
         foreach ($allowed as $f) {
