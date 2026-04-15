@@ -1,10 +1,11 @@
-const CACHE_NAME = 'citaclick-v4';
+const CACHE_NAME = 'citaclick-v5';
 const STATIC_ASSETS = [
   '/',
   '/css/variables.css',
   '/css/reset.css',
   '/css/base.css',
   '/css/components.css',
+  '/js/qrcode.min.js',
   '/js/app.js',
   '/js/router.js',
   '/js/api.js',

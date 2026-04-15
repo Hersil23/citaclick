@@ -130,8 +130,11 @@ var CatalogPage=(function(){
       if(_cm==='both'&&_cr>0)return '$'+p.toFixed(2)+' / '+sym+' '+(p*_cr).toFixed(2);
       return '$'+p.toFixed(2);
     };
-    renderHeader(biz);renderServices(businessData.categories);if(businessData.has_qr)renderQR(biz.slug);renderFooter();
-    if(window._canBook)setupBooking(businessData.providers);
+    try{renderHeader(biz);}catch(e){console.error('renderHeader:',e);}
+    try{renderServices(businessData.categories);}catch(e){console.error('renderServices:',e);}
+    try{renderQR(biz.slug);}catch(e){console.error('renderQR:',e);}
+    try{renderFooter();}catch(e){console.error('renderFooter:',e);}
+    if(window._canBook){try{setupBooking(businessData.providers);}catch(e){console.error('setupBooking:',e);}}
   }
 
   function renderHeader(biz){
