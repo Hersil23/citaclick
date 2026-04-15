@@ -198,10 +198,9 @@ class AuthController
 
             $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
             $stmt = $db->prepare('
-                INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, trial_ends_at, created_at)
-                VALUES (:bid, :pid, "trial", CURDATE(), NOW(), :ends_at, :ends_at, NOW())
+                INSERT INTO subscriptions (business_id, plan_id, status, start_date, starts_at, ends_at, created_at)
+                VALUES (:bid, :pid, "active", CURDATE(), NOW(), :ends_at, NOW())
             ');
-            $trialEnd = date('Y-m-d H:i:s', strtotime('+21 days'));
             $stmt->execute([
                 ':bid'      => $businessId,
                 ':pid'      => $plan['id'],
@@ -260,6 +259,7 @@ class AuthController
                         'theme'         => $theme,
                         'plan'          => $planSlug,
                         'provider_id'   => $providerId,
+                        'logo'          => null,
                     ],
                 ],
             ]);
